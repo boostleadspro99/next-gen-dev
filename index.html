@@ -8,14 +8,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Performance: Use Variable Font to reduce HTTP requests and allow fine-grained weight control -->
+    <!-- Performance: Use Variable Font to reduce HTTP requests -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Arabic Font: Tajwal (Modern, Clean, High Legibility) -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajwal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
+                        arabic: ['Tajwal', 'sans-serif'],
                     },
                     fontSize: {
                         // Typography Scale from Guide
@@ -108,6 +112,12 @@
         h2, .h2 { letter-spacing: -0.015em; font-weight: var(--font-weight-bold); }
         h3, .h3 { letter-spacing: -0.01em; font-weight: var(--font-weight-bold); }
         p, .body-text { letter-spacing: 0em; }
+        
+        /* Arabic overrides */
+        html[lang="ar"] h1, html[lang="ar"] h2, html[lang="ar"] h3, html[lang="ar"] p, html[lang="ar"] body {
+            font-family: 'Tajwal', sans-serif;
+            letter-spacing: 0em; /* Arabic connects letters, no negative spacing */
+        }
 
         /* Refined Scrollbar */
         ::-webkit-scrollbar { width: 10px; }

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart2, LogIn, Menu, X, ChevronRight } from 'lucide-react';
+import { BarChart2, LogIn, Menu, X, ChevronRight, Globe } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Navigation: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t, language, setLanguage, dir } = useLanguage();
   const isHome = location.pathname === '/';
 
   // Lock body scroll when mobile menu is open
@@ -27,7 +29,6 @@ const Navigation: React.FC = () => {
     setIsMobileMenuOpen(false);
 
     if (isHome) {
-      // Small timeout to allow menu close animation to start/finish smoothly
       setTimeout(() => {
         const element = document.getElementById(id.replace('#', ''));
         if (element) {
@@ -39,7 +40,7 @@ const Navigation: React.FC = () => {
     }
   };
 
-  const NavLink = ({ to, children, className, mobile = false }: { to: string, children: React.ReactNode, className?: string, mobile?: boolean }) => {
+  const NavLink = ({ to, children, className, mobile = false }: React.PropsWithChildren<{ to: string, className?: string, mobile?: boolean }>) => {
     return (
       <a 
         href={isHome ? to : `/#/${to}`} 
@@ -51,9 +52,14 @@ const Navigation: React.FC = () => {
         } ${className}`}
       >
         <span className={mobile ? 'group-hover:text-emerald-400 transition-colors' : ''}>{children}</span>
-        {mobile && <ChevronRight className="text-neutral-700 group-hover:text-emerald-500 transition-colors" />}
+        {mobile && <ChevronRight className={`text-neutral-700 group-hover:text-emerald-500 transition-colors ${dir === 'rtl' ? 'rotate-180' : ''}`} />}
       </a>
     );
+  };
+
+  const toggleLanguage = () => {
+    setLanguage(language === 'fr' ? 'ar' : 'fr');
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -70,31 +76,42 @@ const Navigation: React.FC = () => {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 border border-emerald-500/20 flex items-center justify-center text-emerald-500 group-hover:border-emerald-500/40 transition-colors">
               <BarChart2 size={20} strokeWidth={2} />
             </div>
-            <span className="font-semibold tracking-tight text-sm group-hover:text-emerald-50 transition-colors">NexGen</span>
+            <span className="font-semibold tracking-tight text-sm group-hover:text-emerald-50 transition-colors font-sans">NexGen</span>
           </Link>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-2 text-[14px] font-medium text-neutral-300">
-            <NavLink to="#solutions" className="hover:text-white transition-colors">Solutions</NavLink>
-            <NavLink to="#methodology" className="hover:text-white transition-colors">Méthode</NavLink>
-            <NavLink to="#pricing" className="hover:text-white transition-colors">Tarifs</NavLink>
-            <NavLink to="#faq" className="hover:text-white transition-colors">FAQ</NavLink>
+            <NavLink to="#solutions" className="hover:text-white transition-colors">{t.nav.solutions}</NavLink>
+            <NavLink to="#methodology" className="hover:text-white transition-colors">{t.nav.methodology}</NavLink>
+            <NavLink to="#pricing" className="hover:text-white transition-colors">{t.nav.pricing}</NavLink>
+            <NavLink to="#faq" className="hover:text-white transition-colors">{t.nav.faq}</NavLink>
           </div>
 
-          {/* Desktop CTA */}
-          <Link to="/login" className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[13px] font-semibold text-white transition-all group hover:border-emerald-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
-            Espace Client
-            <LogIn size={16} strokeWidth={2} className="group-hover:translate-x-0.5 transition-transform text-neutral-400 group-hover:text-emerald-400" />
-          </Link>
+          <div className="flex items-center gap-3">
+             {/* Language Switcher Desktop */}
+             <button 
+                onClick={toggleLanguage}
+                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/5 transition-all text-xs font-bold uppercase tracking-wider text-neutral-400 hover:text-white group"
+             >
+                <Globe size={14} className="group-hover:text-emerald-500 transition-colors"/>
+                <span>{language === 'fr' ? 'FR' : 'AR'}</span>
+             </button>
 
-          {/* Mobile Menu Toggle */}
-          <button 
-            className="md:hidden z-50 relative p-2 text-neutral-300 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-lg"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            {/* Desktop CTA */}
+            <Link to="/login" className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[13px] font-semibold text-white transition-all group hover:border-emerald-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+              {t.nav.login}
+              <LogIn size={16} strokeWidth={2} className={`group-hover:translate-x-0.5 transition-transform text-neutral-400 group-hover:text-emerald-400 ${dir === 'rtl' ? 'rotate-180 group-hover:-translate-x-0.5' : ''}`} />
+            </Link>
+
+            {/* Mobile Menu Toggle */}
+            <button 
+              className="md:hidden z-50 relative p-2 text-neutral-300 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-lg"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -109,10 +126,10 @@ const Navigation: React.FC = () => {
 
         <div className="flex flex-col h-full overflow-y-auto pb-10">
           <div className="flex flex-col gap-2 mb-8">
-            <NavLink to="#solutions" mobile>Solutions</NavLink>
-            <NavLink to="#methodology" mobile>Notre Méthode</NavLink>
-            <NavLink to="#pricing" mobile>Tarifs</NavLink>
-            <NavLink to="#faq" mobile>FAQ & Aide</NavLink>
+            <NavLink to="#solutions" mobile>{t.nav.solutions}</NavLink>
+            <NavLink to="#methodology" mobile>{t.nav.methodology}</NavLink>
+            <NavLink to="#pricing" mobile>{t.nav.pricing}</NavLink>
+            <NavLink to="#faq" mobile>{t.nav.faq}</NavLink>
             
             <div className="py-4 border-b border-white/5">
                 <Link 
@@ -120,9 +137,19 @@ const Navigation: React.FC = () => {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="text-3xl font-bold text-white flex items-center justify-between group"
                 >
-                    <span className="group-hover:text-emerald-400 transition-colors">Contact</span>
-                    <ChevronRight className="text-neutral-700 group-hover:text-emerald-500 transition-colors" />
+                    <span className="group-hover:text-emerald-400 transition-colors">{t.nav.contact}</span>
+                    <ChevronRight className={`text-neutral-700 group-hover:text-emerald-500 transition-colors ${dir === 'rtl' ? 'rotate-180' : ''}`} />
                 </Link>
+            </div>
+            
+            <div className="py-4">
+                <button 
+                    onClick={toggleLanguage}
+                    className="flex items-center gap-3 text-lg font-medium text-neutral-400 hover:text-white"
+                >
+                    <Globe size={20} />
+                    <span>{language === 'fr' ? 'Changer en Arabe (العربية)' : 'Passer en Français'}</span>
+                </button>
             </div>
           </div>
 
@@ -132,13 +159,13 @@ const Navigation: React.FC = () => {
               onClick={() => setIsMobileMenuOpen(false)}
               className="w-full flex items-center justify-center gap-3 px-6 py-5 bg-emerald-500 text-neutral-950 rounded-xl text-lg font-bold hover:bg-emerald-400 transition-all active:scale-[0.98]"
             >
-              Accéder à l'Espace Client
-              <LogIn size={20} strokeWidth={2.5} />
+              {t.nav.login}
+              <LogIn size={20} strokeWidth={2.5} className={dir === 'rtl' ? 'rotate-180' : ''}/>
             </Link>
             
             <div className="mt-8 flex justify-center gap-6 text-sm text-neutral-500">
-                <Link to="/legal" onClick={() => setIsMobileMenuOpen(false)}>Mentions</Link>
-                <Link to="/privacy" onClick={() => setIsMobileMenuOpen(false)}>Confidentialité</Link>
+                <Link to="/legal" onClick={() => setIsMobileMenuOpen(false)}>{t.footer.legal}</Link>
+                <Link to="/privacy" onClick={() => setIsMobileMenuOpen(false)}>{t.footer.privacy}</Link>
             </div>
           </div>
         </div>

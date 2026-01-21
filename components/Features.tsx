@@ -1,8 +1,11 @@
 import React from 'react';
 import { LayoutTemplate, MapPin, MessageCircle, FileText, Bot, BarChart3, TrendingUp, Smartphone } from 'lucide-react';
 import FadeIn from './FadeIn';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Features: React.FC = () => {
+  const { t, dir } = useLanguage();
+
   return (
     <section 
       id="solutions" 
@@ -18,11 +21,11 @@ const Features: React.FC = () => {
         <div className="text-center mb-20 lg:mb-24">
           <FadeIn>
             <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-6">
-              Une machine à vendre, <br className="hidden md:block" />
-              <span className="text-emerald-500">pas juste une vitrine.</span>
+              {t.features.header_title_1} <br className="hidden md:block" />
+              <span className="text-emerald-500">{t.features.header_title_2}</span>
             </h2>
             <p className="text-neutral-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-normal">
-              Chaque fonctionnalité NexGen est conçue pour capturer l'attention et transformer vos visiteurs en clients confirmés.
+              {t.features.header_desc}
             </p>
           </FadeIn>
         </div>
@@ -31,43 +34,43 @@ const Features: React.FC = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
           <FeatureCard 
             icon={<LayoutTemplate size={24} />}
-            title="Structure de Vente"
-            desc="Fini les sites brouillons. Nous déployons une architecture persuasive qui guide naturellement le visiteur vers le bouton d'action."
+            title={t.features.cards.structure.title}
+            desc={t.features.cards.structure.desc}
             delay={0}
           />
           <FeatureCard 
             icon={<MapPin size={24} />}
-            title="Domination Locale (SEO)"
-            desc="Soyez le premier résultat sur Google dans votre ville. Nous optimisons votre visibilité pour capter les clients de votre quartier."
+            title={t.features.cards.seo.title}
+            desc={t.features.cards.seo.desc}
             delay={100}
           />
           <FeatureCard 
             icon={<Smartphone size={24} />}
-            title="Boutons de Contact"
-            desc="Zéro friction. WhatsApp, Appel, ou RDV en un clic. Vos prospects peuvent vous joindre instantanément, où qu'ils soient."
+            title={t.features.cards.contact.title}
+            desc={t.features.cards.contact.desc}
             delay={200}
           />
           <FeatureCard 
             icon={<FileText size={24} />}
-            title="Formulaires Intelligents"
-            desc="Des formulaires courts et engageants qui se connectent à votre email. Ne ratez plus jamais une demande de devis."
+            title={t.features.cards.forms.title}
+            desc={t.features.cards.forms.desc}
             delay={300}
           />
           <FeatureCard 
             icon={<Bot size={24} />}
-            title="Chatbot & IA (24/7)"
-            desc="Un assistant virtuel qui accueille vos visiteurs, répond aux questions basiques et capture leurs coordonnées même la nuit."
+            title={t.features.cards.chatbot.title}
+            desc={t.features.cards.chatbot.desc}
             delay={400}
           />
           <FeatureCard 
             icon={<BarChart3 size={24} />}
-            title="Suivi de Performance"
-            desc="Plus de devinettes. Accédez à des statistiques claires sur vos visites et vos conversions depuis votre espace client."
+            title={t.features.cards.stats.title}
+            desc={t.features.cards.stats.desc}
             delay={500}
           />
         </div>
 
-        {/* Dashboard Visual Spotlight (Proof of Analytics/Space) */}
+        {/* Dashboard Visual Spotlight */}
         <div className="perspective-1000 w-full max-w-5xl mx-auto">
           <FadeIn delay={200} direction="up" className="h-full">
             <div className="text-center mb-10">
@@ -84,7 +87,7 @@ const Features: React.FC = () => {
 
                 {/* Fake Browser Header */}
                 <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-[#0f0f0f]">
-                  <div className="flex gap-2">
+                  <div className="flex gap-2" style={{ flexDirection: 'row', direction: 'ltr' }}>
                     <div className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E]"></div>
                     <div className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]"></div>
                     <div className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29]"></div>
@@ -96,7 +99,7 @@ const Features: React.FC = () => {
                 </div>
 
                 {/* Content */}
-                <div className="p-6 md:p-8 relative z-10 text-left">
+                <div className={`p-6 md:p-8 relative z-10 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
                   <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <div>
                       <h3 className="text-white font-semibold text-lg">Tableau de bord - Octobre</h3>
@@ -115,7 +118,7 @@ const Features: React.FC = () => {
                       <div className="text-[10px] uppercase tracking-widest text-emerald-500/80 mb-2 font-semibold">Leads (Devis/Appels)</div>
                       <div className="text-3xl font-bold text-white mb-1">42</div>
                       <div className="text-[10px] text-emerald-400 flex items-center gap-1 font-medium">
-                        <TrendingUp size={12} /> +8 cette semaine
+                        <TrendingUp size={12} className={dir === 'rtl' ? 'ml-1' : 'mr-1'}/> +8 cette semaine
                       </div>
                     </div>
                     <DashboardStat title="Taux de Conv." value="4.8%" change="+0.5%" neutral />
@@ -149,9 +152,7 @@ const FeatureCard = ({ icon, title, desc, delay }: { icon: React.ReactNode, titl
             {icon}
         </div>
         <div>
-          {/* H4 Typography: 20px (text-xl), Semibold (600) */}
           <h4 className="text-white text-xl font-semibold mb-2 group-hover:text-emerald-400 transition-colors">{title}</h4>
-          {/* Body Typography: Regular (400), Relaxed Leading */}
           <p className="text-sm text-neutral-400 leading-relaxed font-normal">{desc}</p>
         </div>
       </div>

@@ -1,32 +1,35 @@
 import React from 'react';
 import { Unlock, Headphones, Activity, Award, TrendingUp, LayoutDashboard } from 'lucide-react';
 import FadeIn from './FadeIn';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const TrustBar: React.FC = () => {
+  const { t } = useLanguage();
+
   const signals = [
     { 
       icon: <Unlock size={20} className="text-emerald-500" />, 
-      text: "Sans engagement" 
+      text: t.trustbar.no_commitment
     },
     { 
       icon: <Headphones size={20} className="text-emerald-500" />, 
-      text: "Support réel et continu" 
+      text: t.trustbar.support 
     },
     { 
       icon: <Activity size={20} className="text-emerald-500" />, 
-      text: "Site suivi dans le temps" 
+      text: t.trustbar.updates 
     },
     { 
       icon: <Award size={20} className="text-emerald-500" />, 
-      text: "Méthodologie Pro" 
+      text: t.trustbar.methodology 
     },
     { 
       icon: <TrendingUp size={20} className="text-emerald-500" />, 
-      text: "Résultats mesurables" 
+      text: t.trustbar.results 
     },
     { 
       icon: <LayoutDashboard size={20} className="text-emerald-500" />, 
-      text: "Espace client dédié" 
+      text: t.trustbar.dashboard 
     },
   ];
 
