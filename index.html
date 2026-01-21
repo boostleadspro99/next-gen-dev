@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth bg-[#050505]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NexGen - Sites Web Orientés Conversion. Créez, hébergez et optimisez votre machine à vendre.">
+    <title>NexGen — Sites Web Orientés Conversion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Performance: Use Variable Font to reduce HTTP requests and allow fine-grained weight control -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    fontSize: {
+                        // Typography Scale from Guide
+                        'xs': ['0.75rem', { lineHeight: '1rem' }],     // 12px
+                        'sm': ['0.875rem', { lineHeight: '1.4' }],    // 14px
+                        'base': ['1rem', { lineHeight: '1.5' }],      // 16px
+                        'lg': ['1.125rem', { lineHeight: '1.6' }],    // 18px (Body Large)
+                        'xl': ['1.25rem', { lineHeight: '1.6' }],     // 20px
+                        '2xl': ['1.5rem', { lineHeight: '1.3' }],     // 24px (H3)
+                        '3xl': ['1.875rem', { lineHeight: '1.25' }],  // 30px
+                        '4xl': ['2.25rem', { lineHeight: '1.2' }],    // 36px (H2)
+                        '5xl': ['3rem', { lineHeight: '1.1' }],       // 48px
+                        '6xl': ['3.75rem', { lineHeight: '1.1' }],    // 60px
+                        '7xl': ['4.5rem', { lineHeight: '1.05' }],    // 72px
+                        '8xl': ['6rem', { lineHeight: '1.05' }],      // 96px (Hero Impact)
+                    },
+                    letterSpacing: {
+                        tighter: '-0.04em',
+                        tight: '-0.02em', // Optimized for H1
+                        normal: '0em',
+                        wide: '0.025em',
+                    },
+                    colors: {
+                        // Optimised Palette for Dark Mode Contrast
+                        background: '#050505',
+                        surface: '#0F0F0F',
+                        emerald: {
+                            300: '#6ee7b7', // Good for hover text
+                            400: '#34d399', // PRIMARY ACCENT TEXT (Contrast > 4.5:1 on black)
+                            500: '#10b981', // PRIMARY BUTTON BG (Use with Black text)
+                            600: '#059669', // Hover state for buttons
+                            900: '#064e3b',
+                            950: '#022c22',
+                        },
+                        neutral: {
+                            300: '#d4d4d4', // Primary Body Text (High legibility)
+                            400: '#a3a3a3', // Secondary Text
+                            500: '#737373', // Placeholder / Disabled
+                            800: '#262626',
+                            900: '#171717',
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'glass': 'linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.00) 100%)',
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 4s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(15px)' }, // Reduced motion distance for perceived speed
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.3' },
+                            '50%': { opacity: '0.6' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            /* Typography Variables from Guide */
+            --font-weight-regular: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            --font-weight-extrabold: 800;
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #050505;
+            color: #d4d4d4; 
+            font-feature-settings: "cv11", "ss01"; /* Inter optimization for better legibility */
+        }
+
+        /* Typography Helper Classes based on Guide */
+        h1, .h1 { letter-spacing: -0.02em; font-weight: var(--font-weight-extrabold); }
+        h2, .h2 { letter-spacing: -0.015em; font-weight: var(--font-weight-bold); }
+        h3, .h3 { letter-spacing: -0.01em; font-weight: var(--font-weight-bold); }
+        p, .body-text { letter-spacing: 0em; }
+
+        /* Refined Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 5px; border: 2px solid #050505; }
+        ::-webkit-scrollbar-thumb:hover { background: #404040; }
+        
+        /* Accessibility: High Visibility Focus State */
+        :focus-visible {
+            outline: 2px solid #34d399; /* Emerald 400 */
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Utility for screen readers */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react/": "https://esm.sh/react@18.2.0/",
+    "react-dom": "https://esm.sh/react-dom@18.2.0",
+    "react-dom/": "https://esm.sh/react-dom@18.2.0/",
+    "lucide-react": "https://esm.sh/lucide-react@0.344.0?deps=react@18.2.0",
+    "react-router-dom": "https://esm.sh/react-router-dom@6.22.3?deps=react@18.2.0,react-dom@18.2.0",
+    "react-router": "https://esm.sh/react-router@6.22.3?deps=react@18.2.0",
+    "@remix-run/router": "https://esm.sh/@remix-run/router@1.15.3"
+  }
+}
+</script>
+</head>
+<body class="relative overflow-x-hidden selection:bg-emerald-500/30 selection:text-emerald-50">
+    <div id="root"></div>
+</body>
+</html>
