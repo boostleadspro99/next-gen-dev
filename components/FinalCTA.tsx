@@ -19,7 +19,7 @@ const FinalCTA: React.FC = () => {
             <span className="text-emerald-500">{t.finalCTA.title_2}</span>
           </h2>
           
-          <p className="text-neutral-400 text-lg font-light mb-10 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-neutral-400 text-xl font-light mb-10 max-w-2xl mx-auto leading-relaxed">
             {t.finalCTA.desc}
           </p>
 
@@ -41,10 +41,10 @@ const FinalCTA: React.FC = () => {
             </a>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-sm text-neutral-500">
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-base text-neutral-500">
              {t.finalCTA.features.map((feature, index) => (
                 <div key={index} className="flex items-center gap-2">
-                    <CheckCircle2 size={16} className="text-emerald-500" />
+                    <CheckCircle2 size={18} className="text-emerald-500" />
                     <span>{feature}</span>
                 </div>
              ))}

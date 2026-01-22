@@ -13,7 +13,8 @@ const Hero: React.FC = () => {
       {/* Background radial gradient accent */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-emerald-500/10 rounded-[100%] blur-[120px] -z-10 pointer-events-none opacity-50"></div>
 
-      <div className="max-w-5xl mx-auto flex flex-col items-center">
+      {/* Increased max-width to allow larger text on desktop without wrapping */}
+      <div className="max-w-7xl mx-auto flex flex-col items-center">
         {/* Badge */}
         <FadeIn delay={0}>
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/30 border border-emerald-500/20 mb-8 hover:border-emerald-400/40 transition-colors cursor-default backdrop-blur-sm group">
@@ -30,8 +31,8 @@ const Hero: React.FC = () => {
           <h1 className={`
             font-extrabold text-white tracking-tight mb-8 
             ${isRTL 
-                ? 'text-4xl md:text-6xl lg:text-7xl leading-[1.4] md:leading-[1.3]' 
-                : 'text-5xl md:text-7xl lg:text-8xl leading-[1.1] md:leading-[1.05]'
+                ? 'text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.4] md:leading-[1.3]' 
+                : 'text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.1] md:leading-[1.1]'
             }
           `}>
             {t.hero.title_1} <br className="hidden md:block" /> 
@@ -39,9 +40,9 @@ const Hero: React.FC = () => {
           </h1>
         </FadeIn>
 
-        {/* Subheadline */}
+        {/* Subheadline - Increased font size */}
         <FadeIn delay={200}>
-          <p className="text-lg md:text-xl text-neutral-300 font-normal max-w-2xl mx-auto mb-12 leading-relaxed">
+          <p className="text-xl md:text-2xl text-neutral-300 font-normal max-w-3xl mx-auto mb-12 leading-relaxed">
             {t.hero.subtitle}
           </p>
         </FadeIn>

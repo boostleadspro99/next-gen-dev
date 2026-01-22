@@ -14,7 +14,7 @@ const Pricing: React.FC = () => {
             <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-6">
               {t.pricing.title_1} <span className="text-emerald-400">{t.pricing.title_2}</span>.
             </h2>
-            <p className="text-neutral-300 text-base md:text-lg max-w-2xl mx-auto font-normal leading-relaxed">
+            <p className="text-neutral-300 text-lg md:text-xl max-w-2xl mx-auto font-normal leading-relaxed">
               {t.pricing.subtitle}
             </p>
           </FadeIn>
@@ -55,13 +55,13 @@ const Pricing: React.FC = () => {
                         <div className="text-emerald-400 font-bold tracking-wider uppercase text-sm mb-2 flex items-center gap-2">
                              <Zap size={18} className="fill-emerald-400 text-emerald-400" /> {t.pricing.packs.boost.title}
                         </div>
-                        <p className="text-neutral-300 text-sm mb-6 font-normal">{t.pricing.packs.boost.subtitle}</p>
+                        <p className="text-neutral-300 text-base mb-6 font-normal">{t.pricing.packs.boost.subtitle}</p>
                         
                         <div className="flex items-baseline gap-1.5">
                             <span className="text-5xl lg:text-6xl font-extrabold text-white tracking-tight">{t.pricing.packs.boost.price}</span>
-                            <span className="text-base text-neutral-400 font-medium">/mois</span>
+                            <span className="text-lg text-neutral-400 font-medium">/mois</span>
                         </div>
-                        <div className="text-[12px] text-emerald-200 mt-4 font-medium px-3 py-2 bg-emerald-900/30 rounded-lg inline-block border border-emerald-500/30">
+                        <div className="text-[13px] text-emerald-200 mt-4 font-medium px-3 py-2 bg-emerald-900/30 rounded-lg inline-block border border-emerald-500/30">
                             + {t.pricing.packs.boost.setup} {t.pricing.setup_label}
                         </div>
                     </div>
@@ -72,8 +72,8 @@ const Pricing: React.FC = () => {
 
                     <ul className="space-y-4 flex-grow">
                     {t.pricing.packs.boost.features.map((item, i) => (
-                        <li key={i} className="flex items-start gap-3 text-sm text-neutral-200">
-                        <CheckCircle2 size={20} className="text-emerald-500 fill-emerald-500/10 shrink-0 mt-0.5" />
+                        <li key={i} className="flex items-start gap-3 text-base text-neutral-200">
+                        <CheckCircle2 size={22} className="text-emerald-500 fill-emerald-500/10 shrink-0 mt-0.5" />
                         <span className="font-medium leading-relaxed">{item}</span>
                         </li>
                     ))}
@@ -117,14 +117,14 @@ interface PricingCardProps {
 const PricingCard: React.FC<PricingCardProps> = ({ title, subtitle, price, setup, setupLabel, cta, features, isBusiness }) => (
   <div className="bg-white/[0.02] backdrop-blur-xl p-8 lg:p-10 rounded-2xl border border-white/10 hover:border-white/20 transition-colors relative h-full flex flex-col hover:bg-white/[0.04] group">
     <div className="mb-8">
-      <h3 className="text-xl font-bold text-white tracking-wide group-hover:text-emerald-400 transition-colors">{title}</h3>
-      <p className="text-neutral-400 text-sm mb-6 mt-1 font-normal">{subtitle}</p>
+      <h3 className="text-2xl font-bold text-white tracking-wide group-hover:text-emerald-400 transition-colors">{title}</h3>
+      <p className="text-neutral-400 text-base mb-6 mt-1 font-normal">{subtitle}</p>
       
       <div className="flex items-baseline gap-1.5">
         <span className="text-4xl lg:text-5xl font-bold text-white tracking-tight">{price}</span>
-        <span className="text-sm text-neutral-500 font-medium">/mois</span>
+        <span className="text-base text-neutral-500 font-medium">/mois</span>
       </div>
-      <div className="text-[12px] text-neutral-400 mt-4 font-medium bg-white/5 px-3 py-2 rounded-lg inline-block border border-white/10">
+      <div className="text-[13px] text-neutral-400 mt-4 font-medium bg-white/5 px-3 py-2 rounded-lg inline-block border border-white/10">
         {setup !== "Sur devis" && setup !== "حسب الطلب" ? `+ ${setup} ${setupLabel}` : `+ ${setup}`}
       </div>
     </div>
@@ -135,8 +135,8 @@ const PricingCard: React.FC<PricingCardProps> = ({ title, subtitle, price, setup
     
     <ul className="space-y-4 flex-grow">
       {features.map((item, i) => (
-        <li key={i} className="flex items-start gap-3 text-sm text-neutral-300">
-          <Check size={18} strokeWidth={2.5} className="mt-0.5 text-neutral-600 shrink-0 group-hover:text-emerald-500 transition-colors" />
+        <li key={i} className="flex items-start gap-3 text-base text-neutral-300">
+          <Check size={20} strokeWidth={2.5} className="mt-0.5 text-neutral-600 shrink-0 group-hover:text-emerald-500 transition-colors" />
           <span className="leading-relaxed font-normal">{item}</span>
         </li>
       ))}

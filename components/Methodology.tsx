@@ -51,7 +51,7 @@ const Methodology: React.FC = () => {
             <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">
               {t.methodology.title_1} <span className="text-emerald-400">{t.methodology.title_2}</span>.
             </h2>
-            <p className="text-neutral-400 text-lg max-w-2xl mx-auto font-light leading-relaxed">
+            <p className="text-neutral-400 text-xl max-w-3xl mx-auto font-light leading-relaxed">
               {t.methodology.subtitle}
             </p>
           </div>
@@ -111,7 +111,7 @@ const Methodology: React.FC = () => {
                       </h3>
                     </div>
                     
-                    <p className="text-sm lg:text-base text-neutral-400 leading-relaxed font-normal group-hover:text-neutral-300 transition-colors">
+                    <p className="text-base lg:text-lg text-neutral-400 leading-relaxed font-normal group-hover:text-neutral-300 transition-colors">
                       {step.desc}
                     </p>
 

@@ -10,7 +10,7 @@ const Legal: React.FC = () => {
           <div className="h-1 w-20 bg-emerald-500 rounded-full mb-12"></div>
         </FadeIn>
 
-        <div className="space-y-12 text-neutral-400 font-light leading-relaxed text-sm md:text-base">
+        <div className="space-y-12 text-neutral-400 font-light leading-relaxed text-base md:text-lg">
           <FadeIn delay={100}>
             <section className="bg-white/[0.02] border border-white/5 p-8 rounded-2xl">
               <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">

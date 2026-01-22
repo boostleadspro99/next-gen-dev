@@ -16,12 +16,12 @@ const Footer: React.FC = () => {
           <span className="font-semibold text-white text-sm tracking-tight group-hover:text-emerald-400 transition-colors font-sans">NexGen Digital</span>
         </Link>
         
-        <p className="text-xs text-neutral-500 mb-10 max-w-sm mx-auto leading-relaxed">
+        <p className="text-sm text-neutral-500 mb-10 max-w-sm mx-auto leading-relaxed">
           {t.footer.desc}
         </p>
 
         <nav aria-label="Footer Navigation">
-            <ul className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[11px] text-neutral-500 font-medium tracking-wide uppercase">
+            <ul className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-xs text-neutral-500 font-medium tracking-wide uppercase">
                 <li><Link to="/cgv" className="hover:text-emerald-500 transition-colors duration-300">{t.footer.cgv}</Link></li>
                 <li><Link to="/legal" className="hover:text-emerald-500 transition-colors duration-300">{t.footer.legal}</Link></li>
                 <li><Link to="/privacy" className="hover:text-emerald-500 transition-colors duration-300">{t.footer.privacy}</Link></li>
@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
             </ul>
         </nav>
         
-        <div className="mt-12 pt-8 border-t border-white/5 text-[10px] text-neutral-700">
+        <div className="mt-12 pt-8 border-t border-white/5 text-[11px] text-neutral-700">
           © {new Date().getFullYear()} NexGen Digital. {t.footer.rights}
         </div>
       </div>

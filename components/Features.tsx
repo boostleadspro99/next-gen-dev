@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutTemplate, MapPin, MessageCircle, FileText, Bot, BarChart3, TrendingUp, Smartphone } from 'lucide-react';
+import { LayoutTemplate, MapPin, MessageCircle, FileText, Bot, BarChart3, CheckCircle2, LayoutDashboard, Smartphone, Globe, ExternalLink, MessageSquare, LogOut, ChevronRight, Clock } from 'lucide-react';
 import FadeIn from './FadeIn';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -24,7 +24,7 @@ const Features: React.FC = () => {
               {t.features.header_title_1} <br className="hidden md:block" />
               <span className="text-emerald-500">{t.features.header_title_2}</span>
             </h2>
-            <p className="text-neutral-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-normal">
+            <p className="text-neutral-400 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-normal">
               {t.features.header_desc}
             </p>
           </FadeIn>
@@ -70,7 +70,7 @@ const Features: React.FC = () => {
           />
         </div>
 
-        {/* Dashboard Visual Spotlight */}
+        {/* Dashboard Visual Spotlight - Updated to Match Real App UI exactly */}
         <div className="perspective-1000 w-full max-w-5xl mx-auto">
           <FadeIn delay={200} direction="up" className="h-full">
             <div className="text-center mb-10">
@@ -79,61 +79,114 @@ const Features: React.FC = () => {
               </span>
             </div>
             
-            <div className="relative rounded-2xl p-2 bg-gradient-to-b from-white/10 to-white/0 border border-white/10 shadow-2xl backdrop-blur-sm lg:rotate-x-6 hover:rotate-0 transition-transform duration-700 ease-out">
-              <div className="bg-[#0A0A0A] rounded-xl overflow-hidden border border-white/5 h-full relative shadow-inner">
+            <div className="relative rounded-2xl p-2 bg-gradient-to-b from-slate-200 to-slate-500/20 border border-slate-200/20 shadow-2xl backdrop-blur-sm lg:rotate-x-6 hover:rotate-0 transition-transform duration-700 ease-out">
+              <div className="bg-slate-50 rounded-xl overflow-hidden border border-slate-200 h-full relative shadow-inner font-sans">
                 
-                {/* Glass Reflection Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent pointer-events-none z-20 opacity-50"></div>
-
                 {/* Fake Browser Header */}
-                <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-[#0f0f0f]">
-                  <div className="flex gap-2" style={{ flexDirection: 'row', direction: 'ltr' }}>
-                    <div className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E]"></div>
-                    <div className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]"></div>
-                    <div className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29]"></div>
+                <div className="px-4 py-3 border-b border-slate-200 flex items-center gap-4 bg-white">
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F56] border border-[#E0443E]"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] border border-[#DEA123]"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#27C93F] border border-[#1AAB29]"></div>
                   </div>
-                  <div className="hidden sm:flex px-4 py-1 bg-black/50 rounded-full border border-white/5 text-[10px] text-neutral-500 font-mono items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                  <div className="flex-1 bg-slate-100 rounded-md py-1 px-3 text-[10px] text-slate-500 font-medium text-center border border-slate-200 flex items-center justify-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
                     app.nexgen.com/dashboard
                   </div>
                 </div>
 
-                {/* Content */}
-                <div className={`p-6 md:p-8 relative z-10 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
-                  <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                {/* REAL APP DASHBOARD REPLICA */}
+                <div className="p-6 md:p-8 bg-slate-50 text-left">
+                  
+                  {/* Header Section */}
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
                     <div>
-                      <h3 className="text-white font-semibold text-lg">Tableau de bord - Octobre</h3>
-                      <p className="text-xs text-neutral-500">Données mises à jour en temps réel</p>
+                      <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Espace Client</h2>
+                      <p className="text-slate-500 mt-1 flex items-center gap-2 text-sm">
+                        Compte : <span className="text-slate-900 font-medium">Alex Rénovation SARL</span>
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] border border-emerald-200 font-bold uppercase tracking-wider">Client Premium</span>
+                      </p>
                     </div>
                     <div className="flex gap-2">
-                        <button className="px-3 py-1.5 bg-emerald-500 text-black text-xs font-bold rounded hover:bg-emerald-400 transition-colors">
-                            Demander une modif'
-                        </button>
+                       <div className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 flex items-center gap-2 shadow-sm">
+                          <Globe size={14} className="text-slate-400" />
+                          Voir mon site
+                          <ExternalLink size={10} className="text-slate-400" />
+                       </div>
+                       <div className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold flex items-center gap-2 shadow-sm">
+                          <MessageSquare size={14} />
+                          Nouveau Ticket
+                       </div>
+                       <div className="px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-500 shadow-sm">
+                          <LogOut size={14} />
+                       </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <DashboardStat title="Visiteurs Uniques" value="2,840" change="+12%" />
-                    <div className="p-4 bg-emerald-500/5 rounded-xl border border-emerald-500/20 relative overflow-hidden group col-span-2 md:col-span-1">
-                      <div className="text-[10px] uppercase tracking-widest text-emerald-500/80 mb-2 font-semibold">Leads (Devis/Appels)</div>
-                      <div className="text-3xl font-bold text-white mb-1">42</div>
-                      <div className="text-[10px] text-emerald-400 flex items-center gap-1 font-medium">
-                        <TrendingUp size={12} className={dir === 'rtl' ? 'ml-1' : 'mr-1'}/> +8 cette semaine
-                      </div>
+                  {/* PROJECT PROGRESS CARD */}
+                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-6 relative overflow-hidden">
+                     {/* Light Accent */}
+                     <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-[40px] pointer-events-none opacity-60"></div>
+                     
+                     <div className="flex items-center justify-between mb-8 relative z-10">
+                        <h3 className="font-semibold text-slate-900 flex items-center gap-2 text-sm">
+                            <LayoutDashboard size={16} className="text-emerald-600" />
+                            Avancement du Projet
+                        </h3>
+                        <span className="text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                            Phase 3 : Développement en cours
+                        </span>
                     </div>
-                    <DashboardStat title="Taux de Conv." value="4.8%" change="+0.5%" neutral />
-                     <DashboardStat title="Temps sur site" value="2m 14s" />
+
+                    {/* Timeline Replica */}
+                    <div className="relative z-10 px-2">
+                        <div className="hidden md:block absolute top-3.5 left-0 w-full h-0.5 bg-slate-100 z-0"></div>
+                        <div className="flex flex-col md:flex-row justify-between relative gap-6 md:gap-0">
+                            <TimelineStep step="1" title="Audit & Stratégie" date="Complété le 10 Oct" status="completed" />
+                            <TimelineStep step="2" title="Design & Maquettes" date="Validé le 15 Oct" status="completed" />
+                            <TimelineStep step="3" title="Développement" date="Livraison : 28 Oct" status="current" />
+                            <TimelineStep step="4" title="Mise en ligne" date="En attente" status="pending" />
+                        </div>
+                    </div>
                   </div>
 
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-[11px] text-neutral-500 px-2 uppercase tracking-wider font-semibold mb-2">
-                      <span>Dernières conversions capturées</span>
-                      <span className="hidden sm:block">Source</span>
+                  {/* TICKETS CARD */}
+                  <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                        <h3 className="font-semibold text-slate-900 flex items-center gap-2 text-sm">
+                            <MessageSquare size={16} className="text-slate-400" />
+                            Derniers Tickets Support
+                        </h3>
+                        <span className="text-[10px] text-slate-500 font-medium cursor-pointer">Voir l'historique</span>
                     </div>
-                    <LeadItem initials="JD" color="blue" name="Jean Dupont" action="Formulaire de devis" source="Google Ads" time="Il y a 2 min" />
-                    <LeadItem initials="SM" color="purple" name="Sarah Martin" action="Clic Bouton Appel" source="SEO Local" time="Il y a 1h" />
-                    <LeadItem initials="LR" color="orange" name="Lucas Roux" action="Message WhatsApp" source="Instagram" time="Il y a 3h" />
+                    <div className="p-0">
+                        <div className="grid grid-cols-1 divide-y divide-slate-50">
+                             <div className="px-6 py-3 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                                <div>
+                                    <div className="text-xs font-bold text-slate-900">Modification horaire footer</div>
+                                    <div className="text-[10px] text-slate-500">#2930 • Aujourd'hui</div>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <span className="text-[10px] text-slate-500 hidden sm:block">Basse</span>
+                                    <span className="px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded border border-blue-100">En cours</span>
+                                    <ChevronRight size={14} className="text-slate-300" />
+                                </div>
+                             </div>
+                             <div className="px-6 py-3 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                                <div>
+                                    <div className="text-xs font-bold text-slate-900">Problème formulaire contact</div>
+                                    <div className="text-[10px] text-slate-500">#2812 • 12 Oct 2023</div>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <span className="text-[10px] text-slate-500 hidden sm:block">Haute</span>
+                                    <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded border border-emerald-200">Résolu</span>
+                                    <ChevronRight size={14} className="text-slate-300" />
+                                </div>
+                             </div>
+                        </div>
+                    </div>
                   </div>
+
                 </div>
               </div>
             </div>
@@ -144,56 +197,36 @@ const Features: React.FC = () => {
   );
 };
 
+const TimelineStep = ({ step, title, date, status }: { step: string, title: string, date: string, status: 'completed' | 'current' | 'pending' }) => {
+    const bg = status === 'completed' ? 'bg-emerald-600 text-white border-emerald-600' : status === 'current' ? 'bg-white text-emerald-600 border-emerald-500 ring-4 ring-emerald-50' : 'bg-white text-slate-300 border-slate-200';
+    
+    return (
+        <div className="flex flex-row md:flex-col items-center gap-3 md:gap-2 relative z-10">
+            <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-[10px] border-2 transition-all ${bg}`}>
+                {status === 'completed' ? <CheckCircle2 size={12} /> : step}
+            </div>
+            <div className="md:text-center">
+                <div className={`text-xs font-bold ${status === 'pending' ? 'text-slate-400' : 'text-slate-900'}`}>{title}</div>
+                <div className="text-[10px] text-slate-400">{date}</div>
+            </div>
+        </div>
+    )
+}
+
 const FeatureCard = ({ icon, title, desc, delay }: { icon: React.ReactNode, title: string, desc: string, delay: number }) => (
   <FadeIn delay={delay}>
-    <div className="h-full bg-white/[0.02] backdrop-blur-sm border border-white/5 p-6 rounded-2xl hover:bg-white/5 transition-all duration-300 hover:border-emerald-500/20 hover:shadow-[0_0_30px_-10px_rgba(16,185,129,0.1)] group">
-      <div className="flex flex-col gap-4">
-        <div className="w-12 h-12 rounded-lg bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform duration-300 group-hover:bg-emerald-500 group-hover:text-black">
+    <div className="h-full bg-white/[0.02] backdrop-blur-sm border border-white/5 p-8 rounded-2xl hover:bg-white/5 transition-all duration-300 hover:border-emerald-500/20 hover:shadow-[0_0_30px_-10px_rgba(16,185,129,0.1)] group">
+      <div className="flex flex-col gap-5">
+        <div className="w-14 h-14 rounded-xl bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform duration-300 group-hover:bg-emerald-500 group-hover:text-black">
             {icon}
         </div>
         <div>
-          <h4 className="text-white text-xl font-semibold mb-2 group-hover:text-emerald-400 transition-colors">{title}</h4>
-          <p className="text-sm text-neutral-400 leading-relaxed font-normal">{desc}</p>
+          <h4 className="text-white text-xl font-semibold mb-3 group-hover:text-emerald-400 transition-colors">{title}</h4>
+          <p className="text-base text-neutral-400 leading-relaxed font-normal">{desc}</p>
         </div>
       </div>
     </div>
   </FadeIn>
 );
-
-const DashboardStat = ({ title, value, change, neutral }: { title: string, value: string, change?: string, neutral?: boolean }) => (
-  <div className="p-4 bg-white/[0.03] rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-    <div className="text-[10px] uppercase tracking-widest text-neutral-500 mb-2 font-semibold">{title}</div>
-    <div className="text-2xl lg:text-3xl font-bold text-white mb-1">{value}</div>
-    {change && (
-      <div className={`text-[10px] ${neutral ? 'text-emerald-400' : 'text-neutral-400'} flex items-center gap-1 font-medium`}>
-        {change}
-      </div>
-    )}
-  </div>
-);
-
-const LeadItem = ({ initials, color, name, action, source, time }: { initials: string, color: string, name: string, action: string, source: string, time: string }) => {
-    const colorClasses = {
-        blue: 'bg-blue-500/20 text-blue-400 border-blue-500/20',
-        purple: 'bg-purple-500/20 text-purple-400 border-purple-500/20',
-        orange: 'bg-orange-500/20 text-orange-400 border-orange-500/20'
-    }[color] || 'bg-gray-500/20 text-gray-400';
-
-    return (
-        <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/5 hover:bg-white/5 transition-colors group cursor-default">
-            <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-full ${colorClasses} border flex items-center justify-center text-[10px] font-bold`}>{initials}</div>
-                <div>
-                    <div className="text-sm font-medium text-white flex items-center gap-2">
-                        {name}
-                        <span className="text-[10px] text-neutral-600 font-normal">• {time}</span>
-                    </div>
-                    <div className="text-[11px] text-neutral-500 group-hover:text-neutral-400 transition-colors">{action}</div>
-                </div>
-            </div>
-            <div className="hidden sm:block px-2 py-0.5 rounded bg-white/5 text-[10px] text-neutral-400 font-medium border border-white/5">{source}</div>
-        </div>
-    )
-}
 
 export default Features;

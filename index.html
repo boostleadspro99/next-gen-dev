@@ -10,8 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Performance: Use Variable Font to reduce HTTP requests -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <!-- Arabic Font: Tajwal (Modern, Clean, High Legibility) -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajwal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <!-- Arabic Font: Beiruti (Strong Display & Legible Body) -->
+    <link href="https://fonts.googleapis.com/css2?family=Beiruti:wght@200..900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -19,7 +19,7 @@
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
-                        arabic: ['Tajwal', 'sans-serif'],
+                        arabic: ['Beiruti', 'sans-serif'],
                     },
                     fontSize: {
                         // Typography Scale from Guide
@@ -115,7 +115,7 @@
         
         /* Arabic overrides */
         html[lang="ar"] h1, html[lang="ar"] h2, html[lang="ar"] h3, html[lang="ar"] p, html[lang="ar"] body {
-            font-family: 'Tajwal', sans-serif;
+            font-family: 'Beiruti', sans-serif;
             letter-spacing: 0em; /* Arabic connects letters, no negative spacing */
         }
 

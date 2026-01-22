@@ -22,7 +22,7 @@ const FAQ: React.FC = () => {
             <h2 className="text-3xl font-semibold text-white tracking-tight mb-4">
               {t.faq.title}
             </h2>
-            <p className="text-neutral-400 font-light">
+            <p className="text-neutral-400 text-lg font-light">
               {t.faq.subtitle}
             </p>
           </div>
@@ -34,12 +34,12 @@ const FAQ: React.FC = () => {
               <div className={`border rounded-xl bg-white/[0.02] overflow-hidden transition-colors duration-300 ${openIndex === index ? 'border-emerald-500/30 bg-emerald-900/5' : 'border-white/5 hover:border-white/10'}`}>
                 <button 
                   onClick={() => toggleAccordion(index)}
-                  className={`w-full flex items-center justify-between p-6 text-sm md:text-base font-medium text-white hover:bg-white/5 transition-colors focus:outline-none ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
+                  className={`w-full flex items-center justify-between p-6 text-base md:text-lg font-medium text-white hover:bg-white/5 transition-colors focus:outline-none ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
                   aria-expanded={openIndex === index}
                 >
                   <span className={openIndex === index ? 'text-emerald-400' : 'text-neutral-200'}>{faq.question}</span>
                   <ChevronDown 
-                    size={18} 
+                    size={20} 
                     className={`text-neutral-500 transition-transform duration-300 ${openIndex === index ? 'rotate-180 text-emerald-500' : ''}`} 
                   />
                 </button>
@@ -47,7 +47,7 @@ const FAQ: React.FC = () => {
                   className={`grid transition-[grid-template-rows] duration-300 ease-out ${openIndex === index ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
                 >
                   <div className="overflow-hidden">
-                    <div className="p-6 pt-0 text-sm text-neutral-400 font-light leading-relaxed border-t border-white/5 mt-2">
+                    <div className="p-6 pt-0 text-base text-neutral-400 font-light leading-relaxed border-t border-white/5 mt-2">
                       {faq.answer}
                     </div>
                   </div>

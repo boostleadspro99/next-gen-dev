@@ -30,12 +30,12 @@ const ProblemSolution: React.FC = () => {
                 {t.problemSolution.title_1} <br /><span className="text-red-400">{t.problemSolution.title_2}</span>
               </h2>
               <p 
-                className="text-neutral-400 text-lg mb-10 leading-relaxed"
+                className="text-neutral-400 text-xl mb-10 leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: t.problemSolution.desc }}
               ></p>
             </FadeIn>
             
-            <div className="grid sm:grid-cols-2 gap-x-4 gap-y-8 pb-8">
+            <div className="grid sm:grid-cols-2 gap-x-6 gap-y-10 pb-8">
               {t.problemSolution.problems.map((problem, index) => (
                 <ProblemItem 
                   key={index}
@@ -67,19 +67,19 @@ const ProblemSolution: React.FC = () => {
                     </div>
                     <div>
                       <h3 className="text-2xl md:text-3xl font-semibold text-white tracking-tight">{t.problemSolution.solution.title}</h3>
-                      <p className="text-emerald-500 text-sm font-medium mt-1">{t.problemSolution.solution.subtitle}</p>
+                      <p className="text-emerald-500 text-base font-medium mt-1">{t.problemSolution.solution.subtitle}</p>
                     </div>
                   </div>
 
                   <p 
-                    className={`text-neutral-300 text-base md:text-lg leading-relaxed mb-12 border-emerald-500/50 ${dir === 'rtl' ? 'border-r-2 pr-6' : 'border-l-2 pl-6'}`}
+                    className={`text-neutral-300 text-lg md:text-xl leading-relaxed mb-12 border-emerald-500/50 ${dir === 'rtl' ? 'border-r-2 pr-6' : 'border-l-2 pl-6'}`}
                     dangerouslySetInnerHTML={{ __html: t.problemSolution.solution.desc }}
                   ></p>
 
                   <ul className="space-y-5">
                     {t.problemSolution.solution.features.map((item, i) => (
-                      <li key={i} className="flex items-start gap-4 text-sm md:text-base text-neutral-200 group/item">
-                        <CheckCircle2 size={20} className="text-emerald-500 fill-emerald-500/10 shrink-0 mt-0.5 group-hover/item:scale-110 transition-transform" />
+                      <li key={i} className="flex items-start gap-4 text-base md:text-lg text-neutral-200 group/item">
+                        <CheckCircle2 size={24} className="text-emerald-500 fill-emerald-500/10 shrink-0 mt-0.5 group-hover/item:scale-110 transition-transform" />
                         <span className="leading-snug">{item}</span>
                       </li>
                     ))}
@@ -108,8 +108,8 @@ const ProblemItem: React.FC<ProblemItemProps> = ({ icon, title, desc, delay }) =
         {icon}
       </div>
       <div>
-        <h3 className="text-white text-base font-medium mb-1.5 group-hover:text-red-100 transition-colors">{title}</h3>
-        <p className="text-neutral-500 text-sm leading-relaxed group-hover:text-neutral-400 transition-colors">{desc}</p>
+        <h3 className="text-white text-lg font-medium mb-1.5 group-hover:text-red-100 transition-colors">{title}</h3>
+        <p className="text-neutral-500 text-base leading-relaxed group-hover:text-neutral-400 transition-colors">{desc}</p>
       </div>
     </div>
   </FadeIn>
