@@ -75,6 +75,96 @@ export const translations = {
         ]
       }
     },
+    simulator: {
+      preheader: "Simulateur de Rentabilité",
+      title_1: "Combien votre site web",
+      title_2: "devrait-il vous rapporter ?",
+      desc: "Répondez à quelques questions sur votre activité, votre ville et vos objectifs. Notre IA (Gemini 3 Pro) croise les données locales pour estimer votre potentiel de chiffre d'affaires.",
+      cta_primary: "Lancer la simulation",
+      cta_secondary: "Voir la méthodologie IA",
+      badge_1: "Analysé par Gemini 3 Pro",
+      badge_2: "Données marché temps réel",
+      card: {
+        title: "EXEMPLE DE RAPPORT",
+        subtitle: "Secteur : Rénovation • Ville : Casablanca",
+        tag_1: "Analyse : 30s",
+        tag_2: "Précision : Haute",
+        step_1_title: "Volume de Recherche",
+        step_1_val: "4,500 / mois",
+        step_1_desc: "Clients cherchant activement vos services dans votre zone.",
+        step_2_title: "Conversion Estimée",
+        step_2_val: "+15 à 25 Leads",
+        step_2_desc: "Demandes de devis qualifiées générées par le système NexGen.",
+        step_3_title: "Potentiel CA",
+        step_3_val: "+120k MAD / an",
+        step_3_desc: "Chiffre d'affaires additionnel estimé basé sur votre panier moyen.",
+        footer: "entrepreneurs ont simulé leur potentiel cette semaine.",
+        footer_sub: "Simulation gratuite et sans inscription."
+      }
+    },
+    simulatorPage: {
+        back: "Quitter le simulateur",
+        steps: {
+            1: "Activité",
+            2: "Objectifs",
+            3: "Finances",
+            4: "Analyse IA"
+        },
+        form: {
+            sector_label: "Quel est votre métier ou secteur ?",
+            sector_placeholder: "Ex: Plombier, Avocat, Menuisier...",
+            location_label: "Où exercez-vous ?",
+            city_placeholder: "Ville (ex: Casablanca)",
+            country_placeholder: "Pays (ex: Maroc)",
+            objective_label: "Quel est votre objectif principal ?",
+            objectives: {
+                calls: "Recevoir des Appels",
+                whatsapp: "Messages WhatsApp",
+                booking: "Réservations / RDV",
+                orders: "Commandes en ligne"
+            },
+            ticket_label: "Panier moyen d'une vente (MAD) ?",
+            currency: "MAD",
+            margin_label: "Marge nette estimée (%)",
+            margin_sublabel: "Optionnel. Par défaut, nous utilisons une moyenne sectorielle.",
+            site_label: "Avez-vous déjà un site web ?",
+            button_next: "Continuer",
+            button_analyze: "Lancer l'analyse Gemini"
+        },
+        loading: {
+            title: "Gemini analyse votre marché...",
+            step1: "Scan des volumes de recherche à",
+            step2: "Estimation du CPC et CTR local...",
+            step3: "Calcul des taux de conversion...",
+            step4: "Projection du ROI sur 12 mois..."
+        },
+        results: {
+            badge: "Analyse de rentabilité terminée",
+            title: "Votre Potentiel Mensuel",
+            subtitle: "Projection basée sur le Chiffre d'Affaires (CA) estimé.",
+            likely_label: "Scénario Probable",
+            range_label: "Fourchette estimée :",
+            months: "Mois",
+            timeline: {
+                title: "Trajectoire de Croissance",
+                phase1: "Montée progressive",
+                phase2: "Stabilisation",
+                phase3: "Plein potentiel"
+            },
+            recommendation: {
+                title: "Pack recommandé pour votre activité :",
+                reason_label: "Pourquoi ce choix ?",
+                plans: {
+                    presence: "Pack Présence",
+                    boost: "Pack BOOST ⭐",
+                    business: "Pack Business"
+                }
+            },
+            cta_whatsapp: "Recevoir le plan sur WhatsApp",
+            cta_expert: "Parler à un expert NexGen",
+            ai_insight: "L'avis de l'Expert IA"
+        }
+    },
     clientArea: {
       badge: "Inclus dans l'abonnement",
       title_1: "Plus qu'une agence.",
@@ -90,7 +180,7 @@ export const translations = {
         project_progress: "Avancement du projet",
         stages: ["1. Audit", "2. Design", "3. Dév.", "4. Ligne"],
         ticket: { title: "Ticket #204 - Modif' Horaire", status: "Résolu", message: "\"C'est fait ! Les horaires ont été mis à jour sur le pied de page et la page contact...\"" },
-        invoice: { plan: "Abonnement BOOST", status: "Actif • 99€/mois", next_date: "Prochaine facture: 01 Nov" }
+        invoice: { plan: "Abonnement BOOST", status: "Actif • 249 MAD/mois", next_date: "Prochaine facture: 01 Nov" }
       }
     },
     features: {
@@ -143,30 +233,37 @@ export const translations = {
         presence: {
           title: "Présence",
           subtitle: "Pour exister et rassurer",
-          price: "49€",
-          setup: "299€",
+          price: "199",
+          currency: "MAD",
+          setup: "499 MAD",
           cta: "Choisir Présence",
-          features: ["Site One-Page professionnel", "Hébergement haute performance", "Certificat SSL & Sécurité", "Maintenance technique incluse", "1 modification / mois", "Support par email (48h)"]
+          features: ["Nom de domaine inclus", "Site One-Page professionnel", "Design moderne & responsive", "Hébergement sécurisé + SSL", "Configuration technique de base", "Accès Client NexGen (consultation)"],
+          limitations: ["Pas d'optimisation SEO avancée", "Pas de chatbot IA", "Support email uniquement"]
         },
         boost: {
           title: "Pack BOOST",
-          subtitle: "Pour générer des clients actifs",
-          price: "99€",
-          setup: "499€",
-          cta: "Générer des clients",
-          features: ["Site Multi-pages (5 pages)", "Architecture de Conversion & Copywriting", "Optimisation SEO Local", "Intégration WhatsApp & Prise de RDV", "Accès Espace Client & Stats", "Modifications illimitées (24h)", "Support Prioritaire WhatsApp"]
+          subtitle: "Pour générer des clients régulièrement",
+          price: "249",
+          currency: "MAD",
+          setup: "699 MAD",
+          cta: "Choisir BOOST",
+          features: ["Nom de domaine inclus", "Site Multi-pages (5 pages)", "Architecture orientée conversion", "SEO Local optimisé (Google)", "Boutons WhatsApp & Appel visibles", "Chatbot IA de qualification", "Suivi d'avancement Dashboard", "Support prioritaire + Tickets SAV", "Maintenance continue & Mises à jour"]
         },
         business: {
           title: "Business",
-          subtitle: "Pour scaler votre activité",
-          price: "199€",
-          setup: "Sur devis",
-          cta: "Nous contacter",
-          features: ["Site E-commerce ou Catalogue", "Automatisations CRM & Emailing", "Blog & Stratégie de Contenu", "Réunions mensuelles de suivi", "Support VIP Dédié"]
+          subtitle: "Pour scaler et dominer votre marché",
+          price: "449",
+          currency: "MAD",
+          pricePrefix: "",
+          setup: "999 MAD",
+          cta: "Choisir Business",
+          features: ["Nom de domaine inclus", "Site E-commerce ou Catalogue", "Optimisation conversion avancée", "SEO Technique + Contenu IA", "CRM basique intégré", "Tableau de bord analytics avancé", "Support WhatsApp Prioritaire", "Accompagnement stratégique continu"]
         }
       },
-      setup_label: "Mise en place initiale",
-      most_popular: "Le plus choisi"
+      setup_label: "Frais de Mise en Place",
+      setup_payment: "Payé une seule fois",
+      most_popular: "Le plus choisi",
+      trust_text: ["Aucun engagement", "Support réel et continu", "Vous n'êtes jamais seul après la mise en ligne", "Testez sans risque"]
     },
     faq: {
       title: "Questions Fréquentes",
@@ -288,6 +385,96 @@ export const translations = {
         ]
       }
     },
+    simulator: {
+      preheader: "محاكي الربحية",
+      title_1: "كم يجب أن يربح",
+      title_2: "موقعك الإلكتروني؟",
+      desc: "أجب عن بضعة أسئلة حول نشاطك، مدينتك وأهدافك. يقوم ذكاؤنا الاصطناعي (Gemini 3 Pro) بمقاطعة البيانات المحلية لتقدير حجم مبيعاتك المحتمل.",
+      cta_primary: "بدء المحاكاة",
+      cta_secondary: "شاهد منهجية الذكاء الاصطناعي",
+      badge_1: "تم التحليل بواسطة Gemini 3 Pro",
+      badge_2: "بيانات سوق فورية",
+      card: {
+        title: "مثال على التقرير",
+        subtitle: "القطاع: التجديد • المدينة: الدار البيضاء",
+        tag_1: "التحليل: 30 ثانية",
+        tag_2: "الدقة: عالية",
+        step_1_title: "حجم البحث",
+        step_1_val: "4,500 / شهر",
+        step_1_desc: "عملاء يبحثون بنشاط عن خدماتك في منطقتك.",
+        step_2_title: "التحويل المتوقع",
+        step_2_val: "+15 إلى 25 عميل محتمل",
+        step_2_desc: "طلبات عروض أسعار مؤهلة تم إنشاؤها بواسطة نظام NexGen.",
+        step_3_title: "حجم المبيعات المحتمل",
+        step_3_val: "+120 ألف د.م. / سنة",
+        step_3_desc: "رقم معاملات إضافي مقدر بناءً على متوسط سلة مشترياتك.",
+        footer: "رائد أعمال قاموا بمحاكاة إمكاناتهم هذا الأسبوع.",
+        footer_sub: "محاكاة مجانية وبدون تسجيل."
+      }
+    },
+    simulatorPage: {
+        back: "الخروج من المحاكي",
+        steps: {
+            1: "النشاط",
+            2: "الأهداف",
+            3: "المالية",
+            4: "تحليل الذكاء الاصطناعي"
+        },
+        form: {
+            sector_label: "ما هو مجال نشاطك؟",
+            sector_placeholder: "مثال: سباك، محامي، نجار...",
+            location_label: "أين تمارس نشاطك؟",
+            city_placeholder: "المدينة (مثال: الدار البيضاء)",
+            country_placeholder: "البلد (مثال: المغرب)",
+            objective_label: "ما هو هدفك الرئيسي؟",
+            objectives: {
+                calls: "تلقي المكالمات",
+                whatsapp: "رسائل واتساب",
+                booking: "حجوزات / مواعيد",
+                orders: "طلبات عبر الإنترنت"
+            },
+            ticket_label: "متوسط سلة المشتريات (د.م.)؟",
+            currency: "د.م.",
+            margin_label: "هامش الربح الصافي المقدر (%)",
+            margin_sublabel: "اختياري. افتراضياً، نستخدم متوسط القطاع.",
+            site_label: "هل لديك موقع إلكتروني بالفعل؟",
+            button_next: "متابعة",
+            button_analyze: "ابدأ تحليل Gemini"
+        },
+        loading: {
+            title: "يقوم Gemini بتحليل سوقك...",
+            step1: "فحص أحجام البحث في",
+            step2: "تقدير تكلفة النقرة ونسبة النقر...",
+            step3: "حساب معدلات التحويل...",
+            step4: "توقع العائد على الاستثمار لـ 12 شهراً..."
+        },
+        results: {
+            badge: "تم تحليل الربحية",
+            title: "إمكاناتك الشهرية",
+            subtitle: "توقعات مبنية على رقم المعاملات (CA) المقدر.",
+            likely_label: "السيناريو المحتمل",
+            range_label: "النطاق المقدر:",
+            months: "أشهر",
+            timeline: {
+                title: "مسار النمو",
+                phase1: "صعود تدريجي",
+                phase2: "استقرار",
+                phase3: "الإمكانات الكاملة"
+            },
+            recommendation: {
+                title: "الباقة الموصى بها لنشاطك:",
+                reason_label: "لماذا هذا الخيار؟",
+                plans: {
+                    presence: "باقة الحضور",
+                    boost: "باقة BOOST ⭐",
+                    business: "باقة الأعمال"
+                }
+            },
+            cta_whatsapp: "استلام الخطة عبر واتساب",
+            cta_expert: "التحدث إلى خبير NexGen",
+            ai_insight: "رأي خبير الذكاء الاصطناعي"
+        }
+    },
     clientArea: {
       badge: "مشمول في الاشتراك",
       title_1: "أكثر من مجرد وكالة.",
@@ -303,7 +490,7 @@ export const translations = {
         project_progress: "تقدم المشروع",
         stages: ["1. تدقيق", "2. تصميم", "3. برمجة", "4. نشر"],
         ticket: { title: "تذكرة #204 - تعديل التوقيت", status: "مكتمل", message: "\"تم الأمر! تم تحديث مواعيد العمل في تذييل الصفحة وصفحة اتصل بنا...\"" },
-        invoice: { plan: "اشتراك BOOST", status: "نشط • 99€/شهر", next_date: "الفاتورة القادمة: 01 نوفمبر" }
+        invoice: { plan: "اشتراك BOOST", status: "نشط • 249 د.م./شهر", next_date: "الفاتورة القادمة: 01 نوفمبر" }
       }
     },
     features: {
@@ -356,30 +543,37 @@ export const translations = {
         presence: {
           title: "باقة الحضور",
           subtitle: "لإثبات الوجود وبناء الثقة",
-          price: "49€",
-          setup: "299€",
+          price: "199",
+          currency: "د.م.",
+          setup: "499 د.م.",
           cta: "اختر باقة الحضور",
-          features: ["موقع صفحة واحدة احترافي", "استضافة عالية الأداء", "شهادة أمان SSL وحماية", "صيانة تقنية شاملة", "تعديل واحد / شهرياً", "دعم عبر البريد الإلكتروني (48 ساعة)"]
+          features: ["موقع صفحة واحدة احترافي", "استضافة عالية الأداء", "شهادة أمان SSL وحماية", "صيانة تقنية شاملة", "تعديل واحد / شهرياً", "دعم عبر البريد الإلكتروني (48 ساعة)"],
+          limitations: ["بدون تحسينات SEO متقدمة", "بدون مساعد ذكي (Chatbot)", "الدعم عبر البريد الإلكتروني فقط"]
         },
         boost: {
           title: "باقة النمو (BOOST)",
           subtitle: "لتوليد عملاء نشطين ومبيعات",
-          price: "99€",
-          setup: "499€",
+          price: "249",
+          currency: "د.م.",
+          setup: "699 د.م.",
           cta: "ابدأ بجلب العملاء",
           features: ["موقع متعدد الصفحات (5 صفحات)", "هيكلة مخصصة للتحويل وصياغة المحتوى", "تحسين محركات البحث المحلي (SEO)", "ربط واتساب ونظام حجز المواعيد", "لوحة تحكم وإحصائيات", "تعديلات غير محدودة (24 ساعة)", "دعم ذو أولوية عبر واتساب"]
         },
         business: {
           title: "باقة الأعمال",
           subtitle: "لتوسع نشاطك التجاري",
-          price: "199€",
-          setup: "حسب الطلب",
+          price: "399",
+          currency: "د.م.",
+          pricePrefix: "من",
+          setup: "من 999 د.م.",
           cta: "تواصل معنا",
           features: ["مجر إلكتروني أو كتالوج", "أتمتة CRM والبريد الإلكتروني", "مدونة واستراتيجية محتوى", "اجتماعات متابعة شهرية", "دعم VIP مخصص"]
         }
       },
       setup_label: "رسوم التأسيس (مرة واحدة)",
-      most_popular: "الأكثر طلباً"
+      setup_payment: "يُدفع مرة واحدة فقط",
+      most_popular: "الأكثر طلباً",
+      trust_text: ["بدون أي التزام", "دعم حقيقي ومستمر", "لن تكون وحدك بعد الإطلاق", "جرب بدون مخاطرة"]
     },
     faq: {
       title: "الأسئلة الشائعة",

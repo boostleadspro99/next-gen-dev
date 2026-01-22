@@ -1,0 +1,550 @@
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, ArrowRight, BrainCircuit, Building2, MapPin, Calculator, Sparkles, CheckCircle2, TrendingUp, Search, Users, Wallet, AlertCircle, Phone, MessageCircle, Calendar, ShoppingBag, Globe, ToggleLeft, ToggleRight, Info, Award, ListChecks } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import FadeIn from '../components/FadeIn';
+import { useLanguage } from '../contexts/LanguageContext';
+
+type Step = 1 | 2 | 3 | 4;
+type Objective = 'calls' | 'whatsapp' | 'booking' | 'orders';
+type Plan = 'presence' | 'boost' | 'business';
+
+const Simulator: React.FC = () => {
+  const { t, dir } = useLanguage();
+  const [currentStep, setCurrentStep] = useState<Step>(1);
+  
+  // Enhanced Form State
+  const [formData, setFormData] = useState({
+    sector: '',
+    city: '',
+    country: '',
+    objective: 'whatsapp' as Objective,
+    ticket: '',
+    margin: '', // Optional
+    hasSite: false
+  });
+  
+  // Results State matching the Gemini Prompt Output Structure
+  const [results, setResults] = useState({
+      scenarios: {
+          conservative: 0,
+          likely: 0,
+          optimistic: 0
+      },
+      roi3: 0,
+      roi6: 0,
+      roi12: 0,
+      plan: 'boost' as Plan,
+      justificationPoints: [] as string[]
+  });
+
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loadingText, setLoadingText] = useState(t.simulatorPage.loading.step1);
+
+  // Constants for NexGen Pricing (Prompt Definitions)
+  const COSTS = {
+      presence: { setup: 499, monthly: 199 },
+      boost: { setup: 699, monthly: 249 },
+      business: { setup: 999, monthly: 449 }
+  };
+
+  // "Gemini" Simulation Engine (Frontend Mock of the Prompt Logic)
+  const runSimulation = () => {
+      const ticket = parseInt(formData.ticket) || 0;
+      
+      // Heuristic Base: String Length Hash to create consistent pseudo-randomness
+      const seed = (formData.sector.length * 10) + (formData.city.length * 5) + (formData.country.length * 5);
+      
+      // 1. Determine Plan Recommendation FIRST (to calc ROI based on that plan cost)
+      let recommendedPlan: Plan = 'presence';
+      let justificationPoints: string[] = [];
+
+      // Logic based on USER RULES
+      if (formData.objective === 'orders' || ticket > 2000) {
+          recommendedPlan = 'business';
+          justificationPoints = [
+              "Volume potentiel élevé nécessitant une infrastructure scalable.",
+              "Fonctionnalités E-commerce indispensables pour votre objectif.",
+              "ROI maximisé sur 12 mois grâce à l'automatisation."
+          ];
+      } else if (['calls', 'whatsapp'].includes(formData.objective)) {
+          recommendedPlan = 'boost';
+          justificationPoints = [
+              "Objectif direct de conversion (Appels/WhatsApp).",
+              "Le CA potentiel couvre l'investissement dès le 3ème mois.",
+              "Nécessité d'une visibilité locale agressive (SEO)."
+          ];
+      } else {
+          recommendedPlan = 'presence';
+          justificationPoints = [
+              "Idéal pour établir une crédibilité face à une faible concurrence.",
+              "Risque financier nul pour démarrer.",
+              "Base technique solide évolutive vers Boost plus tard."
+          ];
+      }
+
+      // 2. Traffic Estimation (Monthly) - Scenarios
+      let baseTraffic = 800 + (seed * 20); 
+      if (!formData.hasSite) baseTraffic *= 1.5; // New site boost potential
+      
+      const trafficConservative = Math.floor(baseTraffic * 0.7);
+      const trafficLikely = Math.floor(baseTraffic * 1.0);
+      const trafficOptimistic = Math.floor(baseTraffic * 1.5);
+
+      // 3. Lead Conversion Rate (Traffic -> Leads)
+      let conversionRate = 0.02; 
+      if (formData.objective === 'whatsapp') conversionRate = 0.045; 
+      if (formData.objective === 'calls') conversionRate = 0.035;
+      if (formData.objective === 'booking') conversionRate = 0.025;
+      if (formData.objective === 'orders') conversionRate = 0.015; 
+
+      // 4. Client Transformation Rate (Leads -> Deals)
+      const closeRate = 0.20; 
+      
+      // Calculate Revenue for Scenarios
+      const calcRevenue = (traffic: number) => {
+          const leads = Math.floor(traffic * conversionRate);
+          const clients = Math.max(1, Math.floor(leads * closeRate));
+          return clients * ticket;
+      };
+
+      const revConservative = calcRevenue(trafficConservative);
+      const revLikely = calcRevenue(trafficLikely);
+      const revOptimistic = calcRevenue(trafficOptimistic);
+
+      setResults({
+          scenarios: {
+              conservative: revConservative,
+              likely: revLikely,
+              optimistic: revOptimistic
+          },
+          roi3: 0, // Placeholder, visually represented by timeline now
+          roi6: 0,
+          roi12: 0,
+          plan: recommendedPlan,
+          justificationPoints: justificationPoints
+      });
+  }
+
+  // Animation Sequence
+  useEffect(() => {
+    if (currentStep === 4 && loadingProgress < 100) { 
+        // Trigger logic once when entering step 4
+        if (loadingProgress === 0) runSimulation();
+
+        const interval = setInterval(() => {
+            setLoadingProgress(prev => {
+                const next = prev + 1;
+                if (next >= 100) {
+                    clearInterval(interval);
+                    return 100;
+                }
+                
+                // Update text based on progress thresholds
+                if (next === 10) setLoadingText(`${t.simulatorPage.loading.step1} ${formData.city}...`);
+                if (next === 40) setLoadingText(t.simulatorPage.loading.step2);
+                if (next === 70) setLoadingText(t.simulatorPage.loading.step3);
+                if (next === 90) setLoadingText(t.simulatorPage.loading.step4);
+                
+                return next;
+            });
+        }, 40); // 4 seconds total load time roughly
+        
+        return () => clearInterval(interval);
+    }
+  }, [currentStep, loadingProgress, formData.city, t]);
+
+  const handleNext = () => {
+    if (currentStep < 4) {
+      setCurrentStep(prev => (prev + 1) as Step);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+          // Validation checks before next
+          if (currentStep === 1 && (!formData.sector || !formData.city)) return;
+          if (currentStep === 3 && !formData.ticket) return;
+          handleNext();
+      }
+  }
+
+  const isAnalysisComplete = currentStep === 4 && loadingProgress === 100;
+
+  // Icons mapping for objectives
+  const getObjectiveIcon = (obj: Objective) => {
+      switch(obj) {
+          case 'calls': return <Phone size={20} />;
+          case 'whatsapp': return <MessageCircle size={20} />;
+          case 'booking': return <Calendar size={20} />;
+          case 'orders': return <ShoppingBag size={20} />;
+      }
+  };
+
+  return (
+    <section className="min-h-screen pt-24 pb-12 px-6 flex items-center justify-center relative overflow-hidden bg-[#030303]">
+      
+      {/* Background Ambience */}
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-900/10 via-[#050505] to-[#050505] pointer-events-none"></div>
+
+      <div className="w-full max-w-4xl relative z-10">
+        
+        {/* Navigation / Header */}
+        <div className="mb-8 flex items-center justify-between">
+            <Link to="/" className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-lg px-2 py-1">
+              <ArrowLeft size={16} className={`group-hover:-translate-x-1 transition-transform ${dir === 'rtl' ? 'rotate-180 group-hover:translate-x-1' : ''}`} />
+              {t.simulatorPage.back}
+            </Link>
+            
+            {/* Steps Indicator (Only visible before results) */}
+            {!isAnalysisComplete && (
+                <div className="hidden sm:flex items-center gap-2">
+                    {[1, 2, 3].map((s) => (
+                        <div key={s} className={`h-1.5 w-8 rounded-full transition-colors duration-300 ${s <= currentStep ? 'bg-emerald-500' : 'bg-white/10'}`}></div>
+                    ))}
+                </div>
+            )}
+        </div>
+
+        {/* Content Card */}
+        <FadeIn key={isAnalysisComplete ? 'results' : currentStep}>
+            <div className={`bg-[#0A0A0A] border border-white/10 rounded-3xl shadow-2xl relative overflow-hidden backdrop-blur-sm min-h-[550px] flex flex-col transition-all duration-500 ${isAnalysisComplete ? 'border-emerald-500/30' : ''}`}>
+                
+                {/* Decorative Elements */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px] pointer-events-none"></div>
+                
+                {/* STEP 1: ACTIVITY & LOCATION */}
+                {currentStep === 1 && (
+                    <div className="p-8 md:p-12 flex-1 flex flex-col justify-center animate-fade-in-up">
+                        <div className="mb-8">
+                            <span className="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-2 block">{t.simulatorPage.steps[1]}</span>
+                            <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight">{t.simulatorPage.form.sector_label}</h2>
+                        </div>
+                        
+                        <div className="space-y-6 max-w-lg">
+                            <div className="relative group">
+                                <Building2 className="absolute top-4 left-4 text-neutral-500 group-focus-within:text-emerald-500 transition-colors" size={24} />
+                                <input 
+                                    autoFocus
+                                    type="text" 
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-14 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-lg"
+                                    placeholder={t.simulatorPage.form.sector_placeholder}
+                                    value={formData.sector}
+                                    onChange={(e) => setFormData({...formData, sector: e.target.value})}
+                                    onKeyDown={handleKeyDown}
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="relative group">
+                                    <MapPin className="absolute top-4 left-4 text-neutral-500 group-focus-within:text-emerald-500 transition-colors" size={24} />
+                                    <input 
+                                        type="text" 
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-14 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-lg"
+                                        placeholder={t.simulatorPage.form.city_placeholder}
+                                        value={formData.city}
+                                        onChange={(e) => setFormData({...formData, city: e.target.value})}
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                </div>
+                                <div className="relative group">
+                                    <Globe className="absolute top-4 left-4 text-neutral-500 group-focus-within:text-emerald-500 transition-colors" size={24} />
+                                    <input 
+                                        type="text" 
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-14 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-lg"
+                                        placeholder={t.simulatorPage.form.country_placeholder}
+                                        value={formData.country}
+                                        onChange={(e) => setFormData({...formData, country: e.target.value})}
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                </div>
+                            </div>
+
+                            <button 
+                                onClick={handleNext}
+                                disabled={!formData.sector || !formData.city}
+                                className="mt-8 px-8 py-4 bg-emerald-500 text-neutral-950 font-bold rounded-xl text-base uppercase tracking-wide hover:bg-emerald-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 group w-full sm:w-auto"
+                            >
+                                {t.simulatorPage.form.button_next}
+                                <ArrowRight size={20} className={`transition-transform duration-300 group-hover:translate-x-1 ${dir === 'rtl' ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* STEP 2: OBJECTIVES */}
+                {currentStep === 2 && (
+                    <div className="p-8 md:p-12 flex-1 flex flex-col justify-center animate-fade-in-up">
+                        <div className="mb-8">
+                            <span className="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-2 block">{t.simulatorPage.steps[2]}</span>
+                            <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight">{t.simulatorPage.form.objective_label}</h2>
+                        </div>
+                        
+                        <div className="grid sm:grid-cols-2 gap-4 max-w-2xl">
+                            {(['calls', 'whatsapp', 'booking', 'orders'] as Objective[]).map((obj) => (
+                                <button
+                                    key={obj}
+                                    onClick={() => setFormData({...formData, objective: obj})}
+                                    className={`p-6 rounded-xl border text-left transition-all flex flex-col gap-3 group ${
+                                        formData.objective === obj 
+                                        ? 'bg-emerald-500/10 border-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.2)]' 
+                                        : 'bg-white/5 border-white/10 text-neutral-400 hover:border-white/20 hover:bg-white/10'
+                                    }`}
+                                >
+                                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+                                        formData.objective === obj ? 'bg-emerald-500 text-black' : 'bg-white/10 text-neutral-300 group-hover:text-white'
+                                    }`}>
+                                        {getObjectiveIcon(obj)}
+                                    </div>
+                                    <span className="font-semibold text-lg">{t.simulatorPage.form.objectives[obj]}</span>
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="mt-8 flex items-center gap-4">
+                            <button 
+                                onClick={handleNext}
+                                className="px-8 py-4 bg-emerald-500 text-neutral-950 font-bold rounded-xl text-base uppercase tracking-wide hover:bg-emerald-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] flex items-center gap-2 group"
+                            >
+                                {t.simulatorPage.form.button_next}
+                                <ArrowRight size={20} className={`transition-transform duration-300 group-hover:translate-x-1 ${dir === 'rtl' ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
+                            </button>
+                            
+                            <div className="flex items-center gap-2 text-neutral-400 text-sm ml-4 cursor-pointer" onClick={() => setFormData({...formData, hasSite: !formData.hasSite})}>
+                                <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${formData.hasSite ? 'bg-emerald-500 border-emerald-500' : 'border-neutral-600'}`}>
+                                    {formData.hasSite && <CheckCircle2 size={14} className="text-black" />}
+                                </div>
+                                {t.simulatorPage.form.site_label}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* STEP 3: FINANCIALS */}
+                {currentStep === 3 && (
+                    <div className="p-8 md:p-12 flex-1 flex flex-col justify-center animate-fade-in-up">
+                        <div className="mb-8">
+                            <span className="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-2 block">{t.simulatorPage.steps[3]}</span>
+                            <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight">{t.simulatorPage.form.ticket_label}</h2>
+                        </div>
+                        
+                        <div className="space-y-8 max-w-lg">
+                            {/* Ticket Input */}
+                            <div className="relative group">
+                                <span className="absolute top-4 left-6 text-neutral-500 group-focus-within:text-emerald-500 transition-colors text-xl font-bold">{t.simulatorPage.form.currency}</span>
+                                <input 
+                                    autoFocus
+                                    type="number" 
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-20 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-2xl font-bold tracking-wide"
+                                    placeholder="1500"
+                                    value={formData.ticket}
+                                    onChange={(e) => setFormData({...formData, ticket: e.target.value})}
+                                    onKeyDown={handleKeyDown}
+                                />
+                            </div>
+
+                            {/* Optional Margin Input */}
+                            <div className="pt-4 border-t border-white/5">
+                                <div className="flex justify-between mb-2">
+                                    <label className="text-sm font-medium text-neutral-300">{t.simulatorPage.form.margin_label}</label>
+                                    <span className="text-xs text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">Avancé</span>
+                                </div>
+                                <div className="relative group">
+                                    <span className="absolute top-3.5 left-4 text-neutral-500 group-focus-within:text-emerald-500 transition-colors">%</span>
+                                    <input 
+                                        type="number" 
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-base"
+                                        placeholder="30"
+                                        value={formData.margin}
+                                        onChange={(e) => setFormData({...formData, margin: e.target.value})}
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                </div>
+                                <p className="text-xs text-neutral-500 mt-2">{t.simulatorPage.form.margin_sublabel}</p>
+                            </div>
+                            
+                            <div className="pt-4">
+                                <button 
+                                    onClick={handleNext}
+                                    disabled={!formData.ticket}
+                                    className="w-full px-8 py-4 bg-emerald-500 text-neutral-950 font-bold rounded-xl text-base uppercase tracking-wide hover:bg-emerald-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
+                                >
+                                    <BrainCircuit size={20} />
+                                    {t.simulatorPage.form.button_analyze}
+                                </button>
+                                <p className="text-center text-xs text-neutral-500 mt-4 flex items-center justify-center gap-1">
+                                    <Sparkles size={12} className="text-emerald-500" />
+                                    Powered by Gemini 3 Pro
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* STEP 4: LOADING SEQUENCE */}
+                {currentStep === 4 && !isAnalysisComplete && (
+                    <div className="p-8 md:p-12 flex-1 flex flex-col justify-center items-center text-center animate-pulse-glow">
+                        <div className="w-32 h-32 mb-8 relative">
+                            <div className="absolute inset-0 border-4 border-white/5 rounded-full"></div>
+                            <div 
+                                className="absolute inset-0 border-4 border-emerald-500 rounded-full border-t-transparent animate-spin"
+                                style={{ animationDuration: '1.5s' }}
+                            ></div>
+                            <div className="absolute inset-0 flex items-center justify-center text-emerald-400 font-bold text-2xl font-mono">
+                                {loadingProgress}%
+                            </div>
+                        </div>
+                        
+                        <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">{t.simulatorPage.loading.title}</h2>
+                        <p className="text-neutral-400 text-base animate-pulse h-6">{loadingText}</p>
+                    </div>
+                )}
+
+                {/* RESULTS DASHBOARD */}
+                {isAnalysisComplete && (
+                    <div className="flex-1 flex flex-col animate-fade-in-up">
+                        {/* Header Result */}
+                        <div className="p-6 md:p-8 border-b border-white/10 bg-white/[0.02]">
+                            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                                <div>
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-3">
+                                        <CheckCircle2 size={14} className="text-emerald-500" />
+                                        <span className="text-xs font-bold text-emerald-400 uppercase tracking-wide">{t.simulatorPage.results.badge}</span>
+                                    </div>
+                                    <h2 className="text-3xl font-bold text-white mb-2">{t.simulatorPage.results.title}</h2>
+                                    <p className="text-neutral-400 text-sm max-w-lg">
+                                        {t.simulatorPage.results.subtitle} <span className="text-white font-medium">{formData.sector}</span> à <span className="text-white font-medium">{formData.city}</span>.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Main Content Grid */}
+                        <div className="p-6 md:p-8 grid md:grid-cols-12 gap-6 flex-1">
+                            
+                            {/* Left: Main Financial Metrics (Hero Card) */}
+                            <div className="md:col-span-8 space-y-6">
+                                {/* CARD: Potentiel CA */}
+                                <div className="bg-gradient-to-br from-emerald-950/40 to-[#050505] border border-emerald-500/30 rounded-2xl p-6 relative group shadow-[0_0_40px_rgba(16,185,129,0.1)]">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <Wallet size={20} className="text-emerald-400" />
+                                        <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wide">
+                                            {t.simulatorPage.results.likely_label}
+                                        </h3>
+                                    </div>
+                                    <div className="flex items-baseline gap-2 mt-4">
+                                        <span className="text-5xl sm:text-6xl font-extrabold text-white tracking-tight">
+                                            {results.scenarios.likely.toLocaleString()}
+                                        </span>
+                                        <span className="text-2xl text-neutral-500 font-normal ml-2">{t.simulatorPage.form.currency}</span>
+                                    </div>
+                                    <div className="mt-4 flex items-center gap-2 text-sm text-neutral-400">
+                                        <span>{t.simulatorPage.results.range_label}</span>
+                                        <span className="text-white font-medium">{results.scenarios.conservative.toLocaleString()}</span>
+                                        <span>-</span>
+                                        <span className="text-white font-medium">{results.scenarios.optimistic.toLocaleString()}</span>
+                                    </div>
+                                </div>
+
+                                {/* CARD: Timeline */}
+                                <div className="bg-[#050505] border border-white/10 rounded-2xl p-6 relative">
+                                    <h4 className="text-xs font-bold text-white uppercase mb-6 flex items-center gap-2">
+                                        <TrendingUp size={14} className="text-emerald-500" />
+                                        {t.simulatorPage.results.timeline.title}
+                                    </h4>
+                                    
+                                    <div className="relative">
+                                        {/* Connecting Line */}
+                                        <div className="absolute top-1/2 left-0 w-full h-0.5 bg-white/5 -translate-y-1/2 z-0 hidden sm:block"></div>
+                                        
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-4 relative z-10">
+                                            {/* Phase 1 */}
+                                            <div className="bg-[#0A0A0A] border border-white/10 p-4 rounded-xl text-center sm:text-left shadow-lg">
+                                                <div className="text-[10px] uppercase font-bold text-neutral-500 mb-1">3 {t.simulatorPage.results.months}</div>
+                                                <div className="text-sm font-bold text-white mb-2">{t.simulatorPage.results.timeline.phase1}</div>
+                                                <div className="h-1 w-full bg-emerald-500/30 rounded-full overflow-hidden">
+                                                    <div className="h-full bg-emerald-500 w-1/3"></div>
+                                                </div>
+                                            </div>
+                                            
+                                            {/* Phase 2 */}
+                                            <div className="bg-[#0A0A0A] border border-emerald-500/20 p-4 rounded-xl text-center sm:text-left shadow-lg relative">
+                                                <div className="absolute top-0 right-0 -mt-1 -mr-1 w-2 h-2 bg-emerald-500 rounded-full animate-ping"></div>
+                                                <div className="text-[10px] uppercase font-bold text-emerald-400 mb-1">6 {t.simulatorPage.results.months}</div>
+                                                <div className="text-sm font-bold text-white mb-2">{t.simulatorPage.results.timeline.phase2}</div>
+                                                <div className="h-1 w-full bg-emerald-500/30 rounded-full overflow-hidden">
+                                                    <div className="h-full bg-emerald-500 w-2/3"></div>
+                                                </div>
+                                            </div>
+
+                                            {/* Phase 3 */}
+                                            <div className="bg-[#0A0A0A] border border-white/10 p-4 rounded-xl text-center sm:text-left shadow-lg opacity-60">
+                                                <div className="text-[10px] uppercase font-bold text-neutral-500 mb-1">12 {t.simulatorPage.results.months}</div>
+                                                <div className="text-sm font-bold text-white mb-2">{t.simulatorPage.results.timeline.phase3}</div>
+                                                <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
+                                                    <div className="h-full bg-white/30 w-full"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Right: Recommendation */}
+                            <div className="md:col-span-4 space-y-4">
+                                {/* Gemini Recommendation Card */}
+                                <div className="bg-gradient-to-b from-purple-900/20 to-[#050505] border border-purple-500/20 rounded-2xl p-6 relative overflow-hidden group h-full flex flex-col">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-[40px] pointer-events-none opacity-50 group-hover:opacity-80 transition-opacity"></div>
+                                    
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <Sparkles size={16} className="text-purple-400" />
+                                        <h3 className="text-xs font-bold text-purple-200 uppercase tracking-wide">{t.simulatorPage.results.ai_insight}</h3>
+                                    </div>
+
+                                    <h4 className="text-sm font-medium text-neutral-300 mb-2">{t.simulatorPage.results.recommendation.title}</h4>
+                                    
+                                    {/* Recommended Plan Badge */}
+                                    <div className="mb-6">
+                                        <span className="inline-block px-4 py-2 rounded-lg bg-white/10 text-white font-bold text-lg border border-white/10 shadow-sm">
+                                            {t.simulatorPage.results.recommendation.plans[results.plan]}
+                                        </span>
+                                    </div>
+
+                                    <div className="text-[10px] text-purple-300 uppercase font-bold mb-3 opacity-70 border-b border-purple-500/20 pb-2">
+                                        {t.simulatorPage.results.recommendation.reason_label}
+                                    </div>
+                                    
+                                    <ul className="space-y-3 mb-6 flex-grow">
+                                        {results.justificationPoints.map((point, i) => (
+                                            <li key={i} className="flex gap-3 text-xs text-neutral-300 leading-relaxed">
+                                                <CheckCircle2 size={14} className="text-purple-400 shrink-0 mt-0.5" />
+                                                <span>{point}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    <div className="space-y-3">
+                                        <a href="https://wa.me/212600000000" target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center gap-2 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl text-sm transition-all shadow-lg shadow-emerald-500/20">
+                                            <MessageCircle size={18} />
+                                            {t.simulatorPage.results.cta_whatsapp}
+                                        </a>
+                                        <Link to="/contact" className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium rounded-xl text-sm transition-all">
+                                            <Phone size={16} className="text-neutral-400" />
+                                            {t.simulatorPage.results.cta_expert}
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                )}
+
+            </div>
+        </FadeIn>
+
+      </div>
+    </section>
+  );
+};
+
+export default Simulator;

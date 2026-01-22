@@ -4,6 +4,7 @@ import TrustBar from '../components/TrustBar';
 import ProblemSolution from '../components/ProblemSolution';
 import Comparison from '../components/Comparison';
 import Features from '../components/Features';
+import SimulatorSection from '../components/SimulatorSection';
 import Methodology from '../components/Methodology';
 import ClientArea from '../components/ClientArea';
 import Pricing from '../components/Pricing';
@@ -18,6 +19,7 @@ const Home: React.FC = () => {
       <ProblemSolution />
       <Comparison />
       <Features />
+      <SimulatorSection />
       <Methodology />
       <ClientArea />
       <Pricing />

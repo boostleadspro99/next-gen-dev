@@ -119,6 +119,15 @@
             letter-spacing: 0em; /* Arabic connects letters, no negative spacing */
         }
 
+        /* Arabic Text Size Adjustments for better legibility */
+        html[lang="ar"] .text-xs { font-size: 0.85rem; line-height: 1.2rem; }
+        html[lang="ar"] .text-sm { font-size: 1rem; line-height: 1.5rem; }
+        html[lang="ar"] .text-base { font-size: 1.15rem; line-height: 1.7rem; }
+        html[lang="ar"] .text-lg { font-size: 1.25rem; line-height: 1.8rem; }
+        html[lang="ar"] .text-xl { font-size: 1.35rem; line-height: 1.9rem; }
+        /* Target generic paragraphs in Arabic to ensure size boost even without classes */
+        html[lang="ar"] p:not([class*="text-"]) { font-size: 1.15rem; line-height: 1.7rem; }
+
         /* Refined Scrollbar */
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: #050505; }

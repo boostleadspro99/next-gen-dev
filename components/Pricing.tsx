@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, Zap, Check, Star } from 'lucide-react';
+import { CheckCircle2, Zap, Check, Star, X, ShieldCheck } from 'lucide-react';
 import FadeIn from './FadeIn';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -20,18 +20,21 @@ const Pricing: React.FC = () => {
           </FadeIn>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-8 items-start max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-8 items-start max-w-7xl mx-auto mb-16">
           
           {/* Pack Présence */}
           <FadeIn delay={0} className="h-full">
             <PricingCard 
               title={t.pricing.packs.presence.title} 
               subtitle={t.pricing.packs.presence.subtitle}
-              price={t.pricing.packs.presence.price} 
+              price={t.pricing.packs.presence.price}
+              currency={t.pricing.packs.presence.currency}
               setup={t.pricing.packs.presence.setup}
               setupLabel={t.pricing.setup_label}
+              setupPayment={t.pricing.setup_payment}
               cta={t.pricing.packs.presence.cta}
               features={t.pricing.packs.presence.features}
+              limitations={t.pricing.packs.presence.limitations}
             />
           </FadeIn>
 
@@ -57,12 +60,21 @@ const Pricing: React.FC = () => {
                         </div>
                         <p className="text-neutral-300 text-base mb-6 font-normal">{t.pricing.packs.boost.subtitle}</p>
                         
-                        <div className="flex items-baseline gap-1.5">
-                            <span className="text-5xl lg:text-6xl font-extrabold text-white tracking-tight">{t.pricing.packs.boost.price}</span>
-                            <span className="text-lg text-neutral-400 font-medium">/mois</span>
+                        {/* Price Block with Inter Font */}
+                        <div className="flex items-baseline gap-1.5 font-sans">
+                            <span className="text-6xl font-extrabold text-white tracking-tight">{t.pricing.packs.boost.price}</span>
+                            <span className="text-lg text-neutral-400 font-medium">{t.pricing.packs.boost.currency} / mois</span>
                         </div>
-                        <div className="text-[13px] text-emerald-200 mt-4 font-medium px-3 py-2 bg-emerald-900/30 rounded-lg inline-block border border-emerald-500/30">
-                            + {t.pricing.packs.boost.setup} {t.pricing.setup_label}
+
+                        {/* EMPHASIZED SETUP FEE (BOOST) */}
+                        <div className="mt-5 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
+                            <div className="text-[10px] uppercase tracking-wide text-emerald-400 mb-1 font-bold">{t.pricing.setup_label}</div>
+                            <div className="text-white font-bold text-lg font-sans">
+                                + {t.pricing.packs.boost.setup}
+                            </div>
+                            <div className="text-[10px] text-emerald-400 font-bold mt-1 uppercase tracking-wider flex items-center gap-1">
+                                <CheckCircle2 size={10} /> {t.pricing.setup_payment}
+                            </div>
                         </div>
                     </div>
                     
@@ -89,8 +101,11 @@ const Pricing: React.FC = () => {
               title={t.pricing.packs.business.title} 
               subtitle={t.pricing.packs.business.subtitle}
               price={t.pricing.packs.business.price} 
+              currency={t.pricing.packs.business.currency}
+              pricePrefix={t.pricing.packs.business.pricePrefix}
               setup={t.pricing.packs.business.setup} 
               setupLabel={t.pricing.setup_label}
+              setupPayment={t.pricing.setup_payment}
               cta={t.pricing.packs.business.cta}
               features={t.pricing.packs.business.features}
               isBusiness
@@ -98,6 +113,19 @@ const Pricing: React.FC = () => {
           </FadeIn>
 
         </div>
+
+        {/* TRUST SIGNALS MICRO-COPY */}
+        <FadeIn delay={400}>
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-center">
+                {t.pricing.trust_text.map((text, i) => (
+                    <div key={i} className="flex items-center gap-2 text-neutral-400 text-sm font-medium">
+                        <ShieldCheck size={16} className="text-emerald-500" />
+                        {text}
+                    </div>
+                ))}
+            </div>
+        </FadeIn>
+
       </div>
     </section>
   );
@@ -107,25 +135,39 @@ interface PricingCardProps {
     title: string;
     subtitle: string;
     price: string;
+    currency: string;
+    pricePrefix?: string;
     setup: string;
     setupLabel: string;
+    setupPayment: string;
     cta: string;
     features: string[];
+    limitations?: string[];
     isBusiness?: boolean;
 }
 
-const PricingCard: React.FC<PricingCardProps> = ({ title, subtitle, price, setup, setupLabel, cta, features, isBusiness }) => (
+const PricingCard: React.FC<PricingCardProps> = ({ title, subtitle, price, currency, pricePrefix, setup, setupLabel, setupPayment, cta, features, limitations, isBusiness }) => (
   <div className="bg-white/[0.02] backdrop-blur-xl p-8 lg:p-10 rounded-2xl border border-white/10 hover:border-white/20 transition-colors relative h-full flex flex-col hover:bg-white/[0.04] group">
     <div className="mb-8">
       <h3 className="text-2xl font-bold text-white tracking-wide group-hover:text-emerald-400 transition-colors">{title}</h3>
       <p className="text-neutral-400 text-base mb-6 mt-1 font-normal">{subtitle}</p>
       
-      <div className="flex items-baseline gap-1.5">
-        <span className="text-4xl lg:text-5xl font-bold text-white tracking-tight">{price}</span>
-        <span className="text-base text-neutral-500 font-medium">/mois</span>
+      {/* Price Block with Inter Font */}
+      <div className="flex items-baseline gap-1.5 font-sans">
+        {pricePrefix && <span className="text-lg text-neutral-400 font-medium mr-1">{pricePrefix}</span>}
+        <span className="text-5xl font-bold text-white tracking-tight">{price}</span>
+        <span className="text-base text-neutral-500 font-medium">{currency} / mois</span>
       </div>
-      <div className="text-[13px] text-neutral-400 mt-4 font-medium bg-white/5 px-3 py-2 rounded-lg inline-block border border-white/10">
-        {setup !== "Sur devis" && setup !== "حسب الطلب" ? `+ ${setup} ${setupLabel}` : `+ ${setup}`}
+      
+      {/* EMPHASIZED SETUP FEE (STANDARD) */}
+      <div className="mt-5 p-3 rounded-lg bg-white/5 border border-white/10 group-hover:border-white/20 transition-colors">
+        <div className="text-[10px] uppercase tracking-wide text-neutral-500 mb-1 font-bold">{setupLabel}</div>
+        <div className="text-white font-bold text-sm font-sans">
+            {(setup.includes("Dès") || setup.includes("من")) ? setup : `+ ${setup}`}
+        </div>
+        <div className="text-[10px] text-emerald-500 font-bold mt-1 uppercase tracking-wider flex items-center gap-1">
+            <CheckCircle2 size={10} /> {setupPayment}
+        </div>
       </div>
     </div>
     
@@ -139,6 +181,14 @@ const PricingCard: React.FC<PricingCardProps> = ({ title, subtitle, price, setup
           <Check size={20} strokeWidth={2.5} className="mt-0.5 text-neutral-600 shrink-0 group-hover:text-emerald-500 transition-colors" />
           <span className="leading-relaxed font-normal">{item}</span>
         </li>
+      ))}
+      
+      {/* Display Limitations if any */}
+      {limitations && limitations.map((item, i) => (
+         <li key={`lim-${i}`} className="flex items-start gap-3 text-base text-neutral-500 opacity-70">
+            <X size={20} strokeWidth={2.5} className="mt-0.5 text-neutral-600 shrink-0" />
+            <span className="leading-relaxed font-normal">{item}</span>
+         </li>
       ))}
     </ul>
   </div>
