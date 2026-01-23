@@ -1,0 +1,101 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- Helper Functions ---
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isUser(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    // Reads the user's profile to check for 'admin' role
+    // Note: In high-traffic apps, use Custom Claims for performance.
+    function isAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Checks if the document belongs to the requesting client
+    function isClientResource() {
+      return isAuthenticated() && (
+        (resource != null && resource.data.clientId == request.auth.uid) || 
+        (request.resource != null && request.resource.data.clientId == request.auth.uid)
+      );
+    }
+
+    // --- Collections ---
+
+    // USERS: Users can read/write their own profile.
+    // Critical: They cannot promote themselves to admin.
+    match /users/{userId} {
+      allow read: if isUser(userId) || isAdmin();
+      allow create: if isUser(userId) 
+        && request.resource.data.role == 'client'; // Force role to client
+      allow update: if isAdmin() || (isUser(userId) 
+        && request.resource.data.role == resource.data.role); // Cannot change role
+    }
+
+    // CLIENTS: The core subscription document.
+    // Critical: Clients CANNOT change subscription fields (plan, status, dates).
+    match /clients/{clientId} {
+      allow read: if isUser(clientId) || isAdmin();
+      allow create: if isUser(clientId) || isAdmin(); // Seeding on registration
+      allow update: if isAdmin() || (
+        isUser(clientId) 
+        // Immutable fields for clients
+        && request.resource.data.plan == resource.data.plan
+        && request.resource.data.subscriptionStatus == resource.data.subscriptionStatus
+        && request.resource.data.setupFeeStatus == resource.data.setupFeeStatus
+        && request.resource.data.billingCycle == resource.data.billingCycle
+        && request.resource.data.currentPeriodStart == resource.data.currentPeriodStart
+        && request.resource.data.currentPeriodEnd == resource.data.currentPeriodEnd
+        && request.resource.data.nextBillingDate == resource.data.nextBillingDate
+      );
+    }
+
+    // PROJECTS: Clients can see their project status.
+    match /projects/{projectId} {
+      allow read: if isClientResource() || isAdmin();
+      allow create: if isClientResource() || isAdmin(); // Initial seeding
+      allow update: if isAdmin(); // Only admin moves project stages (audit -> design -> etc)
+    }
+
+    // TICKETS: Clients can create tickets and read their own.
+    match /tickets/{ticketId} {
+      allow read: if isClientResource() || isAdmin();
+      allow create: if isClientResource(); // Client creates ticket
+      allow update: if isClientResource() || isAdmin();
+
+      // MESSAGES (Subcollection)
+      match /messages/{messageId} {
+        allow read, create: if isAuthenticated() && (
+          get(/databases/$(database)/documents/tickets/$(ticketId)).data.clientId == request.auth.uid || 
+          isAdmin()
+        );
+      }
+    }
+
+    // INVOICES: Financial records.
+    // Critical: Clients have READ ONLY access.
+    match /invoices/{invoiceId} {
+      allow read: if isClientResource() || isAdmin();
+      allow write: if isAdmin(); 
+    }
+
+    // ADMIN LOGS: Audit trail.
+    match /adminLogs/{logId} {
+      allow read, write: if isAdmin();
+    }
+    
+    // SIMULATIONS: Marketing tool data
+    match /simulations/{simId} {
+       allow create: if true; // Public access for lead gen
+       allow read: if resource.data.userId == request.auth.uid || isAdmin();
+    }
+  }
+}

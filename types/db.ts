@@ -3,11 +3,15 @@ import { Timestamp } from 'firebase/firestore';
 // --- Enums & Unions ---
 
 export type PlanType = 'presence' | 'boost' | 'business';
-export type SubscriptionStatus = 'trial' | 'active' | 'past_due' | 'cancelled';
+export type SubscriptionStatus = 'trial' | 'active' | 'past_due' | 'canceled';
+export type SetupFeeStatus = 'paid' | 'unpaid' | 'pending';
+export type BillingCycle = 'monthly' | 'quarterly' | 'yearly';
+
 export type ProjectStatus = 'audit' | 'design' | 'development' | 'live';
 export type TicketStatus = 'open' | 'pending' | 'resolved' | 'closed';
 export type TicketPriority = 'low' | 'medium' | 'high';
-export type InvoiceStatus = 'paid' | 'pending' | 'overdue';
+export type InvoiceStatus = 'paid' | 'unpaid';
+export type InvoiceType = 'setup' | 'monthly' | 'extra';
 
 // --- Collections ---
 
@@ -20,24 +24,35 @@ export interface UserData {
 }
 
 export interface ClientData {
-  uid: string; // Maps 1:1 to User UID for this architecture
+  uid: string; // Maps 1:1 to User UID
   ownerUid: string;
   companyName: string;
   email: string;
   phone?: string;
+  notes?: string; // Admin internal notes
+  
+  // Subscription & Billing
   plan: PlanType;
   subscriptionStatus: SubscriptionStatus;
-  stripeCustomerId?: string;
+  setupFeeStatus: SetupFeeStatus;
+  billingCycle: BillingCycle;
+  
+  // Dates
+  currentPeriodStart: Timestamp;
+  currentPeriodEnd: Timestamp; // Usually Next Billing Date
+  nextBillingDate?: Timestamp;
+  
+  stripeCustomerId?: string; // Optional for future
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
 
 export interface ProjectStep {
   id: number;
-  key: string; // 'audit', 'design', 'dev', 'live'
+  key: string;
   label: string;
   status: 'pending' | 'current' | 'completed';
-  date?: string; // ISO string for display
+  date?: string;
 }
 
 export interface ProjectData {
@@ -65,7 +80,7 @@ export interface TicketData {
 export interface TicketMessageData {
   id?: string;
   ticketId: string;
-  senderId: string; // Auth UID
+  senderId: string;
   senderName: string;
   text: string;
   isAdmin: boolean;
@@ -75,18 +90,31 @@ export interface TicketMessageData {
 export interface InvoiceData {
   id?: string;
   clientId: string;
-  amount: number;
-  currency: string;
+  type: InvoiceType;
+  amountMAD: number;
   status: InvoiceStatus;
-  periodStart: Timestamp;
-  periodEnd: Timestamp;
-  pdfUrl?: string;
+  period: string; // YYYY-MM
+  dueDate?: Timestamp;
+  createdAt: Timestamp;
+  paidAt?: Timestamp;
+}
+
+export interface AdminLogData {
+  id?: string;
+  adminUid: string;
+  clientId: string;
+  actionType: 'update_subscription' | 'update_project' | 'note_added' | 'create_invoice' | 'update_invoice';
+  changes: {
+    field: string;
+    before: any;
+    after: any;
+  }[];
   createdAt: Timestamp;
 }
 
 export interface SimulationData {
   id?: string;
-  userId?: string; // Optional if anonymous
+  userId?: string;
   sector: string;
   city: string;
   revenuePotential: number;

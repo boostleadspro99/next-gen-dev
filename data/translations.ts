@@ -70,6 +70,61 @@ export const translations = {
         too_many_requests: "Trop de tentatives. Attendez quelques minutes."
       }
     },
+    dashboard: {
+      alerts: {
+        trial_title: "Période d'essai en cours",
+        trial_desc: "Profitez de votre accès complet. Il vous reste",
+        trial_days: "jours",
+        trial_end: "pour confirmer votre abonnement.",
+        trial_btn: "Activer mon compte",
+        
+        past_due_title: "Renouvellement nécessaire",
+        past_due_desc: "Vos services sont actuellement restreints en lecture seule. Régularisez votre situation pour réactiver toutes les fonctionnalités.",
+        
+        canceled_title: "Compte en pause",
+        canceled_desc: "Votre abonnement est actuellement inactif. Contactez notre équipe pour reprendre là où vous en étiez et réactiver vos services.",
+        canceled_btn_support: "Contacter le support",
+        canceled_btn_logout: "Se déconnecter"
+      },
+      subscription: {
+        title: "Mon Abonnement",
+        status_trial: "TRIAL",
+        status_active: "ACTIF",
+        status_pending: "EN ATTENTE",
+        status_disabled: "DÉSACTIVÉ",
+        next_due: "Prochaine échéance",
+        btn_activate: "Contacter pour activer",
+        btn_regularize: "Régulariser maintenant",
+        btn_manage: "Gérer l'abonnement",
+        btn_invoices: "Mes factures",
+        trust_message: "Vous gardez un suivi clair. Le support et la continuité font partie du service."
+      },
+      invoices: {
+        title: "Historique de facturation",
+        empty: "Aucune facture disponible pour le moment.",
+        status_paid: "Réglée",
+        status_unpaid: "En attente",
+        pay_btn: "Régler maintenant",
+        setup_label: "Frais de mise en place",
+        monthly_label: "Abonnement Mensuel",
+        footer: "Pour toute question concernant votre facturation, notre équipe est à votre disposition."
+      },
+      tickets: {
+        new_title: "Nouveau Ticket Support",
+        subject_label: "Sujet de la demande",
+        subject_placeholder: "Ex: Problème d'affichage sur mobile",
+        priority_label: "Priorité",
+        priority_low: "Basse (Question générale)",
+        priority_medium: "Moyenne (Bug mineur)",
+        priority_high: "Haute (Site inaccessible)",
+        create_btn: "Ouvrir le ticket",
+        creating: "Création...",
+        chat_header: "Discussion",
+        chat_placeholder: "Écrivez votre message...",
+        send_btn: "Envoyer",
+        no_messages: "Aucun message. Décrivez votre problème pour commencer."
+      }
+    },
     hero: {
       badge: "Système orienté conversion",
       title_1: "Ne faites pas un site.",
@@ -437,6 +492,61 @@ export const translations = {
         email_in_use: "البريد الإلكتروني مستخدم بالفعل.",
         weak_password: "كلمة المرور يجب أن تتكون من 6 أحرف على الأقل.",
         too_many_requests: "محاولات كثيرة جداً. يرجى الانتظار قليلاً."
+      }
+    },
+    dashboard: {
+      alerts: {
+        trial_title: "فترة تجريبية نشطة",
+        trial_desc: "استمتع بكامل الصلاحيات. تبقى",
+        trial_days: "أيام",
+        trial_end: "لتأكيد اشتراكك.",
+        trial_btn: "تفعيل حسابي",
+        
+        past_due_title: "تجديد الاشتراك مطلوب",
+        past_due_desc: "الخدمات مقيدة حالياً في وضع القراءة فقط. يرجى تسوية الوضع لاستعادة كامل الصلاحيات.",
+        
+        canceled_title: "الحساب متوقف مؤقتاً",
+        canceled_desc: "اشتراكك غير نشط حالياً. تواصل مع فريق الدعم لاستعادة حسابك والخدمات من حيث توقفت.",
+        canceled_btn_support: "تواصل مع الدعم",
+        canceled_btn_logout: "تسجيل الخروج"
+      },
+      subscription: {
+        title: "اشتراكي",
+        status_trial: "تجريبي",
+        status_active: "نشط",
+        status_pending: "معلق",
+        status_disabled: "معطل",
+        next_due: "تاريخ الاستحقاق",
+        btn_activate: "تواصل للتفعيل",
+        btn_regularize: "تواصل للتسوية",
+        btn_manage: "إدارة الاشتراك",
+        btn_invoices: "فواتيري",
+        trust_message: "نحن نضمن لك متابعة واضحة. الدعم والاستمرارية جزء من الخدمة."
+      },
+      invoices: {
+        title: "سجل الفواتير",
+        empty: "لا توجد فواتير حالياً.",
+        status_paid: "مدفوعة",
+        status_unpaid: "في الانتظار",
+        pay_btn: "ادفع الآن",
+        setup_label: "رسوم التأسيس",
+        monthly_label: "اشتراك شهري",
+        footer: "لأي استفسار حول الفواتير، فريقنا في خدمتك."
+      },
+      tickets: {
+        new_title: "تذكرة دعم جديدة",
+        subject_label: "موضوع الطلب",
+        subject_placeholder: "مثال: مشكلة في العرض على الهاتف",
+        priority_label: "الأولوية",
+        priority_low: "منخفضة (سؤال عام)",
+        priority_medium: "متوسطة (خطأ بسيط)",
+        priority_high: "عالية (الموقع لا يعمل)",
+        create_btn: "فتح التذكرة",
+        creating: "جاري الإنشاء...",
+        chat_header: "المحادثة",
+        chat_placeholder: "اكتب رسالتك هنا...",
+        send_btn: "إرسال",
+        no_messages: "لا توجد رسائل. صف مشكلتك للبدء."
       }
     },
     hero: {

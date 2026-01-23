@@ -11,16 +11,20 @@ import {
   orderBy, 
   serverTimestamp, 
   Timestamp,
-  limit
+  limit,
+  onSnapshot
 } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { db, auth } from '../lib/firebase';
 import type { 
   ClientData, 
   ProjectData, 
   TicketData, 
   TicketMessageData, 
   ProjectStep,
-  InvoiceData
+  InvoiceData,
+  InvoiceStatus,
+  InvoiceType,
+  AdminLogData
 } from '../types/db';
 
 // --- Helpers ---
@@ -38,6 +42,14 @@ export const initializeClientData = async (user: any, registrationData?: any) =>
   // If client already exists, do nothing
   if (clientSnap.exists()) return;
 
+  // Calculate Dates
+  const startDate = new Date();
+  const endDate = new Date();
+  endDate.setDate(startDate.getDate() + 30); // 30 Days Trial
+
+  const startTimestamp = Timestamp.fromDate(startDate);
+  const endTimestamp = Timestamp.fromDate(endDate);
+
   // 1. Create Client Document
   const defaultClient: ClientData = {
     uid: user.uid,
@@ -45,8 +57,17 @@ export const initializeClientData = async (user: any, registrationData?: any) =>
     email: user.email,
     companyName: registrationData?.company || user.displayName || 'My Company',
     phone: registrationData?.phone || '',
-    plan: 'boost', // Default plan
+    
+    // Manual Subscription Defaults
+    plan: 'boost', 
     subscriptionStatus: 'trial',
+    setupFeeStatus: 'unpaid',
+    billingCycle: 'monthly',
+    
+    currentPeriodStart: startTimestamp,
+    currentPeriodEnd: endTimestamp,
+    nextBillingDate: endTimestamp,
+
     createdAt: now(),
     updatedAt: now()
   };
@@ -88,7 +109,7 @@ export const initializeClientData = async (user: any, registrationData?: any) =>
     ticketId: ticketRef.id,
     senderId: 'system',
     senderName: 'NexGen Bot',
-    text: `Bonjour ${user.displayName || 'cher client'}, votre espace est prêt. Notre équipe va prendre contact avec vous sous 24h pour démarrer l'audit.`,
+    text: `Bonjour ${user.displayName || 'cher client'}, votre espace est prêt. Votre période d'essai a commencé. Notre équipe va prendre contact avec vous sous 24h pour démarrer l'audit.`,
     isAdmin: true,
     createdAt: now()
   });
@@ -100,6 +121,105 @@ export const getAllClients = async (): Promise<ClientData[]> => {
   const q = query(collection(db, 'clients'), orderBy('createdAt', 'desc'));
   const snapshot = await getDocs(q);
   return snapshot.docs.map(doc => doc.data() as ClientData);
+};
+
+export const updateClientSubscription = async (
+  clientId: string, 
+  updates: Partial<ClientData>, 
+  previousData: ClientData
+) => {
+  if (!auth.currentUser) throw new Error("Unauthorized");
+
+  // 1. Calculate Changes for Log
+  const changes: { field: string, before: any, after: any }[] = [];
+  
+  Object.keys(updates).forEach((key) => {
+    const k = key as keyof ClientData;
+    // Simple comparison (ignoring Timestamps deep compare for simplicity here)
+    if (updates[k] !== previousData[k]) {
+      changes.push({
+        field: k,
+        before: previousData[k]?.toString() || 'null',
+        after: updates[k]?.toString() || 'null'
+      });
+    }
+  });
+
+  if (changes.length === 0) return;
+
+  // 2. Create Audit Log
+  const logData: AdminLogData = {
+    adminUid: auth.currentUser.uid,
+    clientId,
+    actionType: 'update_subscription',
+    changes,
+    createdAt: now()
+  };
+  await addDoc(collection(db, 'adminLogs'), logData);
+
+  // 3. Update Client
+  const clientRef = doc(db, 'clients', clientId);
+  await updateDoc(clientRef, {
+    ...updates,
+    updatedAt: now()
+  });
+};
+
+// --- Invoices ---
+
+export const createInvoice = async (
+  clientId: string,
+  type: InvoiceType,
+  amountMAD: number,
+  period: string
+) => {
+  if (!auth.currentUser) throw new Error("Unauthorized");
+
+  const dueDate = new Date();
+  dueDate.setDate(dueDate.getDate() + 5); // Default due in 5 days
+
+  const invoiceData: InvoiceData = {
+    clientId,
+    type,
+    amountMAD,
+    status: 'unpaid',
+    period,
+    dueDate: Timestamp.fromDate(dueDate),
+    createdAt: now()
+  };
+
+  await addDoc(collection(db, 'invoices'), invoiceData);
+  
+  // Log it
+  await addDoc(collection(db, 'adminLogs'), {
+    adminUid: auth.currentUser.uid,
+    clientId,
+    actionType: 'create_invoice',
+    changes: [{ field: 'amount', before: '0', after: amountMAD.toString() }],
+    createdAt: now()
+  } as AdminLogData);
+};
+
+export const updateInvoiceStatus = async (invoiceId: string, status: InvoiceStatus) => {
+  const invoiceRef = doc(db, 'invoices', invoiceId);
+  const update: any = { status };
+  if (status === 'paid') {
+    update.paidAt = now();
+  } else {
+    update.paidAt = null;
+  }
+  await updateDoc(invoiceRef, update);
+};
+
+export const getInvoicesByClient = async (clientId: string): Promise<InvoiceData[]> => {
+  const q = query(
+    collection(db, 'invoices'), 
+    where('clientId', '==', clientId),
+    orderBy('createdAt', 'desc')
+  );
+  
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as InvoiceData));
 };
 
 // --- Projects ---
@@ -178,6 +298,18 @@ export const getTicketsByClient = async (clientId: string): Promise<TicketData[]
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TicketData));
 };
 
+export const subscribeToTicketMessages = (ticketId: string, callback: (messages: TicketMessageData[]) => void) => {
+  const q = query(
+    collection(db, 'tickets', ticketId, 'messages'),
+    orderBy('createdAt', 'asc')
+  );
+
+  return onSnapshot(q, (snapshot) => {
+    const messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TicketMessageData));
+    callback(messages);
+  });
+};
+
 export const getTicketMessages = async (ticketId: string): Promise<TicketMessageData[]> => {
   const q = query(
     collection(db, 'tickets', ticketId, 'messages'),
@@ -207,17 +339,4 @@ export const addTicketMessage = async (ticketId: string, senderId: string, text:
     updatedAt: now(),
     status: isAdmin ? 'pending' : 'open' // If admin replies, waiting for client (pending). If client replies, it's open.
   });
-};
-
-// --- Invoices ---
-
-export const getInvoicesByClient = async (clientId: string): Promise<InvoiceData[]> => {
-  const q = query(
-    collection(db, 'invoices'), 
-    where('clientId', '==', clientId),
-    orderBy('createdAt', 'desc')
-  );
-  
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as InvoiceData));
 };
