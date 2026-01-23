@@ -31,7 +31,7 @@ const Hero: React.FC = () => {
           <h1 className={`
             font-extrabold text-white tracking-tight mb-8 
             ${isRTL 
-                ? 'text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.4] md:leading-[1.3]' 
+                ? 'text-5xl sm:text-6xl lg:text-7xl xl:text-8xl leading-[1.5] md:leading-[1.4]' // Increased size & leading for Arabic
                 : 'text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.1] md:leading-[1.1]'
             }
           `}>
@@ -42,7 +42,10 @@ const Hero: React.FC = () => {
 
         {/* Subheadline - Increased font size */}
         <FadeIn delay={200}>
-          <p className="text-xl md:text-2xl text-neutral-300 font-normal max-w-3xl mx-auto mb-12 leading-relaxed">
+          <p className={`
+            text-neutral-300 font-normal max-w-3xl mx-auto mb-12 leading-relaxed
+            ${isRTL ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'} 
+          `}>
             {t.hero.subtitle}
           </p>
         </FadeIn>
