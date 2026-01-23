@@ -2,19 +2,35 @@ import React from 'react';
 import { ArrowRight, MessageCircle } from 'lucide-react';
 import FadeIn from './FadeIn';
 import { useLanguage } from '../contexts/LanguageContext';
+import LaserFlow from './LaserFlow';
 
 const Hero: React.FC = () => {
   const { t, dir } = useLanguage();
   const isRTL = dir === 'rtl';
 
   return (
-    <section className="relative pt-32 pb-24 px-6 z-10 flex flex-col items-center text-center overflow-hidden min-h-[90vh] justify-center">
+    <section className="relative pt-32 pb-24 px-6 z-10 flex flex-col items-center text-center overflow-hidden min-h-[90vh] justify-center bg-[#050505]">
       
-      {/* Background radial gradient accent */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-emerald-500/10 rounded-[100%] blur-[120px] -z-10 pointer-events-none opacity-50"></div>
+      {/* LaserFlow Animated Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <LaserFlow 
+           color="#10b981" 
+           flowSpeed={0.2} 
+           wispSpeed={15} 
+           wispDensity={1.5}
+           fogIntensity={0.6}
+           horizontalSizing={0.5}
+           verticalSizing={2}
+           horizontalBeamOffset={0}
+           verticalBeamOffset={-0.35}
+        />
+      </div>
+      
+      {/* Overlay gradient to ensure text readability */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent pointer-events-none"></div>
 
       {/* Increased max-width to allow larger text on desktop without wrapping */}
-      <div className="max-w-7xl mx-auto flex flex-col items-center">
+      <div className="max-w-7xl mx-auto flex flex-col items-center relative z-10">
         {/* Badge */}
         <FadeIn delay={0}>
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/30 border border-emerald-500/20 mb-8 hover:border-emerald-400/40 transition-colors cursor-default backdrop-blur-sm group">
