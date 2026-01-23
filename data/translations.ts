@@ -1,3 +1,4 @@
+
 export type Language = 'fr' | 'ar';
 
 export const translations = {
@@ -9,6 +10,65 @@ export const translations = {
       faq: "FAQ",
       login: "Espace Client",
       contact: "Contact"
+    },
+    auth: {
+      titles: {
+        login: "Espace Client",
+        register: "Créer un compte",
+        forgot: "Récupération",
+        verify: "Vérifiez votre email"
+      },
+      labels: {
+        fullname: "Nom complet",
+        company: "Entreprise",
+        city: "Ville",
+        country: "Pays",
+        email: "Email professionnel",
+        password: "Mot de passe"
+      },
+      placeholders: {
+        fullname: "Jean Dupont",
+        company: "Ma Société SAS",
+        city: "Paris",
+        country: "France",
+        email: "nom@entreprise.com",
+        password: "••••••••••••"
+      },
+      buttons: {
+        login: "Connexion",
+        register: "Créer mon compte",
+        forgot: "Réinitialiser",
+        loading: "Chargement...",
+        verify_done: "J'ai vérifié mon email",
+        resend: "Renvoyer le lien",
+        sending: "Envoi...",
+        logout: "Se déconnecter",
+        back: "Retour au site"
+      },
+      links: {
+        forgot_password: "Mot de passe oublié ?",
+        new_user: "Nouveau chez NexGen ?",
+        create_account: "Créer un compte",
+        existing_user: "Déjà un compte ?",
+        login_here: "Se connecter"
+      },
+      messages: {
+        secure: "Connexion sécurisée SSL",
+        reset_sent: "Un lien de réinitialisation a été envoyé à votre adresse email.",
+        verification_sent: "Un lien de confirmation a été envoyé à",
+        verification_instructions: "Veuillez cliquer sur le lien dans l'email pour activer votre compte et accéder au tableau de bord.",
+        verification_resent: "Email de vérification renvoyé ! Vérifiez vos spams."
+      },
+      errors: {
+        generic: "Une erreur est survenue.",
+        invalid_email: "Format d'email invalide.",
+        user_disabled: "Ce compte a été désactivé.",
+        user_not_found: "Aucun compte trouvé avec cet email.",
+        wrong_password: "Mot de passe incorrect.",
+        email_in_use: "Cet email est déjà utilisé.",
+        weak_password: "Le mot de passe doit contenir au moins 6 caractères.",
+        too_many_requests: "Trop de tentatives. Attendez quelques minutes."
+      }
     },
     hero: {
       badge: "Système orienté conversion",
@@ -319,6 +379,65 @@ export const translations = {
       faq: "الأسئلة الشائعة",
       login: "منطقة العملاء",
       contact: "اتصل بنا"
+    },
+    auth: {
+      titles: {
+        login: "منطقة العملاء",
+        register: "إنشاء حساب",
+        forgot: "استعادة كلمة المرور",
+        verify: "تحقق من بريدك الإلكتروني"
+      },
+      labels: {
+        fullname: "الاسم الكامل",
+        company: "اسم الشركة",
+        city: "المدينة",
+        country: "الدولة",
+        email: "البريد الإلكتروني المهني",
+        password: "كلمة المرور"
+      },
+      placeholders: {
+        fullname: "أحمد بناني",
+        company: "شركتي م.م",
+        city: "الدار البيضاء",
+        country: "المغرب",
+        email: "email@company.com",
+        password: "••••••••••••"
+      },
+      buttons: {
+        login: "تسجيل الدخول",
+        register: "إنشاء الحساب",
+        forgot: "إعادة تعيين",
+        loading: "جار التحميل...",
+        verify_done: "تم تأكيد البريد",
+        resend: "إعادة إرسال الرابط",
+        sending: "جاري الإرسال...",
+        logout: "تسجيل الخروج",
+        back: "العودة للموقع"
+      },
+      links: {
+        forgot_password: "نسيت كلمة المرور؟",
+        new_user: "جديد في NexGen؟",
+        create_account: "إنشاء حساب",
+        existing_user: "لديك حساب بالفعل؟",
+        login_here: "تسجيل الدخول"
+      },
+      messages: {
+        secure: "اتصال آمن SSL",
+        reset_sent: "تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني.",
+        verification_sent: "تم إرسال رابط تأكيد إلى",
+        verification_instructions: "يرجى النقر على الرابط في البريد الإلكتروني لتفعيل حسابك والوصول إلى لوحة التحكم.",
+        verification_resent: "تم إعادة إرسال بريد التحقق! تفقد الرسائل غير المرغوب فيها."
+      },
+      errors: {
+        generic: "حدث خطأ ما.",
+        invalid_email: "صيغة البريد الإلكتروني غير صحيحة.",
+        user_disabled: "تم تعطيل هذا الحساب.",
+        user_not_found: "لا يوجد حساب بهذا البريد الإلكتروني.",
+        wrong_password: "كلمة المرور غير صحيحة.",
+        email_in_use: "البريد الإلكتروني مستخدم بالفعل.",
+        weak_password: "كلمة المرور يجب أن تتكون من 6 أحرف على الأقل.",
+        too_many_requests: "محاولات كثيرة جداً. يرجى الانتظار قليلاً."
+      }
     },
     hero: {
       badge: "منظومة مصممة لزيادة المبيعات",

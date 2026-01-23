@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, 
   CreditCard, 
@@ -16,20 +16,50 @@ import {
   ChevronRight,
   X,
   Lock,
-  Save
+  Save,
+  Loader2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import FadeIn from '../components/FadeIn';
+import { useAuth } from '../contexts/AuthContext';
+import { getProjectByClient, getTicketsByClient } from '../services/firestore';
+import type { ProjectData, TicketData } from '../types/db';
 
 const Dashboard: React.FC = () => {
+  const { clientData, logout } = useAuth();
+  const [project, setProject] = useState<ProjectData | null>(null);
+  const [tickets, setTickets] = useState<TicketData[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+
   const [showSettings, setShowSettings] = useState(false);
   const [passwordForm, setPasswordForm] = useState({ current: '', new: '', confirm: '' });
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success'>('idle');
 
+  useEffect(() => {
+    const fetchData = async () => {
+        if (!clientData?.uid) return;
+        
+        try {
+            const [projData, ticketsData] = await Promise.all([
+                getProjectByClient(clientData.uid),
+                getTicketsByClient(clientData.uid)
+            ]);
+            setProject(projData);
+            setTickets(ticketsData);
+        } catch (error) {
+            console.error("Failed to fetch dashboard data", error);
+        } finally {
+            setIsLoadingData(false);
+        }
+    };
+
+    fetchData();
+  }, [clientData]);
+
   const handlePasswordChange = (e: React.FormEvent) => {
     e.preventDefault();
     setSaveStatus('saving');
-    // Simulate API Call
+    // Simulate API Call for now (Requires re-authentication in Firebase)
     setTimeout(() => {
         setSaveStatus('success');
         setTimeout(() => {
@@ -39,6 +69,14 @@ const Dashboard: React.FC = () => {
         }, 1500);
     }, 1000);
   };
+
+  if (isLoadingData) {
+      return (
+          <div className="min-h-screen bg-[#050505] flex items-center justify-center">
+              <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+          </div>
+      );
+  }
 
   return (
     // THÈME SOMBRE : Fond #050505
@@ -51,25 +89,35 @@ const Dashboard: React.FC = () => {
             <div>
               <h1 className="text-3xl font-bold text-white tracking-tight">Espace Client</h1>
               <p className="text-neutral-400 mt-1 flex items-center gap-2">
-                Compte : <span className="text-white font-medium">Alex Rénovation SARL</span>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] border border-emerald-500/20 font-bold uppercase tracking-wider">Client Premium</span>
+                Compte : <span className="text-white font-medium">{clientData?.companyName || 'Mon Entreprise'}</span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] border border-emerald-500/20 font-bold uppercase tracking-wider">
+                    {clientData?.plan || 'Standard'}
+                </span>
               </p>
             </div>
           </FadeIn>
           
           <FadeIn delay={100} className="flex gap-3">
-             <a href="https://alex-renovation.com" target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm font-medium text-neutral-300 hover:bg-white/10 hover:text-white transition-colors flex items-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                <Globe size={16} className="text-neutral-400 group-hover:text-white" />
-                Voir mon site
-                <ExternalLink size={12} className="text-neutral-500" />
-             </a>
+             {project?.domain ? (
+                 <a href={`https://${project.domain}`} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm font-medium text-neutral-300 hover:bg-white/10 hover:text-white transition-colors flex items-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <Globe size={16} className="text-neutral-400 group-hover:text-white" />
+                    Voir mon site
+                    <ExternalLink size={12} className="text-neutral-500" />
+                 </a>
+             ) : (
+                 <button disabled className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm font-medium text-neutral-500 cursor-not-allowed flex items-center gap-2">
+                    <Globe size={16} />
+                    Site en construction
+                 </button>
+             )}
+             
              <button className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-bold hover:bg-emerald-500 transition-colors flex items-center gap-2 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
                 <MessageSquare size={16} />
                 Nouveau Ticket
              </button>
-             <Link to="/" className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-neutral-400 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 transition-colors shadow-sm">
+             <button onClick={() => logout()} className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-neutral-400 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 transition-colors shadow-sm">
                 <LogOut size={18} />
-             </Link>
+             </button>
           </FadeIn>
         </div>
 
@@ -91,7 +139,7 @@ const Dashboard: React.FC = () => {
                             Avancement du Projet
                         </h3>
                         <span className="text-xs font-medium text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 animate-pulse">
-                            Phase 3 : Développement en cours
+                            État : {project?.status === 'audit' ? 'Audit en cours' : project?.status === 'design' ? 'Design' : project?.status === 'development' ? 'Développement' : 'En ligne'}
                         </span>
                     </div>
 
@@ -101,30 +149,19 @@ const Dashboard: React.FC = () => {
                             {/* Ligne de fond (Desktop) */}
                             <div className="hidden md:block absolute top-4 left-0 w-full h-0.5 bg-white/5 z-0"></div>
 
-                            <ProjectStep 
-                                step="1" 
-                                title="Audit & Stratégie" 
-                                date="Complété le 10 Oct" 
-                                status="completed" 
-                            />
-                            <ProjectStep 
-                                step="2" 
-                                title="Design & Maquettes" 
-                                date="Validé le 15 Oct" 
-                                status="completed" 
-                            />
-                            <ProjectStep 
-                                step="3" 
-                                title="Développement" 
-                                date="Livraison prévue : 28 Oct" 
-                                status="current" 
-                            />
-                            <ProjectStep 
-                                step="4" 
-                                title="Recettage & Mise en ligne" 
-                                date="En attente" 
-                                status="upcoming" 
-                            />
+                            {project?.timeline ? (
+                                project.timeline.map((step) => (
+                                    <ProjectStepItem 
+                                        key={step.id}
+                                        step={step.id.toString()}
+                                        title={step.label}
+                                        date={step.date || 'En attente'} 
+                                        status={step.status} 
+                                    />
+                                ))
+                            ) : (
+                                <div className="text-neutral-500 text-sm">Chargement de la timeline...</div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -138,7 +175,9 @@ const Dashboard: React.FC = () => {
                             <MessageSquare size={18} className="text-neutral-400" />
                             Derniers Tickets Support
                         </h3>
-                        <button className="text-xs text-neutral-400 hover:text-emerald-400 transition-colors font-medium">Voir l'historique</button>
+                        {tickets.length > 0 && (
+                            <button className="text-xs text-neutral-400 hover:text-emerald-400 transition-colors font-medium">Voir tout</button>
+                        )}
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm">
@@ -152,27 +191,22 @@ const Dashboard: React.FC = () => {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5 text-neutral-300">
-                                <TicketRow 
-                                    subject="Modification horaire footer" 
-                                    id="#2930" 
-                                    date="Aujourd'hui" 
-                                    priority="Basse" 
-                                    status="En cours" 
-                                />
-                                <TicketRow 
-                                    subject="Problème formulaire contact" 
-                                    id="#2812" 
-                                    date="12 Oct 2023" 
-                                    priority="Haute" 
-                                    status="Résolu" 
-                                />
-                                <TicketRow 
-                                    subject="Ajout nouvelle photo équipe" 
-                                    id="#2750" 
-                                    date="05 Oct 2023" 
-                                    priority="Moyenne" 
-                                    status="Résolu" 
-                                />
+                                {tickets.length > 0 ? tickets.map((ticket) => (
+                                    <TicketRow 
+                                        key={ticket.id}
+                                        subject={ticket.subject} 
+                                        id={`#${ticket.id?.slice(0,4)}`} 
+                                        date={ticket.createdAt ? new Date(ticket.createdAt.seconds * 1000).toLocaleDateString() : '-'} 
+                                        priority={ticket.priority} 
+                                        status={ticket.status} 
+                                    />
+                                )) : (
+                                    <tr>
+                                        <td colSpan={5} className="px-6 py-8 text-center text-neutral-500">
+                                            Aucun ticket ouvert. Tout va bien !
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
@@ -192,22 +226,23 @@ const Dashboard: React.FC = () => {
             
             {/* 3. ABONNEMENT & FACTURATION */}
             <FadeIn delay={200} direction="left">
-                {/* Cette carte était déjà sombre, on l'ajuste pour qu'elle s'intègre mieux */}
                 <div className="bg-gradient-to-br from-[#111] to-[#0A0A0A] border border-white/10 rounded-2xl p-6 relative overflow-hidden group text-white shadow-2xl">
                     <div className="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-emerald-700"></div>
                     
                     <div className="flex justify-between items-start mb-6">
                         <div>
                             <h3 className="text-white font-semibold">Mon Abonnement</h3>
-                            <p className="text-xs text-neutral-400 mt-1">Pack Boost (Mensuel)</p>
+                            <p className="text-xs text-neutral-400 mt-1 capitalize">Pack {clientData?.plan || 'Boost'}</p>
                         </div>
-                        <div className="px-2 py-1 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold uppercase rounded tracking-wide">
-                            Actif
+                        <div className={`px-2 py-1 border text-[10px] font-bold uppercase rounded tracking-wide ${clientData?.subscriptionStatus === 'active' || clientData?.subscriptionStatus === 'trial' ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' : 'bg-red-500/20 border-red-500/30 text-red-400'}`}>
+                            {clientData?.subscriptionStatus === 'trial' ? 'Essai' : clientData?.subscriptionStatus === 'active' ? 'Actif' : 'Inactif'}
                         </div>
                     </div>
 
                     <div className="flex items-baseline gap-1 mb-2">
-                        <span className="text-3xl font-bold text-white">99,00 €</span>
+                        <span className="text-3xl font-bold text-white">
+                            {clientData?.plan === 'business' ? '399' : clientData?.plan === 'presence' ? '199' : '249'} MAD
+                        </span>
                         <span className="text-sm text-neutral-400">/mois</span>
                     </div>
 
@@ -215,7 +250,7 @@ const Dashboard: React.FC = () => {
                         <Clock size={16} className="text-neutral-400" />
                         <div className="flex-1">
                             <div className="text-[10px] text-neutral-500 uppercase font-bold">Prochain Paiement</div>
-                            <div className="text-sm text-white font-medium">01 Novembre 2025</div>
+                            <div className="text-sm text-white font-medium">01 Prochain Mois</div>
                         </div>
                     </div>
 
@@ -275,12 +310,12 @@ const Dashboard: React.FC = () => {
                         </div>
                         <ChevronRight size={16} className="text-neutral-500 group-hover:text-neutral-300" />
                     </button>
-                    <Link to="/login" className="w-full p-4 flex items-center justify-between hover:bg-red-500/10 transition-colors group">
+                    <button onClick={() => logout()} className="w-full p-4 flex items-center justify-between hover:bg-red-500/10 transition-colors group">
                         <div className="flex items-center gap-3">
                             <LogOut size={18} className="text-neutral-400 group-hover:text-red-400 transition-colors" />
                             <span className="text-sm text-neutral-300 group-hover:text-red-400 font-medium">Se déconnecter</span>
                         </div>
-                    </Link>
+                    </button>
                 </div>
             </FadeIn>
 
@@ -372,22 +407,32 @@ const Dashboard: React.FC = () => {
 
 /* --- SUB-COMPONENTS --- */
 
-const ProjectStep = ({ step, title, date, status }: { step: string, title: string, date: string, status: 'completed' | 'current' | 'upcoming' }) => {
+interface ProjectStepProps {
+    step: string;
+    title: string;
+    date: string;
+    status: 'completed' | 'current' | 'pending' | 'upcoming';
+}
+
+const ProjectStepItem: React.FC<ProjectStepProps> = ({ step, title, date, status }) => {
+    // Treat 'pending' same as 'upcoming' visually for now or handle separately
+    const visualStatus = status === 'pending' ? 'upcoming' : status;
+
     // Styles Dark Mode
-    const bg = status === 'completed' ? 'bg-emerald-600 border-emerald-600' : status === 'current' ? 'bg-[#0A0A0A] border-2 border-emerald-500 text-emerald-400' : 'bg-[#0A0A0A] border-2 border-neutral-700 text-neutral-500';
-    const text = status === 'completed' ? 'text-white' : status === 'current' ? 'text-emerald-400' : 'text-neutral-500';
-    const titleColor = status === 'upcoming' ? 'text-neutral-500' : 'text-white';
+    const bg = visualStatus === 'completed' ? 'bg-emerald-600 border-emerald-600' : visualStatus === 'current' ? 'bg-[#0A0A0A] border-2 border-emerald-500 text-emerald-400' : 'bg-[#0A0A0A] border-2 border-neutral-700 text-neutral-500';
+    const text = visualStatus === 'completed' ? 'text-white' : visualStatus === 'current' ? 'text-emerald-400' : 'text-neutral-500';
+    const titleColor = visualStatus === 'upcoming' ? 'text-neutral-500' : 'text-white';
 
     return (
         <div className="flex flex-row md:flex-col items-center gap-4 md:gap-2 relative z-10 w-full md:w-auto">
             <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${bg} ${text} transition-colors shadow-lg`}>
-                {status === 'completed' ? <CheckCircle2 size={16} /> : step}
+                {visualStatus === 'completed' ? <CheckCircle2 size={16} /> : step}
             </div>
             <div className="md:text-center flex-1">
                 <div className={`text-sm font-medium ${titleColor}`}>{title}</div>
                 <div className="text-xs text-neutral-500">{date}</div>
             </div>
-            {status === 'current' && (
+            {visualStatus === 'current' && (
                 <div className="md:hidden absolute right-0">
                     <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -399,10 +444,18 @@ const ProjectStep = ({ step, title, date, status }: { step: string, title: strin
     )
 }
 
-const TicketRow = ({ id, subject, date, priority, status }: { id: string, subject: string, date: string, priority: string, status: string }) => {
+interface TicketRowProps {
+    id: string;
+    subject: string;
+    date: string;
+    priority: string;
+    status: string;
+}
+
+const TicketRow: React.FC<TicketRowProps> = ({ id, subject, date, priority, status }) => {
     let statusBadge;
-    if (status === 'Résolu') statusBadge = <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Résolu</span>;
-    else if (status === 'En cours') statusBadge = <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">En cours</span>;
+    if (status === 'resolved' || status === 'Résolu') statusBadge = <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Résolu</span>;
+    else if (status === 'open' || status === 'pending' || status === 'En cours') statusBadge = <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">En cours</span>;
     else statusBadge = <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-white/5 text-neutral-400 border border-white/10">Fermé</span>;
 
     return (
@@ -412,7 +465,7 @@ const TicketRow = ({ id, subject, date, priority, status }: { id: string, subjec
                 <div className="text-xs text-neutral-500">{id}</div>
             </td>
             <td className="px-6 py-4 text-xs text-neutral-400">{date}</td>
-            <td className="px-6 py-4 text-xs text-neutral-400">{priority}</td>
+            <td className="px-6 py-4 text-xs text-neutral-400 capitalize">{priority === 'low' ? 'Basse' : priority === 'medium' ? 'Moyenne' : 'Haute'}</td>
             <td className="px-6 py-4">{statusBadge}</td>
             <td className="px-6 py-4 text-right">
                 <ChevronRight size={16} className="text-neutral-600 group-hover:text-emerald-400 inline-block transition-colors" />

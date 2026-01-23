@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart2, LogIn, Menu, X, ChevronRight, Globe } from 'lucide-react';
+import { BarChart2, LogIn, Menu, X, ChevronRight, Globe, User } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const Navigation: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { t, language, setLanguage, dir } = useLanguage();
+  const { currentUser } = useAuth();
   const isHome = location.pathname === '/';
 
   // Lock body scroll when mobile menu is open
@@ -98,10 +100,17 @@ const Navigation: React.FC = () => {
              </button>
 
             {/* Desktop CTA */}
-            <Link to="/login" className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[13px] font-semibold text-white transition-all group hover:border-emerald-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
-              {t.nav.login}
-              <LogIn size={16} strokeWidth={2} className={`group-hover:translate-x-0.5 transition-transform text-neutral-400 group-hover:text-emerald-400 ${dir === 'rtl' ? 'rotate-180 group-hover:-translate-x-0.5' : ''}`} />
-            </Link>
+            {currentUser ? (
+              <Link to="/dashboard" className="hidden md:flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white hover:bg-emerald-500 rounded-lg text-[13px] font-bold transition-all shadow-lg shadow-emerald-900/20">
+                <User size={16} />
+                Dashboard
+              </Link>
+            ) : (
+              <Link to="/login" className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[13px] font-semibold text-white transition-all group hover:border-emerald-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+                {t.nav.login}
+                <LogIn size={16} strokeWidth={2} className={`group-hover:translate-x-0.5 transition-transform text-neutral-400 group-hover:text-emerald-400 ${dir === 'rtl' ? 'rotate-180 group-hover:-translate-x-0.5' : ''}`} />
+              </Link>
+            )}
 
             {/* Mobile Menu Toggle */}
             <button 
@@ -154,14 +163,25 @@ const Navigation: React.FC = () => {
           </div>
 
           <div className="mt-auto">
-            <Link 
-              to="/login" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="w-full flex items-center justify-center gap-3 px-6 py-5 bg-emerald-500 text-neutral-950 rounded-xl text-lg font-bold hover:bg-emerald-400 transition-all active:scale-[0.98]"
-            >
-              {t.nav.login}
-              <LogIn size={20} strokeWidth={2.5} className={dir === 'rtl' ? 'rotate-180' : ''}/>
-            </Link>
+            {currentUser ? (
+               <Link 
+                to="/dashboard" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full flex items-center justify-center gap-3 px-6 py-5 bg-emerald-500 text-neutral-950 rounded-xl text-lg font-bold hover:bg-emerald-400 transition-all active:scale-[0.98]"
+              >
+                Accéder au Dashboard
+                <User size={20} />
+              </Link>
+            ) : (
+              <Link 
+                to="/login" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full flex items-center justify-center gap-3 px-6 py-5 bg-emerald-500 text-neutral-950 rounded-xl text-lg font-bold hover:bg-emerald-400 transition-all active:scale-[0.98]"
+              >
+                {t.nav.login}
+                <LogIn size={20} strokeWidth={2.5} className={dir === 'rtl' ? 'rotate-180' : ''}/>
+              </Link>
+            )}
             
             <div className="mt-8 flex justify-center gap-6 text-sm text-neutral-500">
                 <Link to="/legal" onClick={() => setIsMobileMenuOpen(false)}>{t.footer.legal}</Link>

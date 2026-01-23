@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Users, 
   CreditCard, 
@@ -17,24 +17,20 @@ import {
   Mail,
   Lock,
   Building2,
-  User
+  User,
+  Loader2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import FadeIn from '../components/FadeIn';
-
-// Dummy data moved outside component to initialize state
-const INITIAL_CLIENTS = [
-    { id: 1, name: "Alexandre Dumont", company: "Alex Rénovation", email: "alex@renovation.com", plan: "Boost", siteStatus: "online", billingStatus: "paid", amount: "99€" },
-    { id: 2, name: "Sarah Connor", company: "Cyberdyne Systems", email: "sarah@cyberdyne.com", plan: "Business", siteStatus: "maintenance", billingStatus: "paid", amount: "199€" },
-    { id: 3, name: "Jean Valjean", company: "Madeleine Corp", email: "jean@madeleine.fr", plan: "Presence", siteStatus: "online", billingStatus: "late", amount: "49€" },
-    { id: 4, name: "Marie Curie", company: "Radium Labs", email: "marie@radium.io", plan: "Business", siteStatus: "online", billingStatus: "paid", amount: "199€" },
-    { id: 5, name: "Tony Stark", company: "Stark Industries", email: "tony@stark.com", plan: "Boost", siteStatus: "offline", billingStatus: "cancelled", amount: "99€" },
-    { id: 6, name: "Bruce Wayne", company: "Wayne Enterprises", email: "bruce@wayne.com", plan: "Business", siteStatus: "online", billingStatus: "paid", amount: "199€" },
-];
+import { getAllClients } from '../services/firestore';
+import type { ClientData } from '../types/db';
+import { useAuth } from '../contexts/AuthContext';
 
 const AdminDashboard: React.FC = () => {
+  const { logout } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
-  const [clients, setClients] = useState(INITIAL_CLIENTS);
+  const [clients, setClients] = useState<ClientData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,6 +46,20 @@ const AdminDashboard: React.FC = () => {
     plan: 'Presence'
   });
 
+  useEffect(() => {
+      const fetchClients = async () => {
+          try {
+              const data = await getAllClients();
+              setClients(data);
+          } catch (error) {
+              console.error("Error fetching clients:", error);
+          } finally {
+              setIsLoading(false);
+          }
+      };
+      fetchClients();
+  }, []);
+
   const generateTempPassword = () => {
     const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%";
     let pass = "";
@@ -63,41 +73,27 @@ const AdminDashboard: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulation of API Call
+    // NOTE: In a real app, this would call a Cloud Function to create a user.
+    // Client-side SDK cannot create another user without logging out the admin.
     setTimeout(() => {
-        const tempPassword = generateTempPassword();
-        
-        // Add new client to list
-        const newClient = {
-            id: clients.length + 1,
-            name: `${formData.firstName} ${formData.lastName}`,
-            company: formData.company,
-            email: formData.email,
-            plan: formData.plan,
-            siteStatus: "maintenance", // Default status for new site
-            billingStatus: "paid",
-            amount: formData.plan === 'Business' ? '199€' : formData.plan === 'Boost' ? '99€' : '49€'
-        };
-
-        setClients([newClient, ...clients]);
-        
-        // Show success notification
-        setNotification({
-            show: true,
-            type: 'success',
-            message: `Compte créé ! Un email a été envoyé à ${formData.email} avec le mot de passe provisoire : ${tempPassword}`
-        });
-
-        // Reset and close
         setIsSubmitting(false);
         setIsModalOpen(false);
-        setFormData({ firstName: '', lastName: '', company: '', email: '', plan: 'Presence' });
-
-        // Hide notification after 8 seconds
-        setTimeout(() => setNotification(prev => ({...prev, show: false})), 8000);
-
-    }, 1500);
+        setNotification({
+            show: true,
+            type: 'error',
+            message: "La création de compte admin nécessite une Cloud Function (non implémentée)."
+        });
+        setTimeout(() => setNotification(prev => ({...prev, show: false})), 5000);
+    }, 1000);
   };
+
+  if (isLoading) {
+      return (
+          <div className="min-h-screen bg-[#050505] flex items-center justify-center">
+              <Loader2 className="w-10 h-10 text-emerald-500 animate-spin" />
+          </div>
+      );
+  }
 
   return (
     // THÈME SOMBRE : #050505
@@ -111,7 +107,7 @@ const AdminDashboard: React.FC = () => {
                     <CheckCircle2 size={20} />
                 </div>
                 <div>
-                    <h4 className="font-bold text-sm mb-1 text-emerald-400">Succès</h4>
+                    <h4 className="font-bold text-sm mb-1 text-emerald-400">Notification</h4>
                     <p className="text-sm text-neutral-400 leading-relaxed">{notification.message}</p>
                 </div>
                 <button onClick={() => setNotification(prev => ({...prev, show: false}))} className="text-neutral-500 hover:text-white ml-auto">
@@ -143,9 +139,9 @@ const AdminDashboard: React.FC = () => {
                 <Plus size={18} />
                 Ajouter un client
              </button>
-             <Link to="/login" className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm font-medium text-neutral-400 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 transition-colors flex items-center gap-2 shadow-sm">
+             <button onClick={() => logout()} className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm font-medium text-neutral-400 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 transition-colors flex items-center gap-2 shadow-sm">
                 <LogOut size={16} />
-             </Link>
+             </button>
           </FadeIn>
         </div>
 
@@ -153,8 +149,8 @@ const AdminDashboard: React.FC = () => {
         <div className="grid md:grid-cols-4 gap-6 mb-12">
             <KpiCard 
                 title="MRR (Revenu Récurrent)" 
-                value="12,450 €" 
-                trend="+850 €" 
+                value={`${clients.reduce((acc, curr) => acc + (curr.plan === 'business' ? 399 : curr.plan === 'presence' ? 199 : 249), 0).toLocaleString()} MAD`} 
+                trend="Mensuel" 
                 isPositive 
                 icon={<CreditCard size={20} />} 
                 delay={0}
@@ -162,23 +158,23 @@ const AdminDashboard: React.FC = () => {
             <KpiCard 
                 title="Clients Actifs" 
                 value={clients.length.toString()} 
-                trend="+5 ce mois" 
+                trend="Total" 
                 isPositive 
                 icon={<Users size={20} />} 
                 delay={100}
             />
             <KpiCard 
                 title="Taux d'impayés" 
-                value="1.4%" 
-                trend="-0.2%" 
+                value="0%" 
+                trend="Stable" 
                 isPositive 
                 icon={<ShieldAlert size={20} />} 
                 delay={200}
             />
             <KpiCard 
                 title="Tickets Ouverts" 
-                value="8" 
-                trend="+2 hier" 
+                value="0" 
+                trend="Stable" 
                 isPositive={false} 
                 icon={<Activity size={20} />} 
                 delay={300}
@@ -225,29 +221,29 @@ const AdminDashboard: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5 text-neutral-300">
-                            {clients.filter(c => c.name.toLowerCase().includes(searchTerm.toLowerCase()) || c.company.toLowerCase().includes(searchTerm.toLowerCase())).map((client) => (
+                            {clients.length > 0 ? clients.filter(c => 
+                                (c.companyName || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                (c.email || '').toLowerCase().includes(searchTerm.toLowerCase())
+                            ).map((client) => (
                                 <ClientRow 
-                                    key={client.id}
-                                    name={client.name} 
-                                    company={client.company} 
-                                    email={client.email}
+                                    key={client.uid}
+                                    name={client.companyName} 
+                                    company={client.email} // Using Email as secondary line for admin
                                     plan={client.plan} 
-                                    siteStatus={client.siteStatus} 
-                                    billingStatus={client.billingStatus}
-                                    amount={client.amount}
+                                    // Note: In real app, siteStatus would come from ProjectData, simplified here for checklist
+                                    siteStatus="online" 
+                                    billingStatus={client.subscriptionStatus}
+                                    amount={client.plan === 'business' ? '399 MAD' : client.plan === 'presence' ? '199 MAD' : '249 MAD'}
                                 />
-                            ))}
+                            )) : (
+                                <tr>
+                                    <td colSpan={5} className="px-6 py-8 text-center text-neutral-500">
+                                        Aucun client trouvé.
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
-                </div>
-                
-                {/* Pagination (Visual) */}
-                <div className="p-4 border-t border-white/5 flex items-center justify-between text-xs text-neutral-500 bg-white/[0.02]">
-                    <div>Affichage de {clients.length} sur {clients.length}</div>
-                    <div className="flex gap-2">
-                        <button className="px-3 py-1 rounded bg-white/5 border border-white/5 hover:bg-white/10 disabled:opacity-50 text-neutral-400 shadow-sm transition-colors">Précédent</button>
-                        <button className="px-3 py-1 rounded bg-white/5 border border-white/5 hover:bg-white/10 text-neutral-400 shadow-sm transition-colors">Suivant</button>
-                    </div>
                 </div>
             </div>
         </FadeIn>
@@ -334,9 +330,9 @@ const AdminDashboard: React.FC = () => {
                             value={formData.plan}
                             onChange={e => setFormData({...formData, plan: e.target.value})}
                         >
-                            <option value="Presence">Présence (49€/mois)</option>
-                            <option value="Boost">Boost (99€/mois)</option>
-                            <option value="Business">Business (199€/mois)</option>
+                            <option value="Presence">Présence (199 MAD/mois)</option>
+                            <option value="Boost">Boost (249 MAD/mois)</option>
+                            <option value="Business">Business (399 MAD/mois)</option>
                         </select>
                     </div>
 
@@ -394,8 +390,9 @@ const KpiCard = ({ title, value, trend, isPositive, icon, delay }: { title: stri
 const ClientRow = ({ name, company, email, plan, siteStatus, billingStatus, amount }: any) => {
     
     const getPlanBadge = (p: string) => {
-        if (p === 'Business') return <span className="px-2 py-0.5 rounded border border-purple-500/30 bg-purple-500/10 text-purple-400 text-[10px] font-bold uppercase">Business</span>
-        if (p === 'Boost') return <span className="px-2 py-0.5 rounded border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase">Boost</span>
+        const pl = p.toLowerCase();
+        if (pl === 'business') return <span className="px-2 py-0.5 rounded border border-purple-500/30 bg-purple-500/10 text-purple-400 text-[10px] font-bold uppercase">Business</span>
+        if (pl === 'boost') return <span className="px-2 py-0.5 rounded border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase">Boost</span>
         return <span className="px-2 py-0.5 rounded border border-white/10 bg-white/5 text-neutral-400 text-[10px] font-bold uppercase">Presence</span>
     }
 
@@ -406,8 +403,8 @@ const ClientRow = ({ name, company, email, plan, siteStatus, billingStatus, amou
     }
 
     const getBillingStatus = (s: string) => {
-        if (s === 'paid') return <span className="text-neutral-500 text-xs">À jour</span>
-        if (s === 'late') return <span className="text-red-400 font-bold text-xs">Retard</span>
+        if (s === 'paid' || s === 'active' || s === 'trial') return <span className="text-neutral-500 text-xs">À jour</span>
+        if (s === 'late' || s === 'past_due') return <span className="text-red-400 font-bold text-xs">Retard</span>
         return <span className="text-neutral-600 text-xs">Annulé</span>
     }
 
@@ -415,8 +412,8 @@ const ClientRow = ({ name, company, email, plan, siteStatus, billingStatus, amou
         <tr className="hover:bg-white/5 transition-colors group border-b border-white/5 last:border-0">
             <td className="px-6 py-4">
                 <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xs font-bold text-neutral-300">
-                        {name.charAt(0)}
+                    <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xs font-bold text-neutral-300 uppercase">
+                        {(name || 'C').charAt(0)}
                     </div>
                     <div>
                         <div className="font-medium text-white text-sm">{name}</div>
@@ -429,7 +426,6 @@ const ClientRow = ({ name, company, email, plan, siteStatus, billingStatus, amou
             </td>
             <td className="px-6 py-4">
                 {getSiteStatus(siteStatus)}
-                <div className="text-[10px] text-neutral-600 mt-0.5">Uptime: 99.9%</div>
             </td>
             <td className="px-6 py-4">
                 <div className="flex flex-col">
