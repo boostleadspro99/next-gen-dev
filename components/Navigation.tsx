@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart2, LogIn, Menu, X, ChevronRight, Globe, User } from 'lucide-react';
+import { BarChart2, LogIn, Menu, X, ChevronRight, Globe, User, ShieldCheck } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -9,7 +9,7 @@ const Navigation: React.FC = () => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { t, language, setLanguage, dir } = useLanguage();
-  const { currentUser } = useAuth();
+  const { currentUser, isSuperAdmin } = useAuth();
   const isHome = location.pathname === '/';
 
   // Lock body scroll when mobile menu is open
@@ -18,7 +18,7 @@ const Navigation: React.FC = () => {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
-    }
+    };
     return () => {
       document.body.style.overflow = 'unset';
     };
@@ -64,22 +64,34 @@ const Navigation: React.FC = () => {
     setIsMobileMenuOpen(false);
   };
 
+  const dashboardLinkTo = isSuperAdmin ? "/admin" : "/dashboard";
+  const dashboardButtonText = isSuperAdmin ? "Admin" : "Dashboard";
+
   return (
     <>
       <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-[#050505]/80 backdrop-blur-xl transition-all duration-300 supports-[backdrop-filter]:bg-[#050505]/60">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           
-          {/* Logo */}
-          <Link 
-            to="/" 
-            className="flex items-center gap-2 text-white group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-lg p-1 z-50 relative"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 border border-emerald-500/20 flex items-center justify-center text-emerald-500 group-hover:border-emerald-500/40 transition-colors">
-              <BarChart2 size={20} strokeWidth={2} />
-            </div>
-            <span className="font-semibold tracking-tight text-sm group-hover:text-emerald-50 transition-colors font-sans">NexGen</span>
-          </Link>
+          {/* Logo & Admin Badge */}
+          <div className="flex items-center gap-4">
+            <Link 
+              to="/" 
+              className="flex items-center gap-2 text-white group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-lg p-1 z-50 relative"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 border border-emerald-500/20 flex items-center justify-center text-emerald-500 group-hover:border-emerald-500/40 transition-colors">
+                <BarChart2 size={20} strokeWidth={2} />
+              </div>
+              <span className="font-semibold tracking-tight text-sm group-hover:text-emerald-50 transition-colors font-sans">NexGen</span>
+            </Link>
+
+            {isSuperAdmin && (
+              <Link to="/admin" className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[10px] font-bold text-emerald-400 uppercase tracking-widest hover:bg-emerald-500/20 transition-all">
+                <ShieldCheck size={12} />
+                Super Admin
+              </Link>
+            )}
+          </div>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-2 text-[14px] font-medium text-neutral-300">
@@ -101,9 +113,12 @@ const Navigation: React.FC = () => {
 
             {/* Desktop CTA */}
             {currentUser ? (
-              <Link to="/dashboard" className="hidden md:flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white hover:bg-emerald-500 rounded-lg text-[13px] font-bold transition-all shadow-lg shadow-emerald-900/20">
+              <Link 
+                to={dashboardLinkTo} 
+                className="hidden md:flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white hover:bg-emerald-500 rounded-lg text-[13px] font-bold transition-all shadow-lg shadow-emerald-900/20"
+              >
                 <User size={16} />
-                Dashboard
+                {dashboardButtonText}
               </Link>
             ) : (
               <Link to="/login" className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[13px] font-semibold text-white transition-all group hover:border-emerald-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
@@ -135,6 +150,7 @@ const Navigation: React.FC = () => {
 
         <div className="flex flex-col h-full overflow-y-auto pb-10">
           <div className="flex flex-col gap-2 mb-8">
+            {/* Removed Super Admin mobile link here as it's consolidated below */}
             <NavLink to="#solutions" mobile>{t.nav.solutions}</NavLink>
             <NavLink to="#methodology" mobile>{t.nav.methodology}</NavLink>
             <NavLink to="#pricing" mobile>{t.nav.pricing}</NavLink>
@@ -165,11 +181,11 @@ const Navigation: React.FC = () => {
           <div className="mt-auto">
             {currentUser ? (
                <Link 
-                to="/dashboard" 
+                to={dashboardLinkTo} 
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="w-full flex items-center justify-center gap-3 px-6 py-5 bg-emerald-500 text-neutral-950 rounded-xl text-lg font-bold hover:bg-emerald-400 transition-all active:scale-[0.98]"
               >
-                Accéder au Dashboard
+                {isSuperAdmin ? 'Accéder à l\'Admin' : 'Accéder au Dashboard'}
                 <User size={20} />
               </Link>
             ) : (

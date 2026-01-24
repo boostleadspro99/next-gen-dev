@@ -2,7 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { 
   onAuthStateChanged, 
   User, 
-  signOut as firebaseSignOut 
+  signOut as firebaseSignOut,
+  getIdTokenResult
 } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
@@ -16,6 +17,7 @@ interface AuthContextType {
   loading: boolean;
   logout: () => Promise<void>;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,6 +26,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserData | null>(null);
   const [clientData, setClientData] = useState<ClientData | null>(null);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,7 +35,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (user) {
         try {
-          // 1. Fetch Basic User Profile
+          // 1. Verify Custom Claims (Super Admin Status)
+          const tokenResult = await getIdTokenResult(user, true); // Force refresh to get latest claims
+          const isSuper = tokenResult.claims.role === 'super_admin';
+          setIsSuperAdmin(isSuper);
+
+          // 2. Fetch Basic User Profile from Firestore
           const userDocRef = doc(db, 'users', user.uid);
           const userDocSnap = await getDoc(userDocRef);
           
@@ -40,12 +48,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUserProfile(userDocSnap.data() as UserData);
           }
 
-          // 2. Attempt to Initialize Client Data (Seeding)
-          // This ensures that even if registration seeding failed or user logged in via OAuth (future),
-          // the critical client collections exist.
+          // 3. Attempt to Initialize Client Data (Seeding)
+          // This ensures that even if registration seeding failed, critical collections exist.
+          // Note: Super Admin might not need this, but good to have for initial setup.
           await initializeClientData(user);
 
-          // 3. Fetch Client Business Data
+          // 4. Fetch Client Business Data
           const clientDocRef = doc(db, 'clients', user.uid);
           const clientDocSnap = await getDoc(clientDocRef);
 
@@ -59,6 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         setUserProfile(null);
         setClientData(null);
+        setIsSuperAdmin(false);
       }
       
       setLoading(false);
@@ -72,6 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCurrentUser(null);
     setUserProfile(null);
     setClientData(null);
+    setIsSuperAdmin(false);
   };
 
   const value = {
@@ -80,12 +90,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     clientData,
     loading,
     logout,
-    isAdmin: userProfile?.role === 'admin'
+    isAdmin: isSuperAdmin, // Map isSuperAdmin to isAdmin for backward compatibility
+    isSuperAdmin
   };
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };

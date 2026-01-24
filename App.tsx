@@ -1,27 +1,31 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider } from './contexts/AuthContext';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import AdminDashboard from './pages/AdminDashboard';
-import Simulator from './pages/Simulator';
-import Legal from './pages/Legal';
-import CGV from './pages/CGV';
-import Privacy from './pages/Privacy';
-import Contact from './pages/Contact';
 import ScrollToTop from './components/ScrollToTop';
-import VerifyEmail from './pages/VerifyEmail';
 import ProtectedRoute from './components/ProtectedRoute';
+import LoadingSpinner from '@/components/LoadingSpinner';
+
+// Lazy load pages for code splitting
+const Home = lazy(() => import('./pages/Home'));
+const Login = lazy(() => import('./pages/Login'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const Simulator = lazy(() => import('./pages/Simulator'));
+const Legal = lazy(() => import('./pages/Legal'));
+const CGV = lazy(() => import('./pages/CGV'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const Contact = lazy(() => import('./pages/Contact'));
+const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
+const DebugFirebase = lazy(() => import('./components/DebugFirebase'));
 
 const App: React.FC = () => {
   return (
     <AuthProvider>
       <LanguageProvider>
-        <HashRouter>
+        <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <ScrollToTop />
           <div className="relative min-h-screen flex flex-col bg-[#030303]">
             {/* Global Background Elements */}
@@ -37,31 +41,34 @@ const App: React.FC = () => {
             <Navigation />
             
             <main className="relative z-10 flex-grow">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                
-                {/* Protected Routes */}
-                <Route path="/verify-email" element={<VerifyEmail />} />
-                
-                <Route path="/dashboard" element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                } />
-                
-                <Route path="/admin" element={
-                  <ProtectedRoute requireAdmin>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                } />
-                
-                <Route path="/simulator" element={<Simulator />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/legal" element={<Legal />} />
-                <Route path="/cgv" element={<CGV />} />
-                <Route path="/privacy" element={<Privacy />} />
-              </Routes>
+              <Suspense fallback={<LoadingSpinner />}>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/login" element={<Login />} />
+                  
+                  {/* Protected Routes */}
+                  <Route path="/verify-email" element={<VerifyEmail />} />
+                  
+                  <Route path="/dashboard" element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="/admin" element={
+                    <ProtectedRoute requireAdmin>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="/simulator" element={<Simulator />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/legal" element={<Legal />} />
+                  <Route path="/cgv" element={<CGV />} />
+                  <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/debug-firebase" element={<DebugFirebase />} />
+                </Routes>
+              </Suspense>
             </main>
 
             <Footer />

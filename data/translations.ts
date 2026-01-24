@@ -122,7 +122,16 @@ export const translations = {
         chat_header: "Discussion",
         chat_placeholder: "Écrivez votre message...",
         send_btn: "Envoyer",
-        no_messages: "Aucun message. Décrivez votre problème pour commencer."
+        no_messages: "Aucun message. Décrivez votre problème pour commencer.",
+        last_tickets: "Derniers Tickets Support",
+        table_headers: {
+          subject: "Sujet",
+          date: "Date",
+          status: "Statut",
+          action: "Action"
+        },
+        no_tickets: "Aucun ticket ouvert.",
+        new_ticket_button: "Ouvrir un nouveau ticket"
       }
     },
     hero: {
@@ -546,7 +555,16 @@ export const translations = {
         chat_header: "المحادثة",
         chat_placeholder: "اكتب رسالتك هنا...",
         send_btn: "إرسال",
-        no_messages: "لا توجد رسائل. صف مشكلتك للبدء."
+        no_messages: "لا توجد رسائل. صف مشكلتك للبدء.",
+        last_tickets: "آخر تذاكر الدعم",
+        table_headers: {
+          subject: "الموضوع",
+          date: "التاريخ",
+          status: "الحالة",
+          action: "إجراء"
+        },
+        no_tickets: "لا توجد تذاكر مفتوحة.",
+        new_ticket_button: "فتح تذكرة جديدة"
       }
     },
     hero: {

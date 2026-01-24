@@ -45,6 +45,11 @@ export interface ClientData {
   stripeCustomerId?: string; // Optional for future
   createdAt: Timestamp;
   updatedAt: Timestamp;
+
+  // User Preferences
+  language?: 'fr' | 'ar';
+  notificationsEnabled?: boolean;
+  darkMode?: boolean;
 }
 
 export interface ProjectStep {

@@ -14,6 +14,13 @@ import {
   limit,
   onSnapshot
 } from 'firebase/firestore';
+import { 
+  updatePassword,
+  updateProfile,
+  updateEmail,
+  reauthenticateWithCredential,
+  EmailAuthProvider
+} from 'firebase/auth';
 import { db, auth } from '../lib/firebase';
 import type { 
   ClientData, 
@@ -24,7 +31,8 @@ import type {
   InvoiceData,
   InvoiceStatus,
   InvoiceType,
-  AdminLogData
+  AdminLogData,
+  TicketStatus
 } from '../types/db';
 
 // --- Helpers ---
@@ -39,42 +47,34 @@ export const initializeClientData = async (user: any, registrationData?: any) =>
   const clientRef = doc(db, 'clients', user.uid);
   const clientSnap = await getDoc(clientRef);
 
-  // If client already exists, do nothing
   if (clientSnap.exists()) return;
 
-  // Calculate Dates
   const startDate = new Date();
   const endDate = new Date();
-  endDate.setDate(startDate.getDate() + 30); // 30 Days Trial
+  endDate.setDate(startDate.getDate() + 30);
 
   const startTimestamp = Timestamp.fromDate(startDate);
   const endTimestamp = Timestamp.fromDate(endDate);
 
-  // 1. Create Client Document
   const defaultClient: ClientData = {
     uid: user.uid,
     ownerUid: user.uid,
     email: user.email,
     companyName: registrationData?.company || user.displayName || 'My Company',
     phone: registrationData?.phone || '',
-    
-    // Manual Subscription Defaults
     plan: 'boost', 
     subscriptionStatus: 'trial',
     setupFeeStatus: 'unpaid',
     billingCycle: 'monthly',
-    
     currentPeriodStart: startTimestamp,
     currentPeriodEnd: endTimestamp,
     nextBillingDate: endTimestamp,
-
     createdAt: now(),
     updatedAt: now()
   };
 
   await setDoc(clientRef, defaultClient);
 
-  // 2. Create Default Project Document
   const defaultTimeline: ProjectStep[] = [
     { id: 1, key: 'audit', label: 'Audit & Stratégie', status: 'current', date: new Date().toLocaleDateString() },
     { id: 2, key: 'design', label: 'Design & Maquettes', status: 'pending' },
@@ -92,8 +92,7 @@ export const initializeClientData = async (user: any, registrationData?: any) =>
 
   await addDoc(collection(db, 'projects'), projectData);
 
-  // 3. Create Welcome Ticket
-  const welcomeTicket: TicketData = {
+  const welcomeTicket: Omit<TicketData, 'id'> = {
     clientId: user.uid,
     subject: 'Bienvenue chez NexGen !',
     status: 'open',
@@ -123,31 +122,20 @@ export const getAllClients = async (): Promise<ClientData[]> => {
   return snapshot.docs.map(doc => doc.data() as ClientData);
 };
 
-export const updateClientSubscription = async (
-  clientId: string, 
-  updates: Partial<ClientData>, 
-  previousData: ClientData
-) => {
+export const updateClientSubscription = async (clientId: string, updates: Partial<ClientData>, previousData: ClientData) => {
   if (!auth.currentUser) throw new Error("Unauthorized");
 
-  // 1. Calculate Changes for Log
   const changes: { field: string, before: any, after: any }[] = [];
   
   Object.keys(updates).forEach((key) => {
     const k = key as keyof ClientData;
-    // Simple comparison (ignoring Timestamps deep compare for simplicity here)
     if (updates[k] !== previousData[k]) {
-      changes.push({
-        field: k,
-        before: previousData[k]?.toString() || 'null',
-        after: updates[k]?.toString() || 'null'
-      });
+      changes.push({ field: k, before: previousData[k]?.toString() || 'null', after: updates[k]?.toString() || 'null' });
     }
   });
 
   if (changes.length === 0) return;
 
-  // 2. Create Audit Log
   const logData: AdminLogData = {
     adminUid: auth.currentUser.uid,
     clientId,
@@ -157,26 +145,33 @@ export const updateClientSubscription = async (
   };
   await addDoc(collection(db, 'adminLogs'), logData);
 
-  // 3. Update Client
+  const clientRef = doc(db, 'clients', clientId);
+  await updateDoc(clientRef, { ...updates, updatedAt: now() });
+};
+
+// --- Client Preferences ---
+
+export const updateClientPreferences = async (clientId: string, preferences: {
+  language?: 'fr' | 'ar';
+  notificationsEnabled?: boolean;
+  darkMode?: boolean;
+}) => {
+  if (!clientId) throw new Error("Client ID required");
+
   const clientRef = doc(db, 'clients', clientId);
   await updateDoc(clientRef, {
-    ...updates,
+    ...preferences,
     updatedAt: now()
   });
 };
 
 // --- Invoices ---
 
-export const createInvoice = async (
-  clientId: string,
-  type: InvoiceType,
-  amountMAD: number,
-  period: string
-) => {
+export const createInvoice = async (clientId: string, type: InvoiceType, amountMAD: number, period: string) => {
   if (!auth.currentUser) throw new Error("Unauthorized");
 
   const dueDate = new Date();
-  dueDate.setDate(dueDate.getDate() + 5); // Default due in 5 days
+  dueDate.setDate(dueDate.getDate() + 5);
 
   const invoiceData: InvoiceData = {
     clientId,
@@ -190,7 +185,6 @@ export const createInvoice = async (
 
   await addDoc(collection(db, 'invoices'), invoiceData);
   
-  // Log it
   await addDoc(collection(db, 'adminLogs'), {
     adminUid: auth.currentUser.uid,
     clientId,
@@ -203,21 +197,13 @@ export const createInvoice = async (
 export const updateInvoiceStatus = async (invoiceId: string, status: InvoiceStatus) => {
   const invoiceRef = doc(db, 'invoices', invoiceId);
   const update: any = { status };
-  if (status === 'paid') {
-    update.paidAt = now();
-  } else {
-    update.paidAt = null;
-  }
+  if (status === 'paid') update.paidAt = now();
+  else update.paidAt = null;
   await updateDoc(invoiceRef, update);
 };
 
 export const getInvoicesByClient = async (clientId: string): Promise<InvoiceData[]> => {
-  const q = query(
-    collection(db, 'invoices'), 
-    where('clientId', '==', clientId),
-    orderBy('createdAt', 'desc')
-  );
-  
+  const q = query(collection(db, 'invoices'), where('clientId', '==', clientId), orderBy('createdAt', 'desc'));
   const snapshot = await getDocs(q);
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as InvoiceData));
 };
@@ -226,19 +212,12 @@ export const getInvoicesByClient = async (clientId: string): Promise<InvoiceData
 
 export const getProjectByClient = async (clientId: string): Promise<ProjectData | null> => {
   if (!clientId) return null;
-  const q = query(
-    collection(db, 'projects'), 
-    where('clientId', '==', clientId), 
-    limit(1)
-  );
-  
+  const q = query(collection(db, 'projects'), where('clientId', '==', clientId), limit(1));
   const snapshot = await getDocs(q);
   if (snapshot.empty) return null;
-  
   return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as ProjectData;
 };
 
-// Admin only
 export const updateProjectStatus = async (projectId: string, newStepIndex: number) => {
   if (!projectId) throw new Error("Project ID required");
   
@@ -249,7 +228,6 @@ export const updateProjectStatus = async (projectId: string, newStepIndex: numbe
   const project = snap.data() as ProjectData;
   const newTimeline = [...project.timeline];
 
-  // Logic: Mark previous steps completed, current step current
   newTimeline.forEach((step, index) => {
     if (index < newStepIndex) step.status = 'completed';
     else if (index === newStepIndex) {
@@ -270,60 +248,53 @@ export const updateProjectStatus = async (projectId: string, newStepIndex: numbe
 
 // --- Tickets ---
 
-export const createTicket = async (clientId: string, subject: string, priority: 'low'|'medium'|'high') => {
+export const createTicket = async (clientId: string, subject: string, priority: 'low'|'medium'|'high'): Promise<TicketData> => {
   if (!clientId || !subject) throw new Error("Invalid ticket data");
 
-  const ticketData: TicketData = {
-    clientId,
+  const trimmedClientId = clientId.trim();
+
+  const ticketData = {
+    clientId: trimmedClientId,
     subject,
     priority,
-    status: 'open',
+    status: 'open' as const,
     lastMessageAt: now(),
     createdAt: now(),
     updatedAt: now()
   };
 
   const docRef = await addDoc(collection(db, 'tickets'), ticketData);
-  return docRef.id;
+  const newTicketSnap = await getDoc(docRef);
+
+  return { id: newTicketSnap.id, ...newTicketSnap.data() } as TicketData;
 };
 
 export const getTicketsByClient = async (clientId: string): Promise<TicketData[]> => {
-  const q = query(
-    collection(db, 'tickets'), 
-    where('clientId', '==', clientId),
-    orderBy('updatedAt', 'desc')
-  );
-  
+  const trimmedClientId = clientId.trim();
+  if (!trimmedClientId) return [];
+
+  const q = query(collection(db, 'tickets'), where('clientId', '==', trimmedClientId), orderBy('updatedAt', 'desc'));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TicketData));
+};
+
+export const getAllTickets = async (): Promise<TicketData[]> => {
+  const q = query(collection(db, 'tickets'), orderBy('updatedAt', 'desc'));
   const snapshot = await getDocs(q);
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TicketData));
 };
 
 export const subscribeToTicketMessages = (ticketId: string, callback: (messages: TicketMessageData[]) => void) => {
-  const q = query(
-    collection(db, 'tickets', ticketId, 'messages'),
-    orderBy('createdAt', 'asc')
-  );
-
+  const q = query(collection(db, 'tickets', ticketId, 'messages'), orderBy('createdAt', 'asc'));
   return onSnapshot(q, (snapshot) => {
     const messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TicketMessageData));
     callback(messages);
   });
 };
 
-export const getTicketMessages = async (ticketId: string): Promise<TicketMessageData[]> => {
-  const q = query(
-    collection(db, 'tickets', ticketId, 'messages'),
-    orderBy('createdAt', 'asc')
-  );
-  
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TicketMessageData));
-};
-
 export const addTicketMessage = async (ticketId: string, senderId: string, text: string, senderName: string, isAdmin: boolean = false) => {
   if (!text.trim()) return;
 
-  // 1. Add Message
   await addDoc(collection(db, 'tickets', ticketId, 'messages'), {
     ticketId,
     senderId,
@@ -333,10 +304,89 @@ export const addTicketMessage = async (ticketId: string, senderId: string, text:
     createdAt: now()
   });
 
-  // 2. Update Ticket Metadata
   await updateDoc(doc(db, 'tickets', ticketId), {
     lastMessageAt: now(),
     updatedAt: now(),
-    status: isAdmin ? 'pending' : 'open' // If admin replies, waiting for client (pending). If client replies, it's open.
+    status: isAdmin ? 'pending' : 'open'
   });
+};
+
+export const subscribeToClientTickets = (clientId: string, callback: (tickets: TicketData[]) => void) => {
+  const trimmedClientId = clientId.trim();
+  if (!trimmedClientId) return () => {};
+  const q = query(collection(db, 'tickets'), where('clientId', '==', trimmedClientId), orderBy('updatedAt', 'desc'));
+  return onSnapshot(q, (snapshot) => {
+    const tickets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TicketData));
+    callback(tickets);
+  });
+};
+
+export const updateTicketStatus = async (ticketId: string, status: TicketStatus) => {
+  const ticketRef = doc(db, 'tickets', ticketId);
+  await updateDoc(ticketRef, { status, updatedAt: now() });
+};
+
+// --- Profile & Password Management ---
+
+export const updateClientProfile = async (clientId: string, profileData: {
+  companyName?: string;
+  phone?: string;
+  notes?: string;
+  displayName?: string;
+}) => {
+  if (!clientId) throw new Error("Client ID required");
+  
+  const clientRef = doc(db, 'clients', clientId);
+  const updates: any = { updatedAt: now() };
+  
+  // Update Firestore client data
+  if (profileData.companyName !== undefined) updates.companyName = profileData.companyName;
+  if (profileData.phone !== undefined) updates.phone = profileData.phone;
+  if (profileData.notes !== undefined) updates.notes = profileData.notes;
+  
+  await updateDoc(clientRef, updates);
+  
+  // Update Firebase Auth profile if displayName is provided
+  if (profileData.displayName && auth.currentUser) {
+    await updateProfile(auth.currentUser, {
+      displayName: profileData.displayName
+    });
+  }
+  
+  return { success: true };
+};
+
+export const updateClientPassword = async (currentPassword: string, newPassword: string) => {
+  const user = auth.currentUser;
+  if (!user || !user.email) throw new Error("User not authenticated");
+  
+  // Re-authenticate user
+  const credential = EmailAuthProvider.credential(user.email, currentPassword);
+  await reauthenticateWithCredential(user, credential);
+  
+  // Update password
+  await updatePassword(user, newPassword);
+  
+  return { success: true };
+};
+
+export const updateClientEmail = async (currentPassword: string, newEmail: string) => {
+  const user = auth.currentUser;
+  if (!user || !user.email) throw new Error("User not authenticated");
+  
+  // Re-authenticate user
+  const credential = EmailAuthProvider.credential(user.email, currentPassword);
+  await reauthenticateWithCredential(user, credential);
+  
+  // Update email in Firebase Auth
+  await updateEmail(user, newEmail);
+  
+  // Update email in Firestore
+  const clientRef = doc(db, 'clients', user.uid);
+  await updateDoc(clientRef, {
+    email: newEmail,
+    updatedAt: now()
+  });
+  
+  return { success: true };
 };

@@ -5,7 +5,8 @@ import {
     signInWithEmailAndPassword, 
     createUserWithEmailAndPassword, 
     sendPasswordResetEmail,
-    sendEmailVerification 
+    sendEmailVerification,
+    getIdTokenResult
 } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
@@ -49,11 +50,17 @@ const Login: React.FC = () => {
 
     try {
         if (mode === 'login') {
-            await signInWithEmailAndPassword(auth, formData.email, formData.password);
-            // Redirection is handled by the ProtectedRoute or here if needed, 
-            // but usually we wait for auth state change.
-            // Explicitly navigating for better UX
-            navigate(from, { replace: true });
+            const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+            
+            // Check for Super Admin role in Custom Claims immediately
+            const tokenResult = await getIdTokenResult(userCredential.user, true);
+            const isSuperAdmin = tokenResult.claims.role === 'super_admin';
+
+            if (isSuperAdmin) {
+                navigate('/admin', { replace: true });
+            } else {
+                navigate(from, { replace: true });
+            }
 
         } else if (mode === 'register') {
             // 1. Create User
