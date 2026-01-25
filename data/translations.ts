@@ -47,7 +47,7 @@ export const translations = {
       },
       links: {
         forgot_password: "Mot de passe oublié ?",
-        new_user: "Nouveau chez NexGen ?",
+        new_user: "Nouveau chez Komaweb ?",
         create_account: "Créer un compte",
         existing_user: "Déjà un compte ?",
         login_here: "Se connecter"
@@ -135,48 +135,83 @@ export const translations = {
       }
     },
     hero: {
-      badge: "Système orienté conversion",
-      title_1: "Ne faites pas un site.",
-      title_2: "Lancez une machine à vendre.",
-      subtitle: "Fini les freelances injoignables et les sites \"jolis\" qui ne rapportent rien. NexGen crée, héberge et optimise votre écosystème digital pour un abonnement unique.",
-      cta_primary: "Voir les offres",
-      cta_secondary: "Discuter sur WhatsApp"
+      badge: "SYSTÈME D’ACQUISITION CLIENT POUR ARTISANS & TPE",
+      title_1: "Recevez plus de demandes de clients chaque semaine.",
+      title_2: "Pas juste un site web.",
+      subtitle: "Komaweb installe chez vous un système digital complet qui transforme Google et WhatsApp en machine à prospects — sans que vous ayez besoin de gérer la technique.",
+      cta_primary: "👉 Voir comment ça marche",
+      cta_secondary: "📲 Parler sur WhatsApp"
     },
     trustbar: {
       no_commitment: "Sans engagement",
-      support: "Support réel et continu",
-      updates: "Site suivi dans le temps",
-      methodology: "Méthodologie Pro",
-      results: "Résultats mesurables",
-      dashboard: "Espace client dédié"
+      support: "Support dédié 7j/7",
+      updates: "Génération de leads continue",
+      methodology: "Système d'acquisition client",
+      results: "Leads qualifiés garantis",
+      dashboard: "Suivi des prospects en temps réel"
+    },
+    socialProofImmediate: [
+      "Sites prêts en 72h",
+      "Optimisé pour Google local",
+      "Support en Français & Arabe",
+      "Sans engagement long terme"
+    ],
+    howItWorks: {
+      title: "⚙️ COMMENT ÇA MARCHE (3 étapes)",
+      subtitle: "Une méthode simple et éprouvée pour transformer votre présence digitale en machine à leads.",
+      steps: [
+        { number: "1️⃣", title: "Vous choisissez votre pack", desc: "Pas de logiciel compliqué. Pas de formation." },
+        { number: "2️⃣", title: "Nous installons votre système", desc: "Nous déployons votre site optimisé et connectons tous les outils." },
+        { number: "3️⃣", title: "Vous recevez des demandes clients", desc: "Votre téléphone et WhatsApp commencent à sonner avec des leads qualifiés." }
+      ],
+      benefits: {
+        title: "📈 CE QUE VOUS OBTENEZ",
+        items: [
+          "Plus d’appels",
+          "Plus de messages WhatsApp",
+          "Plus de devis envoyés",
+          "Plus de chiffre d’affaires"
+        ]
+      },
+      audience: {
+        title: "🎯 POUR QUI ?",
+        items: [
+          "Artisans",
+          "Commerçants",
+          "TPE locales",
+          "Indépendants"
+        ],
+        footnote: "Si vos clients sont dans votre ville → Komaweb est fait pour vous."
+      }
     },
     problemSolution: {
       title_1: "Le modèle \"Freelance classique\"",
       title_2: "ne fonctionne plus.",
       desc: "Vous avez peut-être déjà vécu ça : un enthousiasme au départ, puis la désillusion. <span class=\"text-white font-medium\">Ce n'est pas votre faute</span>, c'est le système de facturation \"au coup par coup\" qui crée ces conflits.",
       problems: [
-        { title: "Silence Radio", desc: "Le freelance disparaît une fois le solde payé. Plus de réponse aux emails." },
+        { title: "Les clients vous trouvent mal sur Google", desc: "Votre site n'apparaît pas dans les premières recherches, vous perdez des prospects chaque jour." },
+        { title: "Votre téléphone ne sonne pas assez", desc: "Les visiteurs ne convertissent pas en appels, vous ratez des opportunités." },
+        { title: "Vous dépendez du bouche-à-oreille", desc: "Pas de système de génération de leads, votre croissance est limitée." },
         { title: "Site non terminé", desc: "Livré à la va-vite, plein de bugs d'affichage ou non compatible mobile." },
         { title: "Aucun Support", desc: "Une mise à jour plante votre site ? Vous êtes seul pour réparer les dégâts." },
-        { title: "SEO de Façade", desc: "Un site visuellement correct, mais invisible sur Google. Zéro trafic." },
-        { title: "Accès Bloqués", desc: "Nom de domaine ou hébergement au nom du prestataire. Vous êtes pris en otage." },
-        { title: "Promesses non tenues", desc: "Délais explosés, fonctionnalités manquantes et factures supplémentaires." }
+        { title: "SEO de Façade", desc: "Un site visuellement correct, mais invisible sur Google. Zéro trafic." }
       ],
       solution: {
-        title: "L'approche NexGen",
+        title: "L'approche Komaweb",
         subtitle: "L'antidote au modèle classique",
         desc: "Nous ne vendons pas juste un site. Nous devenons votre <span class=\"text-emerald-400 font-semibold\">partenaire de croissance</span> sur le long terme.",
         features: [
-          "Design conçu pour la conversion (Copywriting inclus)",
+          "Une page optimisée pour convertir",
+          "Un bouton WhatsApp connecté",
+          "Un formulaire intelligent",
           "Maintenance technique & Sécurité gérées à 100%",
           "Modifications illimitées sur simple message WhatsApp",
-          "Propriété totale de votre contenu et domaine",
           "Coût fixe mensuel transparent, zéro surprise"
         ]
       }
     },
     comparison: {
-      title: "Pourquoi NexGen est différent",
+      title: "Pourquoi Komaweb est différent",
       quote_part1: "Vous ne confiez plus votre site à une personne.",
       quote_part2: "Vous confiez votre présence digitale à un système.",
       competitors: {
@@ -188,9 +223,9 @@ export const translations = {
           { title: "Dépendance technique", desc: "Hébergement complexe à gérer vous-même ou verrouillé par le prestataire." }
         ]
       },
-      nexgen: {
-        badge: "Le Standard NexGen",
-        title: "L'écosystème NexGen",
+      komaweb: {
+        badge: "Le Standard Komaweb",
+        title: "L'écosystème Komaweb",
         items: [
           { title: "Partenaire Long Terme", desc: "Nous sommes votre équipe technique dédiée. Support disponible 7j/7 via WhatsApp." },
           { title: "Transparence Totale", desc: "Un abonnement fixe. Tout est inclus : hébergement, modifications, maintenance." },
@@ -218,7 +253,7 @@ export const translations = {
         step_1_desc: "Clients cherchant activement vos services dans votre zone.",
         step_2_title: "Conversion Estimée",
         step_2_val: "+15 à 25 Leads",
-        step_2_desc: "Demandes de devis qualifiées générées par le système NexGen.",
+        step_2_desc: "Demandes de devis qualifiées générées par le système Komaweb.",
         step_3_title: "Potentiel CA",
         step_3_val: "+120k MAD / an",
         step_3_desc: "Chiffre d'affaires additionnel estimé basé sur votre panier moyen.",
@@ -285,7 +320,7 @@ export const translations = {
                 }
             },
             cta_whatsapp: "Recevoir le plan sur WhatsApp",
-            cta_expert: "Parler à un expert NexGen",
+            cta_expert: "Parler à un expert Komaweb",
             ai_insight: "L'avis de l'Expert IA"
         }
     },
@@ -293,7 +328,7 @@ export const translations = {
       badge: "Inclus dans l'abonnement",
       title_1: "Plus qu'une agence.",
       title_2: "Une plateforme.",
-      desc: "NexGen n'est pas un prestataire avec qui vous échangez des emails perdus. C'est un véritable <strong>Mini-SaaS</strong> qui centralise toute votre activité digitale. Transparence totale, contrôle absolu.",
+      desc: "Komaweb n'est pas un prestataire avec qui vous échangez des emails perdus. C'est un véritable <strong>Mini-SaaS</strong> qui centralise toute votre activité digitale. Transparence totale, contrôle absolu.",
       features: {
         tracking: { title: "Suivi de projet en temps réel", desc: "Une timeline interactive pour savoir exactement où en est la création de votre site. Zéro zone d'ombre." },
         support: { title: "Support & Tickets SAV", desc: "Une demande de modification ? Ouvrez un ticket, suivez son traitement et soyez notifié quand c'est fait." },
@@ -310,7 +345,7 @@ export const translations = {
     features: {
       header_title_1: "Une machine à vendre,",
       header_title_2: "pas juste une vitrine.",
-      header_desc: "Chaque fonctionnalité NexGen est conçue pour capturer l'attention et transformer vos visiteurs en clients confirmés.",
+      header_desc: "Chaque fonctionnalité Komaweb est conçue pour capturer l'attention et transformer vos visiteurs en clients confirmés.",
       cards: {
         structure: {
           title: "Structure de Vente",
@@ -340,13 +375,13 @@ export const translations = {
     },
     methodology: {
       title_1: "De l'idée aux",
-      title_2: "résultats",
-      subtitle: "Notre processus est rodé pour éliminer les frictions et livrer une machine à vendre en moins de 14 jours.",
+      title_2: "leads qualifiés",
+      subtitle: "Notre processus est rodé pour transformer votre site en machine à générer des demandes clients en moins de 14 jours.",
       steps: {
-        1: { title: "Audit & Stratégie", desc: "Analyse de votre marché et définition de vos objectifs de conversion (leads, ventes) avant la moindre ligne de code." },
-        2: { title: "Design & Copywriting", desc: "Création d'une identité visuelle premium et rédaction de textes persuasifs conçus pour guider le visiteur." },
-        3: { title: "Lancement Boost", desc: "Mise en ligne sur serveurs haute performance, sécurisation SSL et indexation immédiate sur Google." },
-        4: { title: "Suivi Continu", desc: "On ne vous lâche pas. Mises à jour techniques, sécurité et modifications illimitées incluses à vie." }
+        1: { title: "Audit & Stratégie Leads", desc: "Analyse de votre marché et identification des canaux de capture de leads (Google, WhatsApp, formulaires) avant la moindre ligne de code." },
+        2: { title: "Design & Copywriting orienté conversion", desc: "Création d'une identité visuelle premium et rédaction de textes persuasifs conçus pour convertir les visiteurs en prospects." },
+        3: { title: "Lancement & Optimisation SEO", desc: "Mise en ligne sur serveurs haute performance, sécurisation SSL et indexation immédiate sur Google pour capter les recherches locales." },
+        4: { title: "Suivi & Amélioration continue", desc: "On ne vous lâche pas. Analyse des performances, optimisation des taux de conversion et modifications illimitées incluses à vie." }
       }
     },
     pricing: {
@@ -361,7 +396,7 @@ export const translations = {
           currency: "MAD",
           setup: "499 MAD",
           cta: "Choisir Présence",
-          features: ["Nom de domaine inclus", "Site One-Page professionnel", "Design moderne & responsive", "Hébergement sécurisé + SSL", "Configuration technique de base", "Accès Client NexGen (consultation)"],
+          features: ["Nom de domaine inclus", "Site One-Page professionnel", "Design moderne & responsive", "Hébergement sécurisé + SSL", "Configuration technique de base", "Accès Client Komaweb (consultation)"],
           limitations: ["Pas d'optimisation SEO avancée", "Pas de chatbot IA", "Support email uniquement"]
         },
         boost: {
@@ -399,15 +434,15 @@ export const translations = {
         },
         {
           question: "À qui appartient le site ?",
-          answer: "C'est un point crucial : Votre nom de domaine (ex: votrentreprise.com) et tout votre contenu (vos textes, vos images, votre logo) vous appartiennent à 100%. La structure technique et le code sont mis à disposition par NexGen tant que l'abonnement est actif (modèle SaaS/Location), ce qui nous permet de garantir la maintenance."
+          answer: "C'est un point crucial : Votre nom de domaine (ex: votrentreprise.com) et tout votre contenu (vos textes, vos images, votre logo) vous appartiennent à 100%. La structure technique et le code sont mis à disposition par Komaweb tant que l'abonnement est actif (modèle SaaS/Location), ce qui nous permet de garantir la maintenance."
         },
         {
           question: "Que se passe-t-il une fois le site en ligne ?",
           answer: "Contrairement à une agence classique qui vous livre et part, c'est là que notre travail de fond commence. Nous surveillons la sécurité, effectuons les mises à jour techniques et restons disponibles pour vos modifications. Votre site ne devient jamais obsolète."
         },
         {
-          question: "Pourquoi choisir NexGen plutôt qu'un freelance ?",
-          answer: "Pour la tranquillité d'esprit. Un freelance vend un 'produit fini' et passe au client suivant. S'il y a un bug 6 mois plus tard, vous êtes seul ou devez repayer. NexGen est un partenaire continu : nous sommes votre équipe technique externalisée, toujours là, sans surcoût."
+          question: "Pourquoi choisir Komaweb plutôt qu'un freelance ?",
+          answer: "Pour la tranquillité d'esprit. Un freelance vend un 'produit fini' et passe au client suivant. S'il y a un bug 6 mois plus tard, vous êtes seul ou devez repayer. Komaweb est un partenaire continu : nous sommes votre équipe technique externalisée, toujours là, sans surcoût."
         },
         {
           question: "Garantissez-vous des résultats (ventes/appels) ?",
@@ -422,7 +457,7 @@ export const translations = {
     finalCTA: {
       title_1: "Arrêtez de perdre des clients.",
       title_2: "Passez au niveau supérieur.",
-      desc: "Rejoignez NexGen aujourd'hui. On s'occupe de la technique, du design et de la conversion. Vous vous concentrez sur votre métier. Simple.",
+      desc: "Rejoignez Komaweb aujourd'hui. On s'occupe de la technique, du design et de la conversion. Vous vous concentrez sur votre métier. Simple.",
       cta_primary: "Lancer ma machine à vendre",
       cta_secondary: "En discuter d'abord",
       features: ["Sans engagement de durée", "Propriété totale des contenus", "Mise en ligne rapide"]
@@ -480,7 +515,7 @@ export const translations = {
       },
       links: {
         forgot_password: "نسيت كلمة المرور؟",
-        new_user: "جديد في NexGen؟",
+        new_user: "جديد في Komaweb؟",
         create_account: "إنشاء حساب",
         existing_user: "لديك حساب بالفعل؟",
         login_here: "تسجيل الدخول"
@@ -568,48 +603,83 @@ export const translations = {
       }
     },
     hero: {
-      badge: "منظومة مصممة لزيادة المبيعات",
-      title_1: "لا تكتفِ بمجرد موقع إلكتروني.",
-      title_2: "أطلق آلة حقيقية للمبيعات.",
-      subtitle: "وداعاً للمستقلين غير الملتزمين والمواقع \"الجميلة\" التي لا تحقق أرباحاً. NexGen تبني، تستضيف وتطور منظومتك الرقمية بالكامل مقابل اشتراك واحد.",
-      cta_primary: "اكتشف العروض",
-      cta_secondary: "تحدث معنا عبر واتساب"
+      badge: "نظام اكتساب العملاء للشركات الصغيرة والحرفيين",
+      title_1: "احصل على مزيد من طلبات العملاء كل أسبوع.",
+      title_2: "ليس مجرد موقع ويب.",
+      subtitle: "Komaweb تثبت لديك نظاماً رقمياً متكاملاً يحول جوجل وواتساب إلى آلة لتوليد العملاء المحتملين — دون الحاجة إلى إدارة الجانب التقني.",
+      cta_primary: "👉 شاهد كيف يعمل",
+      cta_secondary: "📲 تحدث على واتساب"
     },
     trustbar: {
       no_commitment: "بدون التزام",
-      support: "دعم فني مستمر",
-      updates: "تحديث ومتابعة دائمة",
-      methodology: "منهجية احترافية",
-      results: "نتائج قابلة للقياس",
-      dashboard: "لوحة تحكم شاملة"
+      support: "دعم مخصص 7 أيام/أسبوع",
+      updates: "توليد عملاء مستمر",
+      methodology: "نظام اكتساب العملاء",
+      results: "عملاء محتملين مؤهلين مضمونين",
+      dashboard: "متابعة العملاء المحتملين في الوقت الفعلي"
+    },
+    socialProofImmediate: [
+      "مواقع جاهزة خلال 72 ساعة",
+      "مُحسّن لمحرك البحث المحلي (Google)",
+      "دعم باللغتين الفرنسية والعربية",
+      "بدون التزام طويل الأمد"
+    ],
+    howItWorks: {
+      title: "⚙️ كيف يعمل (3 خطوات)",
+      subtitle: "طريقة بسيطة ومجربة لتحويل وجودك الرقمي إلى آلة لتوليد العملاء المحتملين.",
+      steps: [
+        { number: "1️⃣", title: "تختار باقة المناسبة لك", desc: "لا برامج معقدة. لا تدريب." },
+        { number: "2️⃣", title: "نقوم بتثبيت النظام الخاص بك", desc: "نقوم بنشر موقعك المُحسّن ونربط جميع الأدوات." },
+        { number: "3️⃣", title: "تتلقى طلبات العملاء", desc: "يبدأ هاتفك وواتساب في الرنين بعملاء محتملين مؤهلين." }
+      ],
+      benefits: {
+        title: "📈 ما الذي تحصل عليه",
+        items: [
+          "مزيد من المكالمات",
+          "مزيد من رسائل واتساب",
+          "مزيد من عروض الأسعار المرسلة",
+          "مزيد من حجم المبيعات"
+        ]
+      },
+      audience: {
+        title: "🎯 لمن؟",
+        items: [
+          "الحرفيون",
+          "التجار",
+          "الشركات الصغيرة المحلية",
+          "المستقلون"
+        ],
+        footnote: "إذا كان عملاؤك في مدينتك → Komaweb مصممة لك."
+      }
     },
     problemSolution: {
       title_1: "نموذج \"الفريلانسر التقليدي\"",
       title_2: "لم يعد مجدياً.",
       desc: "ربما مررت بهذا من قبل: حماس في البداية، ثم خيبة أمل. <span class=\"text-white font-medium\">الخطأ ليس خطأك</span>، بل هو نظام الدفع \"بالمشروع\" الذي يخلق تضارباً في المصالح.",
       problems: [
-        { title: "انقطاع التواصل", desc: "يختفي المستقل بمجرد استلام الدفعة الأخيرة. لا رد على الرسائل." },
+        { title: "العملاء لا يجدونك على جوجل", desc: "موقعك لا يظهر في نتائج البحث الأولى، تفقد عملاء محتملين كل يوم." },
+        { title: "هاتفك لا يرن بما يكفي", desc: "الزوار لا يتحولون إلى مكالمات، تفوت فرصاً." },
+        { title: "أنت تعتمد على التسويق الشفهي", desc: "لا يوجد نظام لتوليد العملاء المحتملين، نموك محدود." },
         { title: "موقع غير مكتمل", desc: "تسليم متسرع، مليء بالأخطاء البرمجية أو غير متوافق مع الهواتف." },
         { title: "غياب الدعم الفني", desc: "تحديث بسيط يعطل موقعك؟ أنت وحدك في مواجهة المشكلة." },
-        { title: "ظهور وهمي (SEO)", desc: "موقع يبدو جيداً ولكنه غير مرئي على جوجل. زيارات معدومة." },
-        { title: "حجب الصلاحيات", desc: "الدومين أو الاستضافة مسجلة باسم المطور. أنت رهينة لديه." },
-        { title: "وعود زائفة", desc: "تأخير في التسليم، ميزات ناقصة وفواتير إضافية غير متوقعة." }
+        { title: "ظهور وهمي (SEO)", desc: "موقع يبدو جيداً ولكنه غير مرئي على جوجل. زيارات معدومة." }
       ],
       solution: {
-        title: "نهج NexGen",
+        title: "نهج Komaweb",
         subtitle: "الحل الجذري للمشاكل التقليدية",
         desc: "نحن لا نبيعك مجرد موقع. نحن نصبح <span class=\"text-emerald-400 font-semibold\">شريكك في النمو</span> على المدى الطويل.",
         features: [
-          "تصميم مخصص للتحويل (شاملاً كتابة المحتوى الإعلاني)",
+          "صفحة مُحسّنة للتحويل",
+          "زر واتساب متصل",
+          "نموذج ذكي",
           "صيانة تقنية وحماية أمنية مدارة بالكامل",
           "تعديلات غير محدودة عبر رسالة واتساب بسيطة",
-          "ملكية كاملة للمحتوى واسم النطاق الخاص بك",
           "تكلفة شهرية ثابتة وواضحة، بدون أي مفاجآت"
         ]
       }
     },
     comparison: {
-      title: "لماذا NexGen مختلفة؟",
+      title: "لماذا Komaweb مختلفة؟",
       quote_part1: "أنت لا تسلم موقعك لشخص واحد.",
       quote_part2: "أنت تضع وجودك الرقمي في يد نظام متكامل.",
       competitors: {
@@ -621,9 +691,9 @@ export const translations = {
           { title: "تعقيدات تقنية", desc: "استضافة معقدة عليك إدارتها بنفسك أو محجوزة باسم المطور." }
         ]
       },
-      nexgen: {
-        badge: "معيار NexGen",
-        title: "منظومة NexGen",
+      komaweb: {
+        badge: "معيار Komaweb",
+        title: "منظومة Komaweb",
         items: [
           { title: "شريك طويل الأمد", desc: "نحن فريقك التقني الخاص. دعم متوفر 7 أيام في الأسبوع عبر واتساب." },
           { title: "شفافية تامة", desc: "اشتراك ثابت. كل شيء مشمول: الاستضافة، التعديلات، والصيانة." },
@@ -651,7 +721,7 @@ export const translations = {
         step_1_desc: "عملاء يبحثون بنشاط عن خدماتك في منطقتك.",
         step_2_title: "التحويل المتوقع",
         step_2_val: "+15 إلى 25 عميل محتمل",
-        step_2_desc: "طلبات عروض أسعار مؤهلة تم إنشاؤها بواسطة نظام NexGen.",
+        step_2_desc: "طلبات عروض أسعار مؤهلة تم إنشاؤها بواسطة نظام Komaweb.",
         step_3_title: "حجم المبيعات المحتمل",
         step_3_val: "+120 ألف د.م. / سنة",
         step_3_desc: "رقم معاملات إضافي مقدر بناءً على متوسط سلة مشترياتك.",
@@ -718,7 +788,7 @@ export const translations = {
                 }
             },
             cta_whatsapp: "استلام الخطة عبر واتساب",
-            cta_expert: "التحدث إلى خبير NexGen",
+            cta_expert: "التحدث إلى خبير Komaweb",
             ai_insight: "رأي خبير الذكاء الاصطناعي"
         }
     },
@@ -726,7 +796,7 @@ export const translations = {
       badge: "مشمول في الاشتراك",
       title_1: "أكثر من مجرد وكالة.",
       title_2: "منصة متكاملة.",
-      desc: "NexGen ليست مجرد مقدم خدمة تضيع رسائله في البريد الإلكتروني. إنها <strong>منصة SaaS مصغرة</strong> تجمع كل نشاطك الرقمي في مكان واحد. شفافية تامة، وتحكم مطلق.",
+      desc: "Komaweb ليست مجرد مقدم خدمة تضيع رسائله في البريد الإلكتروني. إنها <strong>منصة SaaS مصغرة</strong> تجمع كل نشاطك الرقمي في مكان واحد. شفافية تامة، وتحكم مطلق.",
       features: {
         tracking: { title: "متابعة المشروع لحظة بلحظة", desc: "جدول زمني تفاعلي لتعرف بالضبط أين وصلت عملية إنشاء موقعك. لا مزيد من الغموض." },
         support: { title: "الدعم الفني ونظام التذاكر", desc: "تريد تعديلاً؟ افتح تذكرة، تتبع حالتها، واحصل على إشعار فور الانتهاء منها." },
@@ -743,7 +813,7 @@ export const translations = {
     features: {
       header_title_1: "آلة ذكية للمبيعات،",
       header_title_2: "وليست مجرد واجهة عرض.",
-      header_desc: "تم تصميم كل ميزة في NexGen لجذب الانتباه وتحويل الزوار العاديين إلى عملاء دائمين.",
+      header_desc: "تم تصميم كل ميزة في Komaweb لجذب الانتباه وتحويل الزوار العاديين إلى عملاء دائمين.",
       cards: {
         structure: {
           title: "هيكلة مخصصة للبيع",
@@ -773,13 +843,13 @@ export const translations = {
     },
     methodology: {
       title_1: "من الفكرة إلى",
-      title_2: "النتائج الملموسة",
-      subtitle: "عملية مدروسة بدقة لإزالة العقبات وتسليمك مشروعاً جاهزاً للبيع في أقل من 14 يوماً.",
+      title_2: "العملاء المحتملين المؤهلين",
+      subtitle: "عملية مدروسة بدقة لتحويل موقعك إلى آلة لتوليد طلبات العملاء في أقل من 14 يوماً.",
       steps: {
-        1: { title: "التدقيق والاستراتيجية", desc: "تحليل سوقك وتحديد أهدافك بدقة (مبيعات، عملاء محتملين) قبل كتابة أي سطر برمجي." },
-        2: { title: "التصميم وصياغة المحتوى", desc: "تصميم هوية بصرية راقية وكتابة نصوص تسويقية مقنعة مصممة لتوجيه الزائر نحو الهدف." },
-        3: { title: "الإطلاق القوي", desc: "الرفع على خوادم فائقة السرعة، تأمين شامل SSL، وفهرسة فورية على محركات البحث." },
-        4: { title: "المتابعة المستمرة", desc: "لن نتركك وحدك. تحديثات تقنية، حماية أمنية، وتعديلات غير محدودة مشمولة مدى الحياة." }
+        1: { title: "التدقيق واستراتيجية الاستحواذ", desc: "تحليل سوقك وتحديد قنوات الاستحواذ على العملاء المحتملين (جوجل، واتساب، النماذج) قبل كتابة أي سطر برمجي." },
+        2: { title: "تصميم وصياغة محتوى موجه للتحويل", desc: "تصميم هوية بصرية راقية وكتابة نصوص تسويقية مقنعة مصممة لتحويل الزوار إلى عملاء محتملين." },
+        3: { title: "الإطلاق وتحسين محركات البحث", desc: "الرفع على خوادم فائقة السرعة، تأمين شامل SSL، وفهرسة فورية على جوجل لاستهداف البحث المحلي." },
+        4: { title: "المتابعة والتحسين المستمر", desc: "لن نتركك وحدك. تحليل الأداء، تحسين معدلات التحويل، وتعديلات غير محدودة مشمولة مدى الحياة." }
       }
     },
     pricing: {
@@ -832,15 +902,15 @@ export const translations = {
         },
         {
           question: "لمن تعود ملكية الموقع؟",
-          answer: "هذه نقطة جوهرية: اسم النطاق (مثل: yourbusiness.com) وجميع محتوياتك (نصوصك، صورك، شعارك) ملك لك بنسبة 100%. الهيكل التقني والأكواد توفرها NexGen طالما الاشتراك نشط (نموذج التأجير/SaaS)، مما يسمح لنا بضمان الصيانة."
+          answer: "هذه نقطة جوهرية: اسم النطاق (مثل: yourbusiness.com) وجميع محتوياتك (نصوصك، صورك، شعارك) ملك لك بنسبة 100%. الهيكل التقني والأكواد توفرها Komaweb طالما الاشتراك نشط (نموذج التأجير/SaaS)، مما يسمح لنا بضمان الصيانة."
         },
         {
           question: "ماذا يحدث بعد إطلاق الموقع؟",
           answer: "على عكس الوكالات التقليدية التي تسلمك المشروع وتغادر، هنا يبدأ عملنا الحقيقي. نحن نراقب الأمان، نقوم بالتحديثات التقنية ونبقى متاحين لتعديلاتك. موقعك لا يتقادم أبداً."
         },
         {
-          question: "لماذا أختار NexGen بدلاً من فريلانسر؟",
-          answer: "من أجل راحة البال. الفريلانسر يبيع \"منتجاً نهائياً\" وينصرف. إذا حدث خطأ بعد 6 أشهر، فأنت وحدك أو عليك الدفع مجدداً. NexGen شريك مستمر: نحن فريقك التقني الخارجي، موجودون دائماً، وبدون تكلفة إضافية."
+          question: "لماذا أختار Komaweb بدلاً من فريلانسر؟",
+          answer: "من أجل راحة البال. الفريلانسر يبيع \"منتجاً نهائياً\" وينصرف. إذا حدث خطأ بعد 6 أشهر، فأنت وحدك أو عليك الدفع مجدداً. Komaweb شريك مستمر: نحن فريقك التقني الخارجي، موجودون دائماً، وبدون تكلفة إضافية."
         },
         {
           question: "هل تضمنون نتائج (مبيعات/اتصالات)؟",
@@ -855,7 +925,7 @@ export const translations = {
     finalCTA: {
       title_1: "توقف عن خسارة العملاء.",
       title_2: "انتقل إلى المستوى التالي.",
-      desc: "انضم إلى NexGen اليوم. نحن نتكفل بالتقنية، التصميم، وزيادة المبيعات. وأنت تركز على عملك. ببساطة.",
+      desc: "انضم إلى Komaweb اليوم. نحن نتكفل بالتقنية، التصميم، وزيادة المبيعات. وأنت تركز على عملك. ببساطة.",
       cta_primary: "أطلق آلة المبيعات الخاصة بي",
       cta_secondary: "لنتحدث أولاً",
       features: ["بدون التزام زمني", "ملكية كاملة للمحتوى", "إطلاق سريع"]

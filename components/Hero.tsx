@@ -1,30 +1,44 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { ArrowRight, MessageCircle } from 'lucide-react';
 import FadeIn from './FadeIn';
 import { useLanguage } from '../contexts/LanguageContext';
-import LaserFlow from './LaserFlow';
+import { useDeferredMount } from '../hooks/useDeferredMount';
+import { useIsDesktop } from '../hooks/useIsDesktop';
+
+// Dynamic import for code splitting - LaserFlow will load in a separate chunk
+const LaserFlow = lazy(() => import('./LaserFlow'));
 
 const Hero: React.FC = () => {
   const { t, dir } = useLanguage();
   const isRTL = dir === 'rtl';
+  const isDesktop = useIsDesktop();
+  const shouldMountLaserFlow = useDeferredMount(1500);
 
   return (
     <section className="relative pt-32 pb-24 px-6 z-10 flex flex-col items-center text-center overflow-hidden min-h-[90vh] justify-center bg-[#050505]">
       
-      {/* LaserFlow Animated Background */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <LaserFlow 
-           color="#10b981" 
-           flowSpeed={0.2} 
-           wispSpeed={15} 
-           wispDensity={1.5}
-           fogIntensity={0.6}
-           horizontalSizing={0.5}
-           verticalSizing={2}
-           horizontalBeamOffset={0}
-           verticalBeamOffset={-0.35}
-        />
-      </div>
+      {/* Premium Static Fallback Background - Shows instantly */}
+      <div className="absolute inset-0 z-0 pointer-events-none static-fallback" />
+      
+      {/* LaserFlow Animated Background - Loads only on desktop after idle */}
+      {isDesktop && shouldMountLaserFlow && (
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <Suspense fallback={null}>
+            <LaserFlow 
+              color="#10b981" 
+              flowSpeed={0.2} 
+              wispSpeed={15} 
+              wispDensity={1.5}
+              fogIntensity={0.6}
+              horizontalSizing={0.5}
+              verticalSizing={2}
+              horizontalBeamOffset={0}
+              verticalBeamOffset={-0.35}
+              mode="auto"
+            />
+          </Suspense>
+        </div>
+      )}
       
       {/* Overlay gradient to ensure text readability */}
       <div className="absolute inset-0 z-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent pointer-events-none"></div>

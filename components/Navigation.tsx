@@ -82,7 +82,7 @@ const Navigation: React.FC = () => {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 border border-emerald-500/20 flex items-center justify-center text-emerald-500 group-hover:border-emerald-500/40 transition-colors">
                 <BarChart2 size={20} strokeWidth={2} />
               </div>
-              <span className="font-semibold tracking-tight text-sm group-hover:text-emerald-50 transition-colors font-sans">NexGen</span>
+              <span className="font-semibold tracking-tight text-sm group-hover:text-emerald-50 transition-colors font-sans">komaweb</span>
             </Link>
 
             {isSuperAdmin && (

@@ -2,6 +2,7 @@ import React from 'react';
 import Hero from '../components/Hero';
 import TrustBar from '../components/TrustBar';
 import ProblemSolution from '../components/ProblemSolution';
+import HowItWorks from '../components/HowItWorks';
 import Comparison from '../components/Comparison';
 import Features from '../components/Features';
 import SimulatorSection from '../components/SimulatorSection';
@@ -17,8 +18,9 @@ const Home: React.FC = () => {
       <Hero />
       <TrustBar />
       <ProblemSolution />
-      <Comparison />
+      <HowItWorks />
       <Features />
+      <Comparison />
       <SimulatorSection />
       <Methodology />
       <ClientArea />

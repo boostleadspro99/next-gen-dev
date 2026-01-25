@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { LaserFlowMode, getLaserFlowProps } from './LaserFlowPresets';
+import { useDeviceTier } from '../hooks/useDeviceTier';
 
 type Props = {
   className?: string;
@@ -22,6 +24,7 @@ type Props = {
   falloffStart?: number;
   fogFallSpeed?: number;
   color?: string;
+  mode?: LaserFlowMode;
 };
 
 const VERT = `
@@ -263,25 +266,75 @@ void main(){
 export const LaserFlow: React.FC<Props> = ({
   className,
   style,
-  wispDensity = 1,
+  wispDensity,
   dpr,
-  mouseSmoothTime = 0.0,
-  mouseTiltStrength = 0.01,
-  horizontalBeamOffset = 0.1,
-  verticalBeamOffset = 0.0,
-  flowSpeed = 0.35,
-  verticalSizing = 2.0,
-  horizontalSizing = 0.5,
-  fogIntensity = 0.45,
-  fogScale = 0.3,
-  wispSpeed = 15.0,
-  wispIntensity = 5.0,
-  flowStrength = 0.25,
-  decay = 1.1,
-  falloffStart = 1.2,
-  fogFallSpeed = 0.6,
-  color = '#FF79C6'
+  mouseSmoothTime,
+  mouseTiltStrength,
+  horizontalBeamOffset,
+  verticalBeamOffset,
+  flowSpeed,
+  verticalSizing,
+  horizontalSizing,
+  fogIntensity,
+  fogScale,
+  wispSpeed,
+  wispIntensity,
+  flowStrength,
+  decay,
+  falloffStart,
+  fogFallSpeed,
+  color = '#FF79C6',
+  mode = 'auto' as LaserFlowMode
 }) => {
+  const deviceTier = useDeviceTier();
+  
+  // Get optimized props based on mode and device tier
+  const optimizedProps = getLaserFlowProps(
+    mode,
+    deviceTier,
+    {
+      wispDensity,
+      dpr,
+      mouseSmoothTime,
+      mouseTiltStrength,
+      horizontalBeamOffset,
+      verticalBeamOffset,
+      flowSpeed,
+      verticalSizing,
+      horizontalSizing,
+      fogIntensity,
+      fogScale,
+      wispSpeed,
+      wispIntensity,
+      flowStrength,
+      decay,
+      falloffStart,
+      fogFallSpeed,
+      color
+    }
+  );
+  
+  // Destructure the optimized props
+  const {
+    wispDensity: optimizedWispDensity = 1,
+    dpr: optimizedDpr,
+    mouseSmoothTime: optimizedMouseSmoothTime = 0.0,
+    mouseTiltStrength: optimizedMouseTiltStrength = 0.01,
+    horizontalBeamOffset: optimizedHorizontalBeamOffset = 0.1,
+    verticalBeamOffset: optimizedVerticalBeamOffset = 0.0,
+    flowSpeed: optimizedFlowSpeed = 0.35,
+    verticalSizing: optimizedVerticalSizing = 2.0,
+    horizontalSizing: optimizedHorizontalSizing = 0.5,
+    fogIntensity: optimizedFogIntensity = 0.45,
+    fogScale: optimizedFogScale = 0.3,
+    wispSpeed: optimizedWispSpeed = 15.0,
+    wispIntensity: optimizedWispIntensity = 5.0,
+    flowStrength: optimizedFlowStrength = 0.25,
+    decay: optimizedDecay = 1.1,
+    falloffStart: optimizedFalloffStart = 1.2,
+    fogFallSpeed: optimizedFogFallSpeed = 0.6,
+    color: optimizedColor = '#FF79C6'
+  } = optimizedProps;
   const mountRef = useRef<HTMLDivElement | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const uniformsRef = useRef<any>(null);
@@ -295,6 +348,21 @@ export const LaserFlow: React.FC<Props> = ({
   const emaDtRef = useRef<number>(16.7); // ms
   const pausedRef = useRef<boolean>(false);
   const inViewRef = useRef<boolean>(true);
+  const lastFrameTimeRef = useRef<number>(0);
+  const lastDprCheckRef = useRef<number>(performance.now());
+  
+  // Determine target frame time based on device tier
+  const getTargetFrameTime = () => {
+    switch (deviceTier) {
+      case 'high':
+        return 16.7; // 60fps for high-tier devices
+      case 'medium':
+        return 22.2; // 45fps for medium-tier devices
+      case 'low':
+      default:
+        return 33.3; // 30fps for low-tier devices
+    }
+  };
 
   const hexToRGB = (hex: string) => {
     let c = hex.trim();
@@ -323,7 +391,7 @@ export const LaserFlow: React.FC<Props> = ({
     });
     rendererRef.current = renderer;
 
-    baseDprRef.current = Math.min(dpr ?? (window.devicePixelRatio || 1), 2);
+    baseDprRef.current = Math.min(optimizedDpr ?? (window.devicePixelRatio || 1), 2);
     currentDprRef.current = baseDprRef.current;
 
     renderer.setPixelRatio(currentDprRef.current);
@@ -346,23 +414,23 @@ export const LaserFlow: React.FC<Props> = ({
       iTime: { value: 0 },
       iResolution: { value: new THREE.Vector3(1, 1, 1) },
       iMouse: { value: new THREE.Vector4(0, 0, 0, 0) },
-      uWispDensity: { value: wispDensity },
-      uTiltScale: { value: mouseTiltStrength },
+      uWispDensity: { value: optimizedWispDensity },
+      uTiltScale: { value: optimizedMouseTiltStrength },
       uFlowTime: { value: 0 },
       uFogTime: { value: 0 },
-      uBeamXFrac: { value: horizontalBeamOffset },
-      uBeamYFrac: { value: verticalBeamOffset },
-      uFlowSpeed: { value: flowSpeed },
-      uVLenFactor: { value: verticalSizing },
-      uHLenFactor: { value: horizontalSizing },
-      uFogIntensity: { value: fogIntensity },
-      uFogScale: { value: fogScale },
-      uWSpeed: { value: wispSpeed },
-      uWIntensity: { value: wispIntensity },
-      uFlowStrength: { value: flowStrength },
-      uDecay: { value: decay },
-      uFalloffStart: { value: falloffStart },
-      uFogFallSpeed: { value: fogFallSpeed },
+      uBeamXFrac: { value: optimizedHorizontalBeamOffset },
+      uBeamYFrac: { value: optimizedVerticalBeamOffset },
+      uFlowSpeed: { value: optimizedFlowSpeed },
+      uVLenFactor: { value: optimizedVerticalSizing },
+      uHLenFactor: { value: optimizedHorizontalSizing },
+      uFogIntensity: { value: optimizedFogIntensity },
+      uFogScale: { value: optimizedFogScale },
+      uWSpeed: { value: optimizedWispSpeed },
+      uWIntensity: { value: optimizedWispIntensity },
+      uFlowStrength: { value: optimizedFlowStrength },
+      uDecay: { value: optimizedDecay },
+      uFalloffStart: { value: optimizedFalloffStart },
+      uFogFallSpeed: { value: optimizedFogFallSpeed },
       uColor: { value: new THREE.Vector3(1, 1, 1) },
       uFade: { value: hasFadedRef.current ? 1 : 0 }
     };
@@ -480,23 +548,28 @@ export const LaserFlow: React.FC<Props> = ({
         lastFpsCheckRef.current = now;
         return;
       }
+      
+      // Calculate average FPS from collected samples
       const avgFps = samples.reduce((a, b) => a + b, 0) / samples.length;
 
       let next = currentDprRef.current;
       const base = baseDprRef.current;
 
+      // Adjust DPR based on performance
       if (avgFps < lowerThresh) {
         next = clamp(currentDprRef.current * 0.85, dprFloor, base);
       } else if (avgFps > upperThresh && currentDprRef.current < base) {
         next = clamp(currentDprRef.current * 1.1, dprFloor, base);
       }
 
+      // Apply DPR change if significant and cooldown has passed
       if (Math.abs(next - currentDprRef.current) > 0.01 && now - lastDprChangeRef > dprChangeCooldown) {
         currentDprRef.current = next;
         lastDprChangeRef = now;
         setSizeNow();
       }
 
+      // Clear samples for next collection period
       fpsSamplesRef.current = [];
       lastFpsCheckRef.current = now;
     };
@@ -509,32 +582,49 @@ export const LaserFlow: React.FC<Props> = ({
       const dt = Math.max(0, t - prevTime);
       prevTime = t;
 
-      const dtMs = dt * 1000;
-      emaDtRef.current = emaDtRef.current * 0.9 + dtMs * 0.1;
-      const instFps = 1000 / Math.max(1, emaDtRef.current);
-      fpsSamplesRef.current.push(instFps);
-
+      // Always update iTime for shader consistency (real elapsed time)
       uniforms.iTime.value = t;
 
-      const cdt = Math.min(0.033, Math.max(0.001, dt));
-      (uniforms.uFlowTime.value as number) += cdt;
-      (uniforms.uFogTime.value as number) += cdt;
+      // Always accumulate flow/fog times based on REAL uncapped delta time
+      // This ensures perfect time synchronization even with throttled rendering
+      (uniforms.uFlowTime.value as number) += dt;
+      (uniforms.uFogTime.value as number) += dt;
 
+      // Always update mouse smoothing for smooth interaction
+      const tau = Math.max(1e-3, optimizedMouseSmoothTime);
+      const alpha = 1 - Math.exp(-dt / tau);
+      mouseSmooth.lerp(mouseTarget, alpha);
+      uniforms.iMouse.value.set(mouseSmooth.x, mouseSmooth.y, 0, 0);
+
+      // Always update fade animation
       if (!hasFadedRef.current) {
         const fadeDur = 1.0;
-        fade = Math.min(1, fade + cdt / fadeDur);
+        fade = Math.min(1, fade + dt / fadeDur);
         uniforms.uFade.value = fade;
         if (fade >= 1) hasFadedRef.current = true;
       }
 
-      const tau = Math.max(1e-3, mouseSmoothTime);
-      const alpha = 1 - Math.exp(-cdt / tau);
-      mouseSmooth.lerp(mouseTarget, alpha);
-      uniforms.iMouse.value.set(mouseSmooth.x, mouseSmooth.y, 0, 0);
+      // Update FPS tracking every frame for responsive DPR adjustment
+      const now = performance.now();
+      const dtMs = dt * 1000;
+      emaDtRef.current = emaDtRef.current * 0.9 + dtMs * 0.1;
+      const instFps = 1000 / Math.max(1, emaDtRef.current);
+      fpsSamplesRef.current.push(instFps);
+      
+      // Check for DPR adjustment more frequently (every 250ms instead of only when rendering)
+      if (now - lastDprCheckRef.current >= 250) {
+        lastDprCheckRef.current = now;
+        adjustDprIfNeeded(now);
+      }
 
-      renderer.render(scene, camera);
-
-      adjustDprIfNeeded(performance.now());
+      // ADAPTIVE FRAME RATE THROTTLING based on device tier
+      const targetFrameTime = getTargetFrameTime();
+      if (now - lastFrameTimeRef.current >= targetFrameTime) {
+        lastFrameTimeRef.current = now;
+        
+        // Perform actual render
+        renderer.render(scene, camera);
+      }
     };
 
     animate();
@@ -562,41 +652,41 @@ export const LaserFlow: React.FC<Props> = ({
     const uniforms = uniformsRef.current;
     if (!uniforms) return;
 
-    uniforms.uWispDensity.value = wispDensity;
-    uniforms.uTiltScale.value = mouseTiltStrength;
-    uniforms.uBeamXFrac.value = horizontalBeamOffset;
-    uniforms.uBeamYFrac.value = verticalBeamOffset;
-    uniforms.uFlowSpeed.value = flowSpeed;
-    uniforms.uVLenFactor.value = verticalSizing;
-    uniforms.uHLenFactor.value = horizontalSizing;
-    uniforms.uFogIntensity.value = fogIntensity;
-    uniforms.uFogScale.value = fogScale;
-    uniforms.uWSpeed.value = wispSpeed;
-    uniforms.uWIntensity.value = wispIntensity;
-    uniforms.uFlowStrength.value = flowStrength;
-    uniforms.uDecay.value = decay;
-    uniforms.uFalloffStart.value = falloffStart;
-    uniforms.uFogFallSpeed.value = fogFallSpeed;
+    uniforms.uWispDensity.value = optimizedWispDensity;
+    uniforms.uTiltScale.value = optimizedMouseTiltStrength;
+    uniforms.uBeamXFrac.value = optimizedHorizontalBeamOffset;
+    uniforms.uBeamYFrac.value = optimizedVerticalBeamOffset;
+    uniforms.uFlowSpeed.value = optimizedFlowSpeed;
+    uniforms.uVLenFactor.value = optimizedVerticalSizing;
+    uniforms.uHLenFactor.value = optimizedHorizontalSizing;
+    uniforms.uFogIntensity.value = optimizedFogIntensity;
+    uniforms.uFogScale.value = optimizedFogScale;
+    uniforms.uWSpeed.value = optimizedWispSpeed;
+    uniforms.uWIntensity.value = optimizedWispIntensity;
+    uniforms.uFlowStrength.value = optimizedFlowStrength;
+    uniforms.uDecay.value = optimizedDecay;
+    uniforms.uFalloffStart.value = optimizedFalloffStart;
+    uniforms.uFogFallSpeed.value = optimizedFogFallSpeed;
 
-    const { r, g, b } = hexToRGB(color || '#FFFFFF');
+    const { r, g, b } = hexToRGB(optimizedColor || '#FFFFFF');
     uniforms.uColor.value.set(r, g, b);
   }, [
-    wispDensity,
-    mouseTiltStrength,
-    horizontalBeamOffset,
-    verticalBeamOffset,
-    flowSpeed,
-    verticalSizing,
-    horizontalSizing,
-    fogIntensity,
-    fogScale,
-    wispSpeed,
-    wispIntensity,
-    flowStrength,
-    decay,
-    falloffStart,
-    fogFallSpeed,
-    color
+    optimizedWispDensity,
+    optimizedMouseTiltStrength,
+    optimizedHorizontalBeamOffset,
+    optimizedVerticalBeamOffset,
+    optimizedFlowSpeed,
+    optimizedVerticalSizing,
+    optimizedHorizontalSizing,
+    optimizedFogIntensity,
+    optimizedFogScale,
+    optimizedWispSpeed,
+    optimizedWispIntensity,
+    optimizedFlowStrength,
+    optimizedDecay,
+    optimizedFalloffStart,
+    optimizedFogFallSpeed,
+    optimizedColor
   ]);
 
   return <div ref={mountRef} className={`w-full h-full relative ${className || ''}`} style={style} />;

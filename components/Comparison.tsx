@@ -61,18 +61,18 @@ const Comparison: React.FC = () => {
             <div className="relative h-full border border-emerald-500/30 rounded-2xl p-8 bg-gradient-to-b from-emerald-900/10 to-[#050505] shadow-[0_0_50px_-20px_rgba(16,185,129,0.2)]">
               {/* Corner Badge */}
               <div className={`absolute top-0 bg-emerald-500 text-black text-[10px] font-bold uppercase tracking-widest px-3 py-1 ${dir === 'rtl' ? 'left-0 rounded-br-xl rounded-tl-xl' : 'right-0 rounded-bl-xl rounded-tr-xl'}`}>
-                {t.comparison.nexgen.badge}
+                {t.comparison.komaweb.badge}
               </div>
 
               <div className="flex items-center gap-3 mb-8 border-b border-emerald-500/20 pb-6">
                 <div className="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center text-black shadow-[0_0_15px_rgba(16,185,129,0.4)]">
                   <ShieldCheck size={20} strokeWidth={2.5} />
                 </div>
-                <h3 className="text-xl font-semibold text-white">{t.comparison.nexgen.title}</h3>
+                <h3 className="text-xl font-semibold text-white">{t.comparison.komaweb.title}</h3>
               </div>
 
               <ul className="space-y-6">
-                {t.comparison.nexgen.items.map((item, index) => (
+                {t.comparison.komaweb.items.map((item, index) => (
                     <CompareItem 
                         key={index}
                         isPositive={true}
