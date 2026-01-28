@@ -1,5 +1,5 @@
 import React from 'react';
-import { Package, Settings, Users, Check, TrendingUp, Target, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Package, Settings, Users, Check, TrendingUp, Target, ArrowRight, CheckCircle2, Circle, CircleDot } from 'lucide-react';
 import FadeIn from './FadeIn';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -8,21 +8,21 @@ const HowItWorks: React.FC = () => {
 
   const steps = [
     {
-      id: "1️⃣",
+      number: "1",
       icon: <Package size={28} />,
       title: t.howItWorks.steps[0].title,
       desc: t.howItWorks.steps[0].desc,
       color: "group-hover:text-blue-400"
     },
     {
-      id: "2️⃣",
+      number: "2",
       icon: <Settings size={28} />,
       title: t.howItWorks.steps[1].title,
       desc: t.howItWorks.steps[1].desc,
       color: "group-hover:text-purple-400"
     },
     {
-      id: "3️⃣",
+      number: "3",
       icon: <Users size={28} />,
       title: t.howItWorks.steps[2].title,
       desc: t.howItWorks.steps[2].desc,
@@ -67,9 +67,12 @@ const HowItWorks: React.FC = () => {
                 <div className="relative flex flex-row lg:flex-col gap-6 lg:gap-8 items-start h-full group">
                   
                   {/* Large Background Number */}
-                  <span className={`hidden lg:block absolute -top-12 ${dir === 'rtl' ? '-left-4' : '-right-4'} text-[120px] font-black text-white/[0.02] leading-none select-none pointer-events-none group-hover:text-white/[0.04] transition-colors duration-500 z-0`}>
-                    {step.id}
-                  </span>
+                  <div className={`hidden lg:block absolute -top-12 ${dir === 'rtl' ? '-left-4' : '-right-4'} text-[120px] font-black text-white/[0.02] leading-none select-none pointer-events-none group-hover:text-white/[0.04] transition-colors duration-500 z-0`}>
+                    <Circle size={120} className="w-full h-full text-current" />
+                    <span className="absolute inset-0 flex items-center justify-center text-[48px] font-bold text-white/[0.03]">
+                      {step.number}
+                    </span>
+                  </div>
 
                   {/* Icon Node */}
                   <div className="relative z-10 shrink-0">
@@ -93,7 +96,7 @@ const HowItWorks: React.FC = () => {
                     <div className="mb-3">
                       <div className="flex items-center gap-3 mb-2">
                         <span className="lg:hidden text-xs font-bold uppercase tracking-widest text-emerald-500/80">
-                            {dir === 'rtl' ? `خطوة ${step.id}` : `Étape ${step.id}`}
+                            {dir === 'rtl' ? `خطوة ${step.number}` : `Étape ${step.number}`}
                         </span>
                         {step.highlight && (
                             <span className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-wider text-emerald-500">

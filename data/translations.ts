@@ -139,8 +139,8 @@ export const translations = {
       title_1: "Recevez plus de demandes de clients chaque semaine.",
       title_2: "Pas juste un site web.",
       subtitle: "Komaweb installe chez vous un système digital complet qui transforme Google et WhatsApp en machine à prospects — sans que vous ayez besoin de gérer la technique.",
-      cta_primary: "👉 Voir comment ça marche",
-      cta_secondary: "📲 Parler sur WhatsApp"
+      cta_primary: "Voir comment ça marche",
+      cta_secondary: "Parler sur WhatsApp"
     },
     trustbar: {
       no_commitment: "Sans engagement",
@@ -157,7 +157,7 @@ export const translations = {
       "Sans engagement long terme"
     ],
     howItWorks: {
-      title: "⚙️ COMMENT ÇA MARCHE (3 étapes)",
+      title: "COMMENT ÇA MARCHE (3 étapes)",
       subtitle: "Une méthode simple et éprouvée pour transformer votre présence digitale en machine à leads.",
       steps: [
         { number: "1️⃣", title: "Vous choisissez votre pack", desc: "Pas de logiciel compliqué. Pas de formation." },
@@ -165,7 +165,7 @@ export const translations = {
         { number: "3️⃣", title: "Vous recevez des demandes clients", desc: "Votre téléphone et WhatsApp commencent à sonner avec des leads qualifiés." }
       ],
       benefits: {
-        title: "📈 CE QUE VOUS OBTENEZ",
+        title: "CE QUE VOUS OBTENEZ",
         items: [
           "Plus d’appels",
           "Plus de messages WhatsApp",
@@ -174,7 +174,7 @@ export const translations = {
         ]
       },
       audience: {
-        title: "🎯 POUR QUI ?",
+        title: "POUR QUI ?",
         items: [
           "Artisans",
           "Commerçants",
@@ -607,8 +607,8 @@ export const translations = {
       title_1: "احصل على مزيد من طلبات العملاء كل أسبوع.",
       title_2: "ليس مجرد موقع ويب.",
       subtitle: "Komaweb تثبت لديك نظاماً رقمياً متكاملاً يحول جوجل وواتساب إلى آلة لتوليد العملاء المحتملين — دون الحاجة إلى إدارة الجانب التقني.",
-      cta_primary: "👉 شاهد كيف يعمل",
-      cta_secondary: "📲 تحدث على واتساب"
+      cta_primary: "شاهد كيف يعمل",
+      cta_secondary: "تحدث على واتساب"
     },
     trustbar: {
       no_commitment: "بدون التزام",
@@ -625,7 +625,7 @@ export const translations = {
       "بدون التزام طويل الأمد"
     ],
     howItWorks: {
-      title: "⚙️ كيف يعمل (3 خطوات)",
+      title: "كيف يعمل (3 خطوات)",
       subtitle: "طريقة بسيطة ومجربة لتحويل وجودك الرقمي إلى آلة لتوليد العملاء المحتملين.",
       steps: [
         { number: "1️⃣", title: "تختار باقة المناسبة لك", desc: "لا برامج معقدة. لا تدريب." },
@@ -633,7 +633,7 @@ export const translations = {
         { number: "3️⃣", title: "تتلقى طلبات العملاء", desc: "يبدأ هاتفك وواتساب في الرنين بعملاء محتملين مؤهلين." }
       ],
       benefits: {
-        title: "📈 ما الذي تحصل عليه",
+        title: "ما الذي تحصل عليه",
         items: [
           "مزيد من المكالمات",
           "مزيد من رسائل واتساب",
@@ -642,7 +642,7 @@ export const translations = {
         ]
       },
       audience: {
-        title: "🎯 لمن؟",
+        title: "لمن؟",
         items: [
           "الحرفيون",
           "التجار",
