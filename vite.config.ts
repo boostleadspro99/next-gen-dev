@@ -30,7 +30,7 @@ export default defineConfig(({ mode }) => {
       build: {
         chunkSizeWarningLimit: 800, // Set to 800 kB to catch very large chunks
         rollupOptions: {
-          output: {
+              output: {
             manualChunks(id) {
               // Separate large dependencies into their own chunks
               if (id.includes('node_modules')) {
@@ -51,17 +51,19 @@ export default defineConfig(({ mode }) => {
                   }
                   return 'vendor-firebase-core';
                 }
-                // Split React into its own chunk (group react and react-dom together to avoid circular dependencies)
-                if (id.includes('react')) {
+                // Split React core packages into their own chunk
+                // Be specific to avoid circular dependencies
+                if (id.includes('node_modules/react/') || 
+                    id.includes('node_modules/react-dom/') ||
+                    id.includes('node_modules/scheduler/') ||
+                    id.includes('node_modules/@remix-run/router') ||
+                    id.includes('node_modules/react-router') ||
+                    id.includes('node_modules/react-router-dom')) {
                   return 'vendor-react';
                 }
                 // Split icon library
                 if (id.includes('lucide-react')) {
                   return 'vendor-icons';
-                }
-                // Split router
-                if (id.includes('react-router') || id.includes('@remix-run/router')) {
-                  return 'vendor-router';
                 }
                 // Group remaining node_modules into vendor chunk
                 return 'vendor';

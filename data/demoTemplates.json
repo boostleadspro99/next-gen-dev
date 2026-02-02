@@ -1,0 +1,280 @@
+[
+  {
+    "id": "T-PLUMB-01",
+    "title": "Plombier Pro",
+    "tagline": "Site de plomberie qui génère des appels urgents",
+    "industries": ["artisan", "services"],
+    "goals": ["appels", "whatsapp", "devis"],
+    "styles": ["moderne", "simple"],
+    "levels": ["essentiel", "pro"],
+    "demoUrl": "https://demo-plombier.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/0d9488/ffffff?text=Plombier+Pro",
+    "tags": ["Local", "Urgence", "Appels", "WhatsApp", "Devis"],
+    "benefits": [
+      "Bouton d'appel visible sur mobile",
+      "Formulaire de devis optimisé",
+      "Section avis clients intégrée"
+    ]
+  },
+  {
+    "id": "T-ELEC-01",
+    "title": "Électricien Express",
+    "tagline": "Site pour électriciens avec réservation en ligne",
+    "industries": ["artisan", "services"],
+    "goals": ["reservations", "appels", "whatsapp"],
+    "styles": ["moderne", "dynamique"],
+    "levels": ["pro", "business"],
+    "demoUrl": "https://demo-electricien.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/7c3aed/ffffff?text=Électricien+Express",
+    "tags": ["24/7", "Réservations", "Urgence", "Local"],
+    "benefits": [
+      "Calendrier de réservation intégré",
+      "Chatbot pour questions fréquentes",
+      "Galerie de projets réalisés"
+    ]
+  },
+  {
+    "id": "T-DENT-01",
+    "title": "Dentiste Confiance",
+    "tagline": "Site médical qui rassure et convertit",
+    "industries": ["sante"],
+    "goals": ["reservations", "appels"],
+    "styles": ["premium", "moderne"],
+    "levels": ["pro", "business"],
+    "demoUrl": "https://demo-dentiste.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/3b82f6/ffffff?text=Dentiste+Confiance",
+    "tags": ["Santé", "Confiance", "Réservations", "Premium"],
+    "benefits": [
+      "Design rassurant et professionnel",
+      "Système de RDV en ligne",
+      "Section équipe médicale"
+    ]
+  },
+  {
+    "id": "T-PHYSIO-01",
+    "title": "Physiothérapeute",
+    "tagline": "Site pour kinésithérapeutes avec prise de RDV",
+    "industries": ["sante"],
+    "goals": ["reservations", "appels"],
+    "styles": ["moderne", "simple"],
+    "levels": ["essentiel", "pro"],
+    "demoUrl": "https://demo-physio.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/10b981/ffffff?text=Physiothérapeute",
+    "tags": ["Santé", "Réservations", "Local", "Professionnel"],
+    "benefits": [
+      "Prise de RDV simplifiée",
+      "Explication des soins",
+      "Témoignages patients"
+    ]
+  },
+  {
+    "id": "T-AVOCAT-01",
+    "title": "Avocat Expert",
+    "tagline": "Site juridique premium pour cabinets",
+    "industries": ["professionnel"],
+    "goals": ["appels", "devis"],
+    "styles": ["premium", "moderne"],
+    "levels": ["business"],
+    "demoUrl": "https://demo-avocat.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/1e40af/ffffff?text=Avocat+Expert",
+    "tags": ["Premium", "Confiance", "Expertise", "Juridique"],
+    "benefits": [
+      "Design élégant et sérieux",
+      "Formulaire de consultation",
+      "Section spécialités juridiques"
+    ]
+  },
+  {
+    "id": "T-COMPTA-01",
+    "title": "Comptable Pro",
+    "tagline": "Site pour experts-comptables",
+    "industries": ["professionnel"],
+    "goals": ["appels", "devis"],
+    "styles": ["moderne", "simple"],
+    "levels": ["pro", "business"],
+    "demoUrl": "https://demo-comptable.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/0f766e/ffffff?text=Comptable+Pro",
+    "tags": ["Finance", "Professionnel", "Devis", "Expert"],
+    "benefits": [
+      "Présentation des services comptables",
+      "Calculateur d'impôts simple",
+      "Section ressources utiles"
+    ]
+  },
+  {
+    "id": "T-RESTO-01",
+    "title": "Restaurant Gourmet",
+    "tagline": "Site pour restaurants avec menu en ligne",
+    "industries": ["resto"],
+    "goals": ["reservations", "appels", "orders"],
+    "styles": ["dynamique", "moderne"],
+    "levels": ["pro", "business"],
+    "demoUrl": "https://demo-restaurant.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/d97706/ffffff?text=Restaurant+Gourmet",
+    "tags": ["Gastronomie", "Réservations", "Menu", "Local"],
+    "benefits": [
+      "Menu interactif avec photos",
+      "Réservation de table en ligne",
+      "Intégration Google Maps"
+    ]
+  },
+  {
+    "id": "T-BOUTIQUE-01",
+    "title": "Boutique Chic",
+    "tagline": "Site e-commerce pour boutiques locales",
+    "industries": ["boutique", "ecommerce"],
+    "goals": ["orders", "whatsapp"],
+    "styles": ["moderne", "premium"],
+    "levels": ["business"],
+    "demoUrl": "https://demo-boutique.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/be185d/ffffff?text=Boutique+Chic",
+    "tags": ["E-commerce", "COD", "WhatsApp", "Ventes"],
+    "benefits": [
+      "Catalogue produits élégant",
+      "Paiement à la livraison (COD)",
+      "Commande via WhatsApp"
+    ]
+  },
+  {
+    "id": "T-COIFF-01",
+    "title": "Salon de Coiffure",
+    "tagline": "Site pour coiffeurs avec prise de RDV",
+    "industries": ["services", "boutique"],
+    "goals": ["reservations", "appels"],
+    "styles": ["dynamique", "moderne"],
+    "levels": ["essentiel", "pro"],
+    "demoUrl": "https://demo-coiffure.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/8b5cf6/ffffff?text=Salon+de+Coiffure",
+    "tags": ["Beauté", "Réservations", "Local", "Style"],
+    "benefits": [
+      "Galerie des coiffures",
+      "Prise de RDV en 2 clics",
+      "Promotions mises en avant"
+    ]
+  },
+  {
+    "id": "T-UNIVERSAL-01",
+    "title": "LeadGen Pro",
+    "tagline": "Template universel pour génération de leads",
+    "industries": ["autre"],
+    "goals": ["appels", "whatsapp", "devis"],
+    "styles": ["simple", "moderne"],
+    "levels": ["essentiel", "pro", "business"],
+    "demoUrl": "https://demo-universal.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/475569/ffffff?text=LeadGen+Pro",
+    "tags": ["Universel", "Conversion", "Leads", "Simple"],
+    "benefits": [
+      "Formulaire de contact optimisé",
+      "Structure éprouvée pour la conversion",
+      "Design responsive et rapide"
+    ]
+  },
+  {
+    "id": "T-AUTO-01",
+    "title": "Garage Auto",
+    "tagline": "Site pour garages automobiles",
+    "industries": ["services", "artisan"],
+    "goals": ["appels", "devis"],
+    "styles": ["moderne", "simple"],
+    "levels": ["pro"],
+    "demoUrl": "https://demo-garage.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/ea580c/ffffff?text=Garage+Auto",
+    "tags": ["Automobile", "Réparation", "Devis", "Local"],
+    "benefits": [
+      "Demande de devis rapide",
+      "Présentation des services mécaniques",
+      "Section avis clients"
+    ]
+  },
+  {
+    "id": "T-IMMO-01",
+    "title": "Agence Immobilière",
+    "tagline": "Site pour agents immobiliers",
+    "industries": ["professionnel"],
+    "goals": ["appels", "whatsapp"],
+    "styles": ["premium", "moderne"],
+    "levels": ["business"],
+    "demoUrl": "https://demo-immobilier.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/1d4ed8/ffffff?text=Agence+Immobilière",
+    "tags": ["Immobilier", "Premium", "WhatsApp", "Visites"],
+    "benefits": [
+      "Galerie de biens avec filtres",
+      "Formulaire de demande de visite",
+      "Section expertise du marché"
+    ]
+  },
+  {
+    "id": "T-RESTO-MAROC-01",
+    "title": "Restaurant Marocain",
+    "tagline": "Site restaurant avec livraison à domicile",
+    "industries": ["resto"],
+    "goals": ["appels", "whatsapp", "orders"],
+    "styles": ["dynamique", "moderne"],
+    "levels": ["pro", "business"],
+    "demoUrl": "https://demo-resto-maroc.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/dc2626/ffffff?text=Restaurant+Marocain",
+    "tags": ["Gastronomie", "Livraison", "WhatsApp", "Local"],
+    "benefits": [
+      "Menu interactif avec photos de plats marocains",
+      "Commande via WhatsApp pour livraison",
+      "Intégration Google Maps et avis clients",
+      "Section spécialités du chef"
+    ]
+  },
+  {
+    "id": "T-BTP-01",
+    "title": "Artisan BTP Maroc",
+    "tagline": "Site pour professionnels du bâtiment",
+    "industries": ["artisan", "services"],
+    "goals": ["appels", "devis", "whatsapp"],
+    "styles": ["simple", "moderne"],
+    "levels": ["pro", "business"],
+    "demoUrl": "https://demo-btp.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/ea580c/ffffff?text=Artisan+BTP",
+    "tags": ["BTP", "Construction", "Devis", "Local"],
+    "benefits": [
+      "Galerie de projets réalisés (avant/après)",
+      "Formulaire de demande de devis rapide",
+      "Services détaillés (maçonnerie, peinture, électricité)",
+      "Certifications et assurances"
+    ]
+  },
+  {
+    "id": "T-ECOM-MAROC-01",
+    "title": "Boutique en Ligne Maroc",
+    "tagline": "E-commerce avec paiement à la livraison",
+    "industries": ["boutique", "ecommerce"],
+    "goals": ["orders", "whatsapp", "appels"],
+    "styles": ["premium", "moderne"],
+    "levels": ["business"],
+    "demoUrl": "https://demo-ecom-maroc.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/7c3aed/ffffff?text=Boutique+en+Ligne",
+    "tags": ["E-commerce", "COD", "WhatsApp", "Livraison"],
+    "benefits": [
+      "Catalogue produits élégant",
+      "Paiement à la livraison (COD) - standard au Maroc",
+      "Commande facile via WhatsApp",
+      "Suivi de commande en temps réel",
+      "Promotions et soldes mises en avant"
+    ]
+  },
+  {
+    "id": "T-SERVICE-MAROC-01",
+    "title": "Service Local Maroc",
+    "tagline": "Template universel optimisé pour le marché local",
+    "industries": ["autre"],
+    "goals": ["appels", "whatsapp", "devis"],
+    "styles": ["simple", "moderne"],
+    "levels": ["essentiel", "pro", "business"],
+    "demoUrl": "https://demo-service-maroc.komaweb.digital",
+    "previewImageUrl": "https://via.placeholder.com/600x400/059669/ffffff?text=Service+Local+Maroc",
+    "tags": ["Universel", "Local", "WhatsApp", "Conversion"],
+    "benefits": [
+      "Bouton WhatsApp fixe et toujours visible",
+      "Formulaire de contact optimisé pour conversion",
+      "Section services clairs et concis",
+      "Témoignages clients en français/arabe",
+      "Appel direct depuis mobile"
+    ]
+  }
+]

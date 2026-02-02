@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+/* Tailwind CSS v4 @theme directive - suppress CSS linter warnings */
+/* eslint-disable css/no-unknown-at-rules -- Tailwind CSS v4 @theme directive */
 @theme {
   --font-sans: "Inter", sans-serif;
   --font-arabic: "Beiruti", sans-serif;
@@ -85,6 +87,7 @@
     }
   }
 }
+/* eslint-enable css/no-unknown-at-rules */
 
 /* Premium static fallback for LaserFlow background */
 .static-fallback {
@@ -97,10 +100,238 @@
   background-repeat: no-repeat;
 }
 
-/* Ensure smooth transition when LaserFlow loads */
+  /* Ensure smooth transition when LaserFlow loads */
 .laserflow-container {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
+}
+
+/* ============================================
+   MOBILE OPTIMIZATIONS & ACCESSIBILITY
+   ============================================ */
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-spin,
+  .animate-pulse,
+  .animate-bounce,
+  .animate-float,
+  .animate-pulse-glow,
+  .animate-fade-in-up {
+    animation: none !important;
+  }
+
+  .hover\:scale-\[1\.02\]:hover {
+    transform: none !important;
+  }
+
+  .group-hover\:-translate-x-1:hover,
+  .group-hover\:translate-x-1:hover {
+    transform: none !important;
+  }
+}
+
+/* Mobile Touch Targets (44px minimum) */
+@media (max-width: 768px) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 16px;
+  }
+
+  .touch-target-sm {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px 14px;
+  }
+
+  .touch-target-lg {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 14px 18px;
+  }
+}
+
+/* Focus Indicators - High Visibility */
+*:focus-visible {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+/* Mobile-Specific Animation Optimizations */
+@media (max-width: 768px) {
+  /* Simplify blur effects on mobile */
+  .blur-\[80px\] {
+    filter: blur(40px);
+  }
+
+  .blur-\[40px\] {
+    filter: blur(20px);
+  }
+
+  .backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+  }
+
+  .backdrop-blur-md {
+    backdrop-filter: blur(8px);
+  }
+
+  /* Reduce shadow intensity */
+  .shadow-2xl {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  }
+
+  .shadow-lg {
+    box-shadow: 0 8px 10px -2px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Simplify transforms */
+  .hover\:scale-\[1\.02\]:hover {
+    transform: none;
+  }
+
+  .hover\:scale-105:hover {
+    transform: none;
+  }
+
+  /* Optimize transitions */
+  .transition-all {
+    transition-property: background-color, border-color, color;
+  }
+}
+
+/* Keyboard Navigation - Skip Link */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #10b981;
+  color: black;
+  padding: 8px 16px;
+  z-index: 100;
+  transition: top 0.3s;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* Mobile Form Input Optimizations */
+@media (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* Prevent iOS zoom */
+    padding: 14px 16px;
+    min-height: 48px;
+  }
+
+  /* Better tap targets for small screens */
+  .grid-cols-2 > button,
+  .grid-cols-3 > button,
+  .grid-cols-4 > button {
+    min-height: 48px;
+  }
+}
+
+/* Contrast Enhancement for Accessibility */
+.text-neutral-400 {
+  color: #a3a3a3;
+}
+
+@media (max-width: 768px) {
+  /* Slightly brighter text on mobile for better readability */
+  .text-neutral-400 {
+    color: #b0b0b0;
+  }
+
+  .text-neutral-500 {
+    color: #9a9a9a;
+  }
+}
+
+/* Mobile Card Optimizations */
+@media (max-width: 768px) {
+  .mobile-card {
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  }
+
+  .mobile-card:hover {
+    transform: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Loading Spinner - Reduced Motion Version */
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin {
+    animation: none;
+    border-top-color: #10b981;
+  }
+}
+
+/* Progress Bar - Mobile Optimized */
+@media (max-width: 768px) {
+  .progress-bar-mobile {
+    height: 4px;
+  }
+}
+
+/* Button States - Clear Visual Feedback */
+button:active {
+  transform: scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button:active {
+    transform: none;
+  }
+}
+
+/* Smooth Scrolling - Respect User Preference */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .bg-emerald-500\/10 {
+    background-color: rgba(16, 185, 129, 0.2);
+  }
+
+  .border-white\/10 {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .text-neutral-400 {
+    color: #d4d4d4;
+  }
 }

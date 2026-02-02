@@ -3,7 +3,6 @@ import { ArrowLeft, ArrowRight, BrainCircuit, Building2, MapPin, Calculator, Spa
 import { Link } from 'react-router-dom';
 import FadeIn from '../components/FadeIn';
 import { useLanguage } from '../contexts/LanguageContext';
-import { trackQuizStarted, trackQuizStepCompleted, trackQuizCompleted, trackContinueClicked } from '../utils/analytics';
 
 type Step = 1 | 2 | 3 | 4;
 type Objective = 'calls' | 'whatsapp' | 'booking' | 'orders';
@@ -126,26 +125,6 @@ const Simulator: React.FC = () => {
       });
   }
 
-  const handleNext = () => {
-    if (currentStep < 4) {
-      // Track step completion and continue click
-      trackQuizStepCompleted(`step_${currentStep}`, formData, 'simulator');
-      trackContinueClicked(`step_${currentStep}`, 'simulator');
-      setCurrentStep(prev => (prev + 1) as Step);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter') {
-          // Validation checks before next
-          if (currentStep === 1 && (!formData.sector || !formData.city)) return;
-          if (currentStep === 3 && !formData.ticket) return;
-          handleNext();
-      }
-  }
-
-  const isAnalysisComplete = currentStep === 4 && loadingProgress === 100;
-
   // Animation Sequence
   useEffect(() => {
     if (currentStep === 4 && loadingProgress < 100) { 
@@ -174,20 +153,22 @@ const Simulator: React.FC = () => {
     }
   }, [currentStep, loadingProgress, formData.city, t]);
 
-  // Track quiz completion when analysis finishes
-  useEffect(() => {
-    if (isAnalysisComplete) {
-      trackQuizCompleted('simulator', {
-        results: results,
-        formData: formData
-      });
+  const handleNext = () => {
+    if (currentStep < 4) {
+      setCurrentStep(prev => (prev + 1) as Step);
     }
-  }, [isAnalysisComplete, results, formData]);
+  };
 
-  // Track quiz start when component mounts
-  useEffect(() => {
-    trackQuizStarted('simulator');
-  }, []);
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+          // Validation checks before next
+          if (currentStep === 1 && (!formData.sector || !formData.city)) return;
+          if (currentStep === 3 && !formData.ticket) return;
+          handleNext();
+      }
+  }
+
+  const isAnalysisComplete = currentStep === 4 && loadingProgress === 100;
 
   // Icons mapping for objectives
   const getObjectiveIcon = (obj: Objective) => {
@@ -200,26 +181,17 @@ const Simulator: React.FC = () => {
   };
 
   return (
-    <section className="min-h-screen pt-24 pb-12 px-4 sm:px-6 flex items-center justify-center relative overflow-hidden bg-[#030303]">
+    <section className="min-h-screen pt-24 pb-12 px-6 flex items-center justify-center relative overflow-hidden bg-[#030303]">
       
-      {/* Skip Link for Accessibility */}
-      <a href="#simulator-content" className="skip-to-content">
-        Aller au contenu principal
-      </a>
-      
-      {/* Background Ambience - Simplified on Mobile */}
+      {/* Background Ambience */}
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-900/10 via-[#050505] to-[#050505] pointer-events-none"></div>
 
       <div className="w-full max-w-4xl relative z-10">
         
         {/* Navigation / Header */}
         <div className="mb-8 flex items-center justify-between">
-            <Link 
-              to="/" 
-              className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-lg px-3 py-2 touch-target-sm"
-              aria-label={t.simulatorPage.back}
-            >
-              <ArrowLeft size={16} />
+            <Link to="/" className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-lg px-2 py-1">
+              <ArrowLeft size={16} className={`group-hover:-translate-x-1 transition-transform ${dir === 'rtl' ? 'rotate-180 group-hover:translate-x-1' : ''}`} />
               {t.simulatorPage.back}
             </Link>
             
@@ -235,10 +207,10 @@ const Simulator: React.FC = () => {
 
         {/* Content Card */}
         <FadeIn key={isAnalysisComplete ? 'results' : currentStep}>
-            <div id="simulator-content" className={`bg-[#0A0A0A] border border-white/10 rounded-3xl shadow-2xl relative overflow-hidden backdrop-blur-sm min-h-[550px] flex flex-col transition-all duration-500 ${isAnalysisComplete ? 'border-emerald-500/30' : ''}`}>
+            <div className={`bg-[#0A0A0A] border border-white/10 rounded-3xl shadow-2xl relative overflow-hidden backdrop-blur-sm min-h-[550px] flex flex-col transition-all duration-500 ${isAnalysisComplete ? 'border-emerald-500/30' : ''}`}>
                 
-                {/* Decorative Elements - Simplified on Mobile */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px] md:blur-[80px] blur-[40px] pointer-events-none"></div>
+                {/* Decorative Elements */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px] pointer-events-none"></div>
                 
                 {/* STEP 1: ACTIVITY & LOCATION */}
                 {currentStep === 1 && (
@@ -250,42 +222,39 @@ const Simulator: React.FC = () => {
                         
                         <div className="space-y-6 max-w-lg">
                             <div className="relative group">
-                                <Building2 className="absolute top-4 left-4 text-neutral-500 group-focus-within:text-emerald-500 transition-colors" size={24} aria-hidden="true" />
+                                <Building2 className="absolute top-4 left-4 text-neutral-500 group-focus-within:text-emerald-500 transition-colors" size={24} />
                                 <input 
                                     autoFocus
                                     type="text" 
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-14 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-lg min-h-[52px]"
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-14 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-lg"
                                     placeholder={t.simulatorPage.form.sector_placeholder}
                                     value={formData.sector}
                                     onChange={(e) => setFormData({...formData, sector: e.target.value})}
                                     onKeyDown={handleKeyDown}
-                                    aria-label={t.simulatorPage.form.sector_label}
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="relative group">
-                                    <MapPin className="absolute top-4 left-4 text-neutral-500 group-focus-within:text-emerald-500 transition-colors" size={24} aria-hidden="true" />
+                                    <MapPin className="absolute top-4 left-4 text-neutral-500 group-focus-within:text-emerald-500 transition-colors" size={24} />
                                     <input 
                                         type="text" 
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-14 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-lg min-h-[52px]"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-14 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-lg"
                                         placeholder={t.simulatorPage.form.city_placeholder}
                                         value={formData.city}
                                         onChange={(e) => setFormData({...formData, city: e.target.value})}
                                         onKeyDown={handleKeyDown}
-                                        aria-label={t.simulatorPage.form.city_placeholder}
                                     />
                                 </div>
                                 <div className="relative group">
-                                    <Globe className="absolute top-4 left-4 text-neutral-500 group-focus-within:text-emerald-500 transition-colors" size={24} aria-hidden="true" />
+                                    <Globe className="absolute top-4 left-4 text-neutral-500 group-focus-within:text-emerald-500 transition-colors" size={24} />
                                     <input 
                                         type="text" 
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-14 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-lg min-h-[52px]"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-14 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-lg"
                                         placeholder={t.simulatorPage.form.country_placeholder}
                                         value={formData.country}
                                         onChange={(e) => setFormData({...formData, country: e.target.value})}
                                         onKeyDown={handleKeyDown}
-                                        aria-label={t.simulatorPage.form.country_placeholder}
                                     />
                                 </div>
                             </div>
@@ -293,11 +262,10 @@ const Simulator: React.FC = () => {
                             <button 
                                 onClick={handleNext}
                                 disabled={!formData.sector || !formData.city}
-                                className="mt-8 px-8 py-4 bg-emerald-500 text-neutral-950 font-bold rounded-xl text-base uppercase tracking-wide hover:bg-emerald-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 group w-full sm:w-auto touch-target"
-                                aria-disabled={!formData.sector || !formData.city}
+                                className="mt-8 px-8 py-4 bg-emerald-500 text-neutral-950 font-bold rounded-xl text-base uppercase tracking-wide hover:bg-emerald-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 group w-full sm:w-auto"
                             >
                                 {t.simulatorPage.form.button_next}
-                                <ArrowRight size={20} />
+                                <ArrowRight size={20} className={`transition-transform duration-300 group-hover:translate-x-1 ${dir === 'rtl' ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
                             </button>
                         </div>
                     </div>
@@ -316,13 +284,11 @@ const Simulator: React.FC = () => {
                                 <button
                                     key={obj}
                                     onClick={() => setFormData({...formData, objective: obj})}
-                                    className={`p-6 rounded-xl border text-left transition-all flex flex-col gap-3 group touch-target ${
+                                    className={`p-6 rounded-xl border text-left transition-all flex flex-col gap-3 group ${
                                         formData.objective === obj 
                                         ? 'bg-emerald-500/10 border-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.2)]' 
                                         : 'bg-white/5 border-white/10 text-neutral-400 hover:border-white/20 hover:bg-white/10'
                                     }`}
-                                    aria-pressed={formData.objective === obj}
-                                    aria-label={`Choisir l'objectif: ${t.simulatorPage.form.objectives[obj]}`}
                                 >
                                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
                                         formData.objective === obj ? 'bg-emerald-500 text-black' : 'bg-white/10 text-neutral-300 group-hover:text-white'
@@ -337,22 +303,18 @@ const Simulator: React.FC = () => {
                         <div className="mt-8 flex items-center gap-4">
                             <button 
                                 onClick={handleNext}
-                                className="px-8 py-4 bg-emerald-500 text-neutral-950 font-bold rounded-xl text-base uppercase tracking-wide hover:bg-emerald-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] flex items-center gap-2 group touch-target"
+                                className="px-8 py-4 bg-emerald-500 text-neutral-950 font-bold rounded-xl text-base uppercase tracking-wide hover:bg-emerald-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] flex items-center gap-2 group"
                             >
                                 {t.simulatorPage.form.button_next}
-                                <ArrowRight size={20} />
+                                <ArrowRight size={20} className={`transition-transform duration-300 group-hover:translate-x-1 ${dir === 'rtl' ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
                             </button>
                             
-                            <button 
-                                className="flex items-center gap-2 text-neutral-400 text-sm ml-4 cursor-pointer touch-target-sm"
-                                onClick={() => setFormData({...formData, hasSite: !formData.hasSite})}
-                                aria-pressed={formData.hasSite}
-                            >
-                                <div className={`w-6 h-6 rounded border flex items-center justify-center transition-colors ${formData.hasSite ? 'bg-emerald-500 border-emerald-500' : 'border-neutral-600'}`} aria-hidden="true">
+                            <div className="flex items-center gap-2 text-neutral-400 text-sm ml-4 cursor-pointer" onClick={() => setFormData({...formData, hasSite: !formData.hasSite})}>
+                                <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${formData.hasSite ? 'bg-emerald-500 border-emerald-500' : 'border-neutral-600'}`}>
                                     {formData.hasSite && <CheckCircle2 size={14} className="text-black" />}
                                 </div>
                                 {t.simulatorPage.form.site_label}
-                            </button>
+                            </div>
                         </div>
                     </div>
                 )}
@@ -368,16 +330,15 @@ const Simulator: React.FC = () => {
                         <div className="space-y-8 max-w-lg">
                             {/* Ticket Input */}
                             <div className="relative group">
-                                <span className="absolute top-4 left-6 text-neutral-500 group-focus-within:text-emerald-500 transition-colors text-xl font-bold" aria-hidden="true">{t.simulatorPage.form.currency}</span>
+                                <span className="absolute top-4 left-6 text-neutral-500 group-focus-within:text-emerald-500 transition-colors text-xl font-bold">{t.simulatorPage.form.currency}</span>
                                 <input 
                                     autoFocus
                                     type="number" 
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-20 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-2xl font-bold tracking-wide min-h-[56px]"
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-20 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-2xl font-bold tracking-wide"
                                     placeholder="1500"
                                     value={formData.ticket}
                                     onChange={(e) => setFormData({...formData, ticket: e.target.value})}
                                     onKeyDown={handleKeyDown}
-                                    aria-label={t.simulatorPage.form.ticket_label}
                                 />
                             </div>
 
@@ -388,15 +349,14 @@ const Simulator: React.FC = () => {
                                     <span className="text-xs text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">Avancé</span>
                                 </div>
                                 <div className="relative group">
-                                    <span className="absolute top-3.5 left-4 text-neutral-500 group-focus-within:text-emerald-500 transition-colors" aria-hidden="true">%</span>
+                                    <span className="absolute top-3.5 left-4 text-neutral-500 group-focus-within:text-emerald-500 transition-colors">%</span>
                                     <input 
                                         type="number" 
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-base min-h-[52px]"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-base"
                                         placeholder="30"
                                         value={formData.margin}
                                         onChange={(e) => setFormData({...formData, margin: e.target.value})}
                                         onKeyDown={handleKeyDown}
-                                        aria-label={t.simulatorPage.form.margin_label}
                                     />
                                 </div>
                                 <p className="text-xs text-neutral-500 mt-2">{t.simulatorPage.form.margin_sublabel}</p>
@@ -406,8 +366,7 @@ const Simulator: React.FC = () => {
                                 <button 
                                     onClick={handleNext}
                                     disabled={!formData.ticket}
-                                    className="w-full px-8 py-4 bg-emerald-500 text-neutral-950 font-bold rounded-xl text-base uppercase tracking-wide hover:bg-emerald-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group touch-target"
-                                    aria-disabled={!formData.ticket}
+                                    className="w-full px-8 py-4 bg-emerald-500 text-neutral-950 font-bold rounded-xl text-base uppercase tracking-wide hover:bg-emerald-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
                                 >
                                     <BrainCircuit size={20} />
                                     {t.simulatorPage.form.button_analyze}
@@ -564,17 +523,14 @@ const Simulator: React.FC = () => {
                                     </ul>
 
                                     <div className="space-y-3">
-                                        <a href="https://wa.me/212600000000" target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center gap-2 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl text-sm transition-all shadow-lg shadow-emerald-500/20 touch-target">
+                                        <a href="https://wa.me/212600000000" target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center gap-2 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl text-sm transition-all shadow-lg shadow-emerald-500/20">
                                             <MessageCircle size={18} />
                                             {t.simulatorPage.results.cta_whatsapp}
                                         </a>
-                                        <Link to="/contact" className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium rounded-xl text-sm transition-all touch-target">
+                                        <Link to="/contact" className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium rounded-xl text-sm transition-all">
                                             <Phone size={16} className="text-neutral-400" />
                                             {t.simulatorPage.results.cta_expert}
-                                        </Link>
-                                        <Link to="/simulator-design" className="w-full flex items-center justify-center gap-2 py-3 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-white font-medium rounded-xl text-sm transition-all touch-target">
-                                            <Palette size={16} className="text-purple-400" />
-                                            {t.simulatorPage.results.cta_design}
+                                        <Link to="/simulator-design" className="w-full flex items-center justify-center gap-2 py-3 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-white font-medium rounded-xl text-sm transition-all">                                            <Palette size={16} className="text-purple-400" />                                            {t.simulatorPage.results.cta_design}                                        </Link>
                                         </Link>
                                     </div>
                                 </div>

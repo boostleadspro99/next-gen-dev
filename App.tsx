@@ -14,6 +14,7 @@ const Login = lazy(() => import('./pages/Login'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const Simulator = lazy(() => import('./pages/Simulator'));
+const DesignSimulator = lazy(() => import('./pages/DesignSimulator')); // Ensure this is imported
 const Legal = lazy(() => import('./pages/Legal'));
 const CGV = lazy(() => import('./pages/CGV'));
 const Privacy = lazy(() => import('./pages/Privacy'));
@@ -62,6 +63,7 @@ const App: React.FC = () => {
                   } />
                   
                   <Route path="/simulator" element={<Simulator />} />
+                  <Route path="/simulator-design" element={<DesignSimulator />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/legal" element={<Legal />} />
                   <Route path="/cgv" element={<CGV />} />

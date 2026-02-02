@@ -1,4 +1,3 @@
-
 export type Language = 'fr' | 'ar';
 
 export const translations = {
@@ -135,12 +134,12 @@ export const translations = {
       }
     },
     hero: {
-      badge: "SYSTÈME D’ACQUISITION CLIENT POUR ARTISANS & TPE",
+      badge: "SYSTÈME D'ACQUISITION CLIENT POUR ARTISANS & TPE",
       title_1: "Recevez plus de demandes de clients chaque semaine.",
       title_2: "Pas juste un site web.",
       subtitle: "Komaweb installe chez vous un système digital complet qui transforme Google et WhatsApp en machine à prospects — sans que vous ayez besoin de gérer la technique.",
-      cta_primary: "Voir comment ça marche",
-      cta_secondary: "Parler sur WhatsApp"
+      cta_primary: "Simulez vos revenus en 30 secondes",
+      cta_secondary: "Voir les tarifs"
     },
     trustbar: {
       no_commitment: "Sans engagement",
@@ -167,10 +166,10 @@ export const translations = {
       benefits: {
         title: "CE QUE VOUS OBTENEZ",
         items: [
-          "Plus d’appels",
+          "Plus d'appels",
           "Plus de messages WhatsApp",
           "Plus de devis envoyés",
-          "Plus de chiffre d’affaires"
+          "Plus de chiffre d'affaires"
         ]
       },
       audience: {
@@ -239,7 +238,7 @@ export const translations = {
       title_1: "Combien votre site web",
       title_2: "devrait-il vous rapporter ?",
       desc: "Répondez à quelques questions sur votre activité, votre ville et vos objectifs. Notre IA (Gemini 3 Pro) croise les données locales pour estimer votre potentiel de chiffre d'affaires.",
-      cta_primary: "Lancer la simulation",
+      cta_primary: "Simulez vos revenus en 30 secondes",
       cta_secondary: "Voir la méthodologie IA",
       badge_1: "Analysé par Gemini 3 Pro",
       badge_2: "Données marché temps réel",
@@ -258,7 +257,7 @@ export const translations = {
         step_3_val: "+120k MAD / an",
         step_3_desc: "Chiffre d'affaires additionnel estimé basé sur votre panier moyen.",
         footer: "entrepreneurs ont simulé leur potentiel cette semaine.",
-        footer_sub: "Simulation gratuite et sans inscription."
+        footer_sub: "Simulation gratuite - Offre limitée."
       }
     },
     simulatorPage: {
@@ -321,6 +320,7 @@ export const translations = {
             },
             cta_whatsapp: "Recevoir le plan sur WhatsApp",
             cta_expert: "Parler à un expert Komaweb",
+            cta_design: "Visualiser votre futur site",
             ai_insight: "L'avis de l'Expert IA"
         }
     },
@@ -461,6 +461,118 @@ export const translations = {
       cta_primary: "Lancer ma machine à vendre",
       cta_secondary: "En discuter d'abord",
       features: ["Sans engagement de durée", "Propriété totale des contenus", "Mise en ligne rapide"]
+    },
+    designSimulator: {
+      back: "Quitter",
+      stepNames: {
+        1: "Votre activité",
+        2: "Vos futurs designs",
+        3: "C'est parti !"
+      },
+      steps: {
+        1: "Étape 1",
+        2: "Étape 2",
+        3: "Étape 3",
+        4: "Étape 4"
+      },
+      form: {
+        industry_label: "Qu'est-ce que vous faites ?",
+        industry_help: "Dites-nous votre métier, on s'occupe du reste",
+        goal_label: "Quel est votre objectif principal ?",
+        goal_help: "Ce qui va vraiment faire décoller votre activité",
+        style_label: "Quel style vous inspire ?",
+        style_help: "L'ambiance qui représente le mieux votre business",
+        level_label: "Quel niveau vous convient ?",
+        level_help: "Choisissez selon votre budget et vos ambitions",
+        button_see_demos: "Voir mes démos personnalisées",
+        button_back: "Modifier mes choix",
+        button_next: "Continuer",
+        button_final: "Montrer mes designs",
+        error_message: "Choisissez une option pour continuer 😉",
+        industries: {
+          artisan: "Artisan",
+          services: "Services locaux",
+          sante: "Santé",
+          professionnel: "Professionnel",
+          resto: "Resto",
+          boutique: "Boutique",
+          ecommerce: "E-commerce",
+          autre: "Autre"
+        },
+        goals: {
+          appels: "Appels",
+          whatsapp: "WhatsApp",
+          devis: "Devis",
+          reservations: "Réservations",
+          orders: "Ventes en ligne"
+        },
+        styles: {
+          moderne: "Moderne & épuré",
+          premium: "Premium",
+          dynamique: "Dynamique",
+          simple: "Simple & efficace"
+        },
+        levels: {
+          essentiel: "Essentiel",
+          pro: "Pro",
+          business: "Business"
+        }
+      },
+      results: {
+        title: "Vos designs sont prêts !",
+        subtitle: "Voici les designs qui correspondent parfaitement à votre activité",
+        no_results: "Aucun résultat. Essayez de modifier vos critères.",
+        recommended_badge: "Top choix",
+        open_demo_button: "Voir la démo",
+        select_style_button: "Je le choisis !",
+        secure_note: "Ouverture sécurisée dans un nouvel onglet",
+        benefits_title: "Ce que vous obtenez :",
+        typical_results_title: "Résultat typique",
+        typical_results: {
+          calls: "Appels réguliers",
+          whattsapp: "Messages WhatsApp",
+          orders: "Ventes en ligne",
+          reservations: "Réservations prises"
+        }
+      },
+      confirmation: {
+        title: "Parfait — ce style correspond bien à votre objectif.",
+        subtitle: "Votre futur site web est à portée de clic",
+        selected_label: "✅ Votre style choisi :",
+        summary_badges_label: "Vos réponses",
+        reassurance: "On le personnalise avec votre nom, votre ville et vos couleurs. Vous l'adorez !",
+        microcopy: "On s'occupe de tout : design, SEO local, performance, suivi.",
+        lead_capture: {
+          title: "Dernière étape avant de démarrer",
+          name_label: "Votre nom",
+          whatsapp_label: "Votre WhatsApp",
+          checkbox_label: "Envoyez-moi l'offre sur WhatsApp",
+          optional_note: "Optionnel mais recommandé pour un suivi personnalisé"
+        },
+        cta_pricing: "Voir les packs",
+        cta_whatsapp: "Parler sur WhatsApp",
+        use_style_button: "Continuer",
+        demo_button: "Voir la démo",
+        edit_answers_button: "Modifier mes réponses",
+        lead_capture_button: "Recevoir l'offre sur WhatsApp",
+        customization_note: "Vous pourrez ajuster couleurs & sections après inscription.",
+        timeline_title: "Délai de personnalisation",
+        button_confirm: "Confirmer et démarrer",
+        button_pricing: "Voir les tarifs",
+        button_whatsapp: "WhatsApp",
+        no_selection: "Aucun style sélectionné. Retournez à l'étape précédente pour choisir.",
+        trust_messages: [
+          "Sans engagement",
+          "Support réactif 7j/7",
+          "Parfait sur mobile",
+          "Visible sur Google"
+        ]
+      },
+      toast: {
+        title: "C'est le bon choix ?",
+        message: "On le personnalise avec votre nom en 7 jours chrono.",
+        button: "Je le prends !"
+      }
     },
     footer: {
       desc: "La solution de création de sites web SaaS pour les PME et artisans exigeants. Performance, Design et Conversion sans les tracas techniques.",
@@ -607,8 +719,8 @@ export const translations = {
       title_1: "احصل على مزيد من طلبات العملاء كل أسبوع.",
       title_2: "ليس مجرد موقع ويب.",
       subtitle: "Komaweb تثبت لديك نظاماً رقمياً متكاملاً يحول جوجل وواتساب إلى آلة لتوليد العملاء المحتملين — دون الحاجة إلى إدارة الجانب التقني.",
-      cta_primary: "شاهد كيف يعمل",
-      cta_secondary: "تحدث على واتساب"
+      cta_primary: "محاكاة عوائدك في 30 ثانية",
+      cta_secondary: "عرض الأسعار"
     },
     trustbar: {
       no_commitment: "بدون التزام",
@@ -707,7 +819,7 @@ export const translations = {
       title_1: "كم يجب أن يربح",
       title_2: "موقعك الإلكتروني؟",
       desc: "أجب عن بضعة أسئلة حول نشاطك، مدينتك وأهدافك. يقوم ذكاؤنا الاصطناعي (Gemini 3 Pro) بمقاطعة البيانات المحلية لتقدير حجم مبيعاتك المحتمل.",
-      cta_primary: "بدء المحاكاة",
+      cta_primary: "محاكاة إمكانات عوائدك في 30 ثانية",
       cta_secondary: "شاهد منهجية الذكاء الاصطناعي",
       badge_1: "تم التحليل بواسطة Gemini 3 Pro",
       badge_2: "بيانات سوق فورية",
@@ -725,8 +837,8 @@ export const translations = {
         step_3_title: "حجم المبيعات المحتمل",
         step_3_val: "+120 ألف د.م. / سنة",
         step_3_desc: "رقم معاملات إضافي مقدر بناءً على متوسط سلة مشترياتك.",
-        footer: "رائد أعمال قاموا بمحاكاة إمكاناتهم هذا الأسبوع.",
-        footer_sub: "محاكاة مجانية وبدون تسجيل."
+        footer: "+247 رائد أعمال قاموا بمحاكاة إمكاناتهم هذا الأسبوع.",
+        footer_sub: "محاكاة مجانية - العرض محدود لأول 50 طلب."
       }
     },
     simulatorPage: {
@@ -789,6 +901,7 @@ export const translations = {
             },
             cta_whatsapp: "استلام الخطة عبر واتساب",
             cta_expert: "التحدث إلى خبير Komaweb",
+            cta_design: "تصميم موقعك المستقبلي",
             ai_insight: "رأي خبير الذكاء الاصطناعي"
         }
     },
@@ -929,6 +1042,123 @@ export const translations = {
       cta_primary: "أطلق آلة المبيعات الخاصة بي",
       cta_secondary: "لنتحدث أولاً",
       features: ["بدون التزام زمني", "ملكية كاملة للمحتوى", "إطلاق سريع"]
+    },
+    designSimulator: {
+      back: "خروج",
+      stepNames: {
+        1: "نشاطك",
+        2: "تصاميمك المستقبلية",
+        3: "لنبدأ!"
+      },
+      steps: {
+        1: "الخطوة 1",
+        2: "الخطوة 2",
+        3: "الخطوة 3",
+        4: "الخطوة 4"
+      },
+      form: {
+        industry_label: "ماذا تفعل؟",
+        industry_help: "أخبرنا بمهنتك وسنعتني بالباقي",
+        goal_label: "ما هو هدفك الرئيسي؟",
+        goal_help: "ما سيجعل نشاطك يزدهر حقاً",
+        style_label: "ما هو النمط الذي يلهمك؟",
+        style_help: "الأجواء التي تمثل نشاطك التجاري بشكل أفضل",
+        level_label: "ما المستوى المناسب لك؟",
+        level_help: "اختر حسب ميزانيتك وطموحاتك",
+        button_see_demos: "عرض تصاميمي المخصصة",
+        button_back: "تعديل اختياراتي",
+        button_next: "متابعة",
+        button_final: "عرض تصاميمي",
+        error_message: "اختر خياراً للمتابعة 😉",
+        industries: {
+          artisan: "حرفي",
+          services: "خدمات محلية",
+          sante: "صحة",
+          professionnel: "مهني",
+          resto: "مطعم",
+          boutique: "متجر",
+          ecommerce: "تجارة إلكترونية",
+          autre: "أخرى"
+        },
+        goals: {
+          appels: "مكالمات",
+          whatsapp: "واتساب",
+          devis: "عروض أسعار",
+          reservations: "حجوزات",
+          orders: "مبيعات أونلاين"
+        },
+        styles: {
+          moderne: "عصري وأنيق",
+          premium: "فاخر",
+          dynamique: "حيوي",
+          simple: "بسيط وفعال"
+        },
+        levels: {
+          essentiel: "أساسي",
+          pro: "احترافي",
+          business: "أعمال"
+        }
+      },
+      results: {
+        title: "تصاميمك جاهزة!",
+        subtitle: "إليك التصاميم التي تناسب نشاطك تماماً",
+        no_results: "لم يتم العثور على أي عرض. حاول تعديل معاييرك.",
+        recommended_badge: "أفضل اختيار",
+        open_demo_button: "عرض العرض",
+        select_style_button: "أختاره!",
+        secure_note: "فتح في تبويب جديد",
+        benefits_title: "ما ستحصل عليه:",
+        typical_results_title: "النتيجة النموذجية",
+        typical_results: {
+          calls: "مكالمات منتظمة",
+          whattsapp: "رسائل واتساب",
+          orders: "مبيعات أونلاين",
+          reservations: "حجوزات محجوزة"
+        }
+      },
+      confirmation: {
+        title: "ممتاز — هذا النمط يناسب هدفك تماماً.",
+        subtitle: "موقعك المستقبلي على بعد نقرة",
+        selected_label: "✅ نمطك المختار:",
+        summary_badges_label: "إجاباتك",
+        reassurance: "سنخصصه باسمك ومدينتك وألوانك. ستحبه!",
+        microcopy: "نتكفل بكل شيء: التصميم، تحسين محركات البحث المحلي، الأداء، المتابعة.",
+        lead_capture: {
+          title: "الخطوة الأخيرة قبل البدء",
+          name_label: "اسمك",
+          whatsapp_label: "رقم واتسابك",
+          checkbox_label: "أرسل لي العرض عبر واتساب",
+          optional_note: "اختياري لكن موصى به لمتابعة مخصصة"
+        },
+        trust_messages: [
+          "بدون التزام",
+          "دعم متجاوب 7 أيام/أسبوع",
+          "مثالي على الهاتف",
+          "مرئي على جوجل"
+        ],
+        cta_pricing: "عرض الباقات",
+        cta_whatsapp: "التحدث عبر واتساب",
+        use_style_button: "متابعة",
+        demo_button: "عرض العرض",
+        edit_answers_button: "تعديل إجاباتي",
+        lead_capture_button: "استلام العرض على واتساب",
+        customization_note: "يمكنك تعديل الألوان والأقسام بعد التسجيل.",
+        timeline_title: "مدة التخصيص",
+        button_confirm: "تأكيد والبدء",
+        button_pricing: "عرض الأسعار",
+        button_whatsapp: "واتساب",
+        no_selection: "لم يتم اختيار أي نمط. عد للخطوة السابقة للاختيار.",
+        toast: {
+          title: "هل هذا هو الخيار الصحيح؟",
+          message: "سنخصصه باسمك في 7 أيام.",
+          button: "أختاره!"
+        }
+      },
+      toast: {
+        title: "هل يعجبك هذا النمط؟",
+        message: "اختره وسنخصصه لك في 7 أيام.",
+        button: "اختيار هذا النمط"
+      }
     },
     footer: {
       desc: "الحل الأمثل لإنشاء مواقع الويب (SaaS) للشركات الطموحة. نجمع بين الأداء، التصميم، وزيادة المبيعات دون أي تعقيدات تقنية.",

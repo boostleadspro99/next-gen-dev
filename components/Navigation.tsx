@@ -11,6 +11,17 @@ const Navigation: React.FC = () => {
   const { t, language, setLanguage, dir } = useLanguage();
   const { currentUser, isSuperAdmin } = useAuth();
   const isHome = location.pathname === '/';
+  
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll effect for header
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -24,17 +35,22 @@ const Navigation: React.FC = () => {
     };
   }, [isMobileMenuOpen]);
 
-  const handleScroll = (e: React.MouseEvent, id: string) => {
+  const handleScrollTo = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
-    
-    // Close mobile menu first
     setIsMobileMenuOpen(false);
 
     if (isHome) {
       setTimeout(() => {
         const element = document.getElementById(id.replace('#', ''));
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+          const headerOffset = 80; // Adjusted for header height
+          const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+          const offsetPosition = elementPosition - headerOffset;
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
         }
       }, 100);
     } else {
@@ -46,7 +62,7 @@ const Navigation: React.FC = () => {
     return (
       <a 
         href={isHome ? to : `/#/${to}`} 
-        onClick={(e) => handleScroll(e, to)}
+        onClick={(e) => handleScrollTo(e, to)}
         className={`cursor-pointer group relative ${
           mobile 
             ? 'text-3xl font-bold text-white py-4 flex items-center justify-between border-b border-white/5' 
@@ -69,7 +85,13 @@ const Navigation: React.FC = () => {
 
   return (
     <>
-      <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-[#050505]/80 backdrop-blur-xl transition-all duration-300 supports-[backdrop-filter]:bg-[#050505]/60">
+      <nav 
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+          scrolled || isMobileMenuOpen
+            ? 'border-b border-white/10 bg-[#050505]/80 backdrop-blur-xl supports-[backdrop-filter]:bg-[#050505]/60' 
+            : 'border-b border-transparent'
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           
           {/* Logo & Admin Badge */}
@@ -95,10 +117,10 @@ const Navigation: React.FC = () => {
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-2 text-[14px] font-medium text-neutral-300">
-            <NavLink to="#solutions" className="hover:text-white transition-colors">{t.nav.solutions}</NavLink>
-            <NavLink to="#methodology" className="hover:text-white transition-colors">{t.nav.methodology}</NavLink>
-            <NavLink to="#pricing" className="hover:text-white transition-colors">{t.nav.pricing}</NavLink>
-            <NavLink to="#faq" className="hover:text-white transition-colors">{t.nav.faq}</NavLink>
+            <NavLink to="#how-it-works">{t.nav.solutions}</NavLink>
+            <NavLink to="#methodology">{t.nav.methodology}</NavLink>
+            <NavLink to="#pricing">{t.nav.pricing}</NavLink>
+            <NavLink to="#faq">{t.nav.faq}</NavLink>
           </div>
 
           <div className="flex items-center gap-3">
@@ -150,8 +172,7 @@ const Navigation: React.FC = () => {
 
         <div className="flex flex-col h-full overflow-y-auto pb-10">
           <div className="flex flex-col gap-2 mb-8">
-            {/* Removed Super Admin mobile link here as it's consolidated below */}
-            <NavLink to="#solutions" mobile>{t.nav.solutions}</NavLink>
+            <NavLink to="#how-it-works" mobile>{t.nav.solutions}</NavLink>
             <NavLink to="#methodology" mobile>{t.nav.methodology}</NavLink>
             <NavLink to="#pricing" mobile>{t.nav.pricing}</NavLink>
             <NavLink to="#faq" mobile>{t.nav.faq}</NavLink>

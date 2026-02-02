@@ -17,7 +17,7 @@ import {
   updateTicketStatus
 } from '../services/firestore';
 import type { 
-  ClientData, PlanType, SubscriptionStatus, SetupFeeStatus, InvoiceData, InvoiceType, TicketData, TicketMessageData 
+  ClientData, PlanType, SubscriptionStatus, SetupFeeStatus, InvoiceData, InvoiceType, InvoiceStatus, TicketData, TicketMessageData 
 } from '../types/db';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -472,13 +472,410 @@ const TicketChatModal: React.FC<{ ticket: DisplayTicket, user: any, isSuperAdmin
     );
 }
 
-/* --- The original ClientEditModal component would be here --- */
-/* For brevity, it's omitted but should be kept in the actual file */
 const ClientEditModal = ({ client, onClose, onSuccess }: { client: ClientData, onClose: () => void, onSuccess: (msg: string) => void }) => {
-    // ... (The full code for the ClientEditModal component)
-    // This component remains unchanged from your original file.
-    // It manages client info, billing, invoices, etc.
-    return <div className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center"><div className="bg-neutral-900 p-8 rounded-lg text-white max-w-lg w-full">Édition du client {client.companyName}<button onClick={onClose} className="ml-4">Fermer</button></div></div>
+    const { isSuperAdmin } = useAuth();
+    const [formData, setFormData] = useState<Partial<ClientData>>({});
+    const [isSaving, setIsSaving] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [invoices, setInvoices] = useState<InvoiceData[]>([]);
+    const [isLoadingInvoices, setIsLoadingInvoices] = useState(false);
+    
+    // Initialize form data with client data
+    useEffect(() => {
+        setFormData({
+            companyName: client.companyName,
+            email: client.email,
+            phone: client.phone || '',
+            plan: client.plan,
+            subscriptionStatus: client.subscriptionStatus,
+            setupFeeStatus: client.setupFeeStatus,
+            billingCycle: client.billingCycle,
+            notes: client.notes || ''
+        });
+        
+        // Load invoices for this client
+        const loadInvoices = async () => {
+            setIsLoadingInvoices(true);
+            try {
+                const clientInvoices = await getInvoicesByClient(client.uid);
+                setInvoices(clientInvoices);
+            } catch (err) {
+                console.error("Error loading invoices:", err);
+            } finally {
+                setIsLoadingInvoices(false);
+            }
+        };
+        
+        loadInvoices();
+    }, [client]);
+    
+    const handleChange = (field: keyof ClientData, value: any) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+    };
+    
+    const handleSave = async () => {
+        if (!isSuperAdmin) {
+            setError("Permission refusée : vous devez être super administrateur pour modifier les informations des clients.");
+            return;
+        }
+        
+        setIsSaving(true);
+        setError(null);
+        
+        try {
+            // Filter out unchanged fields
+            const updates: Partial<ClientData> = {};
+            const formKeys = Object.keys(formData) as Array<keyof ClientData>;
+            formKeys.forEach((k) => {
+                const formValue = formData[k];
+                const clientValue = client[k];
+                if (formValue !== clientValue) {
+                    // Type-safe assignment with explicit type assertion
+                    (updates as any)[k] = formValue;
+                }
+            });
+            
+            if (Object.keys(updates).length > 0) {
+                await updateClientSubscription(client.uid, updates, client);
+                onSuccess(`Client ${client.companyName} mis à jour avec succès.`);
+            } else {
+                onClose();
+            }
+        } catch (err: any) {
+            console.error("Error updating client:", err);
+            setError(err.message || "Erreur lors de la mise à jour du client");
+        } finally {
+            setIsSaving(false);
+        }
+    };
+    
+    const handleCreateInvoice = async (type: InvoiceType, amount: number) => {
+        if (!isSuperAdmin) {
+            setError("Permission refusée : vous devez être super administrateur pour créer des factures.");
+            return;
+        }
+        
+        try {
+            const period = new Date().toISOString().slice(0, 7); // YYYY-MM
+            await createInvoice(client.uid, type, amount, period);
+            
+            // Refresh invoices list
+            const updatedInvoices = await getInvoicesByClient(client.uid);
+            setInvoices(updatedInvoices);
+            
+            onSuccess(`Facture créée pour ${client.companyName}`);
+        } catch (err: any) {
+            console.error("Error creating invoice:", err);
+            setError(err.message || "Erreur lors de la création de la facture");
+        }
+    };
+    
+    const handleUpdateInvoiceStatus = async (invoiceId: string, status: InvoiceStatus) => {
+        if (!isSuperAdmin) {
+            setError("Permission refusée : vous devez être super administrateur pour modifier les factures.");
+            return;
+        }
+        
+        try {
+            await updateInvoiceStatus(invoiceId, status);
+            
+            // Refresh invoices list
+            const updatedInvoices = await getInvoicesByClient(client.uid);
+            setInvoices(updatedInvoices);
+            
+            onSuccess(`Statut de la facture mis à jour`);
+        } catch (err: any) {
+            console.error("Error updating invoice:", err);
+            setError(err.message || "Erreur lors de la mise à jour de la facture");
+        }
+    };
+    
+    const formatDate = (ts: any) => {
+        if (!ts || !ts.seconds) return '-';
+        return new Date(ts.seconds * 1000).toLocaleDateString();
+    };
+    
+    const getPlanOptions = () => [
+        { value: 'presence', label: 'Presence' },
+        { value: 'boost', label: 'Boost' },
+        { value: 'business', label: 'Business' }
+    ];
+    
+    const getStatusOptions = () => [
+        { value: 'trial', label: 'Essai' },
+        { value: 'active', label: 'Actif' },
+        { value: 'past_due', label: 'Retard' },
+        { value: 'canceled', label: 'Annulé' }
+    ];
+    
+    const getSetupFeeOptions = () => [
+        { value: 'unpaid', label: 'Non payé' },
+        { value: 'pending', label: 'En attente' },
+        { value: 'paid', label: 'Payé' }
+    ];
+    
+    const getBillingCycleOptions = () => [
+        { value: 'monthly', label: 'Mensuel' },
+        { value: 'quarterly', label: 'Trimestriel' },
+        { value: 'yearly', label: 'Annuel' }
+    ];
+    
+    return (
+        <div className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-[#0F0F0F] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto animate-fade-in-up">
+                <div className="p-6 border-b border-white/10">
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <h3 className="text-xl font-bold text-white">Édition du client</h3>
+                            <p className="text-neutral-400 mt-1">{client.companyName} • {client.email}</p>
+                            {error && (
+                                <div className="mt-3 p-3 bg-red-500/10 border border-red-500/20 rounded text-red-400 text-sm">
+                                    ❌ {error}
+                                </div>
+                            )}
+                        </div>
+                        <button onClick={onClose} className="text-neutral-400 hover:text-white p-2">
+                            <X size={20} />
+                        </button>
+                    </div>
+                </div>
+                
+                <div className="p-6 space-y-8">
+                    {/* Informations de base */}
+                    <div>
+                        <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                            <Users size={18} /> Informations de base
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm text-neutral-400 mb-2">Nom de la société</label>
+                                <input
+                                    type="text"
+                                    value={formData.companyName || ''}
+                                    onChange={(e) => handleChange('companyName', e.target.value)}
+                                    className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm text-neutral-400 mb-2">Email</label>
+                                <input
+                                    type="email"
+                                    value={formData.email || ''}
+                                    onChange={(e) => handleChange('email', e.target.value)}
+                                    className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm text-neutral-400 mb-2">Téléphone</label>
+                                <input
+                                    type="text"
+                                    value={formData.phone || ''}
+                                    onChange={(e) => handleChange('phone', e.target.value)}
+                                    className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm text-neutral-400 mb-2">Notes internes</label>
+                                <textarea
+                                    value={formData.notes || ''}
+                                    onChange={(e) => handleChange('notes', e.target.value)}
+                                    rows={2}
+                                    className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none resize-none"
+                                    placeholder="Notes sur le client..."
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Abonnement et facturation */}
+                    <div>
+                        <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                            <CreditCard size={18} /> Abonnement & Facturation
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div>
+                                <label className="block text-sm text-neutral-400 mb-2">Forfait</label>
+                                <select
+                                    value={formData.plan || 'presence'}
+                                    onChange={(e) => handleChange('plan', e.target.value)}
+                                    className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none"
+                                >
+                                    {getPlanOptions().map(option => (
+                                        <option key={option.value} value={option.value}>{option.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm text-neutral-400 mb-2">Statut d'abonnement</label>
+                                <select
+                                    value={formData.subscriptionStatus || 'trial'}
+                                    onChange={(e) => handleChange('subscriptionStatus', e.target.value)}
+                                    className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none"
+                                >
+                                    {getStatusOptions().map(option => (
+                                        <option key={option.value} value={option.value}>{option.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm text-neutral-400 mb-2">Frais de setup</label>
+                                <select
+                                    value={formData.setupFeeStatus || 'unpaid'}
+                                    onChange={(e) => handleChange('setupFeeStatus', e.target.value)}
+                                    className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none"
+                                >
+                                    {getSetupFeeOptions().map(option => (
+                                        <option key={option.value} value={option.value}>{option.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm text-neutral-400 mb-2">Cycle de facturation</label>
+                                <select
+                                    value={formData.billingCycle || 'monthly'}
+                                    onChange={(e) => handleChange('billingCycle', e.target.value)}
+                                    className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none"
+                                >
+                                    {getBillingCycleOptions().map(option => (
+                                        <option key={option.value} value={option.value}>{option.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="bg-white/5 p-4 rounded-lg">
+                                <p className="text-sm text-neutral-400">Début de période</p>
+                                <p className="text-white font-medium">{formatDate(client.currentPeriodStart)}</p>
+                            </div>
+                            <div className="bg-white/5 p-4 rounded-lg">
+                                <p className="text-sm text-neutral-400">Fin de période</p>
+                                <p className="text-white font-medium">{formatDate(client.currentPeriodEnd)}</p>
+                            </div>
+                            <div className="bg-white/5 p-4 rounded-lg">
+                                <p className="text-sm text-neutral-400">Prochaine facturation</p>
+                                <p className="text-white font-medium">{formatDate(client.nextBillingDate)}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Factures */}
+                    <div>
+                        <div className="flex justify-between items-center mb-4">
+                            <h4 className="text-lg font-semibold text-white flex items-center gap-2">
+                                <FileText size={18} /> Factures
+                            </h4>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => handleCreateInvoice('setup', 5000)}
+                                    disabled={!isSuperAdmin}
+                                    className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 text-purple-400 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    + Frais de setup
+                                </button>
+                                <button
+                                    onClick={() => handleCreateInvoice('monthly', 2000)}
+                                    disabled={!isSuperAdmin}
+                                    className="px-4 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/30 text-emerald-400 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    + Facture mensuelle
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {isLoadingInvoices ? (
+                            <div className="flex justify-center py-8">
+                                <Loader2 className="w-6 h-6 text-emerald-500 animate-spin" />
+                            </div>
+                        ) : invoices.length > 0 ? (
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left text-sm">
+                                    <thead className="bg-white/[0.02] text-neutral-400 font-medium">
+                                        <tr>
+                                            <th className="px-4 py-3">Type</th>
+                                            <th className="px-4 py-3">Montant (MAD)</th>
+                                            <th className="px-4 py-3">Période</th>
+                                            <th className="px-4 py-3">Statut</th>
+                                            <th className="px-4 py-3">Échéance</th>
+                                            <th className="px-4 py-3 text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-white/5">
+                                        {invoices.map((invoice) => (
+                                            <tr key={invoice.id} className="hover:bg-white/5">
+                                                <td className="px-4 py-3">
+                                                    <span className={`px-2 py-1 text-xs rounded ${
+                                                        invoice.type === 'setup' ? 'bg-purple-500/20 text-purple-400' :
+                                                        invoice.type === 'monthly' ? 'bg-emerald-500/20 text-emerald-400' :
+                                                        'bg-blue-500/20 text-blue-400'
+                                                    }`}>
+                                                        {invoice.type === 'setup' ? 'Setup' : 
+                                                         invoice.type === 'monthly' ? 'Mensuel' : 'Extra'}
+                                                    </span>
+                                                </td>
+                                                <td className="px-4 py-3 text-white">{invoice.amountMAD.toLocaleString()} MAD</td>
+                                                <td className="px-4 py-3 text-neutral-400">{invoice.period}</td>
+                                                <td className="px-4 py-3">
+                                                    <span className={`px-2 py-1 text-xs rounded ${
+                                                        invoice.status === 'paid' ? 'bg-emerald-500/20 text-emerald-400' :
+                                                        'bg-red-500/20 text-red-400'
+                                                    }`}>
+                                                        {invoice.status === 'paid' ? 'Payé' : 'Impayé'}
+                                                    </span>
+                                                </td>
+                                                <td className="px-4 py-3 text-neutral-400">{formatDate(invoice.dueDate)}</td>
+                                                <td className="px-4 py-3 text-right">
+                                                    {invoice.status === 'unpaid' && isSuperAdmin && (
+                                                        <button
+                                                            onClick={() => handleUpdateInvoiceStatus(invoice.id!, 'paid')}
+                                                            className="px-3 py-1 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/30 text-emerald-400 text-xs font-medium rounded-lg transition-colors"
+                                                        >
+                                                            Marquer payé
+                                                        </button>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ) : (
+                            <div className="text-center py-8 text-neutral-500">
+                                Aucune facture pour ce client.
+                            </div>
+                        )}
+                    </div>
+                    
+                    {/* Actions */}
+                    <div className="pt-6 border-t border-white/10 flex justify-end gap-3">
+                        <button
+                            onClick={onClose}
+                            className="px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-neutral-400 hover:text-white text-sm font-medium rounded-lg transition-colors"
+                        >
+                            Annuler
+                        </button>
+                        <button
+                            onClick={handleSave}
+                            disabled={isSaving}
+                            className="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        >
+                            {isSaving ? (
+                                <>
+                                    <Loader2 size={16} className="animate-spin" />
+                                    Enregistrement...
+                                </>
+                            ) : (
+                                <>
+                                    <Save size={16} />
+                                    Enregistrer les modifications
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default AdminDashboard;

@@ -26,7 +26,7 @@ const FinalCTA: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <a 
               href="#pricing" 
-              className="w-full sm:w-auto px-8 py-4 bg-emerald-500 text-black rounded-xl text-sm font-bold uppercase tracking-wider hover:bg-emerald-400 transition-all shadow-[0_0_40px_-10px_rgba(16,185,129,0.5)] hover:shadow-[0_0_60px_-10px_rgba(16,185,129,0.6)] hover:scale-105 flex items-center justify-center gap-2 group"
+              className="w-full sm:w-auto px-8 py-4 bg-emerald-500 text-neutral-950 rounded-xl text-sm font-bold uppercase tracking-wider hover:bg-emerald-400 transition-all shadow-[0_0_40px_-10px_rgba(16,185,129,0.5)] hover:shadow-[0_0_60px_-10px_rgba(16,185,129,0.6)] hover:-translate-y-1 flex items-center justify-center gap-2 group"
             >
               {t.finalCTA.cta_primary}
               <ArrowRight size={18} className={`transition-transform duration-300 group-hover:translate-x-1 ${dir === 'rtl' ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />

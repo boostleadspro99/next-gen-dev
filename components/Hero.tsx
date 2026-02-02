@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { ArrowRight, MessageCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import FadeIn from './FadeIn';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useDeferredMount } from '../hooks/useDeferredMount';
@@ -83,15 +84,15 @@ const Hero: React.FC = () => {
         {/* CTAs */}
         <FadeIn delay={300}>
           <div className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto">
-            {/* Primary Button */}
-            <a href="#pricing" className="w-full sm:w-auto px-10 py-4 bg-emerald-500 text-neutral-950 rounded-xl text-base font-medium hover:bg-emerald-400 transition-all flex items-center justify-center gap-2 group shadow-[0_0_30px_rgba(16,185,129,0.2)] hover:shadow-[0_0_50px_rgba(16,185,129,0.4)] hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black">
+            {/* Primary Button - Points to Simulator */}
+            <Link to="/simulator" className="w-full sm:w-auto px-10 py-4 bg-emerald-500 text-neutral-950 rounded-xl text-base font-medium hover:bg-emerald-400 transition-all flex items-center justify-center gap-2 group shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:shadow-[0_0_50px_rgba(16,185,129,0.5)] hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black">
               {t.hero.cta_primary}
               <ArrowRight size={20} strokeWidth={2.5} className={`group-hover:translate-x-1 transition-transform duration-300 ${dir === 'rtl' ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
-            </a>
+            </Link>
             
-            {/* Secondary Button */}
-            <a href="https://wa.me/212600000000" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-8 py-4 bg-transparent border border-white/10 rounded-xl text-sm font-medium text-neutral-200 hover:text-white hover:border-white/20 hover:bg-white/[0.03] transition-all flex items-center justify-center gap-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black">
-              <MessageCircle size={18} strokeWidth={2} className="text-neutral-400 group-hover:text-emerald-400 transition-colors" />
+            {/* Secondary Button - Points to Pricing */}
+            <a href="#pricing" className="w-full sm:w-auto px-8 py-4 bg-transparent border border-white/10 rounded-xl text-sm font-medium text-neutral-200 hover:text-white hover:border-white/20 hover:bg-white/[0.03] transition-all flex items-center justify-center gap-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black">
+              <ArrowRight size={18} strokeWidth={2} className="text-neutral-400 group-hover:text-emerald-400 transition-colors" />
               {t.hero.cta_secondary}
             </a>
           </div>

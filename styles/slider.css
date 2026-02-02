@@ -1,0 +1,21 @@
+.slider-thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #10b981;
+  border-radius: 9999px;
+  cursor: pointer;
+  border: 3px solid #050505;
+  box-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
+}
+
+.slider-thumb::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #10b981;
+  border-radius: 9999px;
+  cursor: pointer;
+  border: 3px solid #050505;
+  box-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
+}
